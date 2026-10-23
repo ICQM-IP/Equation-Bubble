@@ -1,0 +1,35 @@
+'use strict';
+// Shared classroom controls. Game clocks remain in the engines so pause is exact.
+const learningBattle=document.body.classList.contains('versus-page');
+function drawAimMarker(field,aim){
+ let marker=field.querySelector('.aim-end');if(!marker){marker=document.createElement('span');marker.className='aim-end';marker.setAttribute('aria-hidden','true');field.append(marker)}
+ const end=aim.path[aim.path.length-1];marker.textContent=aim.hit?'◎':'×';marker.classList.toggle('no-contact',!aim.hit);marker.style.left=end.x+'px';marker.style.top=Math.max(18,end.y)+'px';
+}
+function makeLearningPanel(host,i){const panel=document.createElement('section');panel.className='learning-panel';panel.dataset.learningPlayer=String(i);const time=document.createElement('p');time.className='learning-clock';const status=document.createElement('p');status.className='learning-status';status.setAttribute('role','status');const choices=document.createElement('div');choices.className='operand-choices';choices.setAttribute('aria-label','炮彈數值選擇');panel.append(time,status,choices);const actions=host.querySelector('.mobile-actions');if(actions)host.insertBefore(panel,actions);else host.append(panel);return {panel,time,status,choices,key:''}}
+const learningPanels=[];
+if(learningBattle){for(let i=0;i<2;i++){learningPanels.push(makeLearningPanel(document.querySelector('#manual'+i).parentElement,i));learningPanels.push(makeLearningPanel(document.querySelector('#vsMobileMath'+i).closest('.mobile-vs-controls'),i));}}
+else{learningPanels.push(makeLearningPanel(document.querySelector('#teaching'),0));learningPanels.push(makeLearningPanel(document.querySelector('#mobileControls'),0));}
+function clockText(elapsed,limit){if(!limit)return '不限時';const n=Math.max(0,Math.ceil(limit-elapsed));return '剩餘 '+Math.floor(n/60)+':'+String(n%60).padStart(2,'0')}
+function refreshLearningUI(){
+ for(const ui of learningPanels){let ammo,stats,mode,active,elapsed,limit;
+ const i=Number(ui.panel.dataset.learningPlayer);
+ if(learningBattle){if(!match){ui.panel.hidden=true;continue}const p=match.players[i];ammo=p.ammo();stats=p.stats;mode=document.querySelector('#battleMode').value;active=p.canFire;elapsed=match.elapsed;limit=match.duration;}
+ else{ammo=loaded;stats=learningStats;mode=document.querySelector('#learningMode').value;active=canAct();elapsed=sessionElapsed;limit=sessionLimit;}
+ if(learningBattle){document.querySelector('#manual'+i).hidden=mode!=='challenge';document.querySelector('#vsMobileLabel'+i).hidden=mode!=='challenge';}else{document.querySelector('#manualAmmo').hidden=mode!=='challenge';document.querySelector('#mobileValueLabel').hidden=mode!=='challenge';}ui.panel.hidden=false;ui.time.textContent=clockText(elapsed,limit);ui.status.textContent='已解 '+stats.solved+' 題 · 正確命中 '+M.accuracy(stats)+'% · 提示 '+stats.hints+' 次';
+ ui.choices.hidden=mode!=='choices';
+ // Values come from the selected operation on the physically reachable target.
+ let base=learningBattle?match.players[i].autoAmmo():cartridges()[ammoIndex];
+ const enabled=mode==='choices'&&active&&base&&!base.unavailable&&!String(base.label).includes('?');
+ const key=mode+'|'+(enabled?base.op+'|'+base.kind+'|'+base.v:'disabled');
+ if(key!==ui.key){ui.key=key;ui.choices.replaceChildren();if(enabled){for(const value of M.operandChoices(base.v)){const button=document.createElement('button');button.type='button';button.textContent=value.replaceAll('-','−');button.setAttribute('aria-label','裝填數值 '+value);button.onclick=()=>{if(learningBattle){const p=activePlayer(i);if(!p?.canFire)return;p.manualValue=value;document.querySelector('#value'+i).value=value;render()}else{if(!canAct())return;document.querySelector('#ammoValue').value=value;document.querySelector('#mobileValue').value=value;load()}};ui.choices.append(button)}}else ui.choices.textContent=mode==='choices'?'先瞄準目標並選擇適用運算，再選數值。':'';}
+ }
+}
+for(const button of document.querySelectorAll('[data-preset]'))button.onclick=()=>{const preset=button.dataset.preset;document.querySelector('#sessionLength').value=preset==='timed'?'180':'0';document.querySelector('#practice').checked=preset==='practice';document.querySelector('#fixedTopic').checked=preset!=='timed';document.querySelector('#gentlePace').checked=true;document.querySelector('#learningMode').value=preset==='timed'?'choices':'assist';for(const b of document.querySelectorAll('[data-preset]'))b.setAttribute('aria-pressed',String(b===button));};
+const learningStyle=document.createElement('style');learningStyle.textContent=`
+.aim-contact{outline:4px solid #fff4a5!important;outline-offset:5px;filter:brightness(1.12)}
+.aim-end{position:absolute;z-index:12;pointer-events:none;transform:translate(-50%,-50%);font:900 30px Arial;color:#fff7a4;text-shadow:0 1px 3px #182c41}.aim-end.no-contact{color:#e8edf4;opacity:.65}
+.learning-panel{padding:9px 10px;border-radius:8px;background:#152c41;color:#fff4ce;font:600 14px/1.45 Arial,sans-serif;text-shadow:none;margin-top:8px}.learning-panel p{margin:2px 0}.learning-clock{font-size:20px;font-variant-numeric:tabular-nums;color:#ffe597}.operand-choices{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.operand-choices[hidden],.learning-panel[hidden]{display:none}.operand-choices button{flex:1;min-height:44px;min-width:54px;background:#edf4ff;color:#17324a;border:2px solid #89bade;border-radius:8px;font:800 20px Arial;cursor:pointer}.operand-choices button:focus-visible{outline:3px solid #ffd966}.quick-presets{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0;font:16px Arial}.quick-presets span{width:100%}.quick-presets button{min-height:42px;border-radius:8px;border:1px solid #c7b287;background:#fff0cc;color:#263b4b;cursor:pointer;padding:6px 10px}.quick-presets button[aria-pressed=true]{background:#ffe184;outline:2px solid #244f70}
+#teaching .learning-panel{position:absolute;left:10px;right:10px;bottom:10px}#teaching #sideFeedback{bottom:165px!important}.battle-dock .learning-panel{position:absolute;left:16px;right:16px;bottom:4px;font-size:13px}.battle-dock .learning-clock{font-size:17px}.battle-dock .operand-choices button{min-height:40px}.versus-page:not(.mobile-mode) .arena{height:990px}.versus-page:not(.mobile-mode) #battleStage{height:1130px}.versus-page:not(.mobile-mode) .battle-dock{height:75px}.versus-page:not(.mobile-mode) .battle-dock .learning-panel{top:180px;bottom:auto;pointer-events:auto}.setup-options{flex-wrap:wrap;gap:12px}.menu{max-height:90vh;overflow-y:auto}.result-stats{line-height:1.7}.result-stats>div{min-width:0}.instructions{line-height:1.6}@media(orientation:landscape) and (min-width:640px){body.mobile-mode:not(.versus-page) #mobileControls{max-height:none!important;overflow:visible}}
+body.mobile-mode .learning-panel{position:static!important;font-size:13px;padding:7px 9px;margin:6px 0}body.mobile-mode .learning-clock{font-size:18px}body.mobile-mode #teaching .learning-panel{display:none}
+`;
+document.head.append(learningStyle);refreshLearningUI();

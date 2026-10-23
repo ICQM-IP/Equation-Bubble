@@ -49,6 +49,20 @@ function parseOperand(text){
  if(!/^-?\d{1,6}(?:\/-?\d{1,6})?$/.test(s))throw Error('請輸入整數或分數，例如 3、-3、1/2。');
  const value=q(s);if(value.eq(0))throw Error('請輸入非零數值；不能乘或除以零。');return value;
 }
-const api={Q,q,eq,solution,verify,lcm,solved,moves,apply,generate,parseOperand};root.EquationMath=api;if(typeof module!=='undefined')module.exports=api;
+const ERROR_NAMES={aim:'未命中',target:'目標不符',value:'數值不符',operation:'運算不符',route:'指定路線'};
+function diagnose(e,node,ammo){
+ if(!node)return {code:'aim',text:'未命中：試試點選泡泡，再微調角度。'};
+ const all=moves(e),target=all.filter(m=>m.target===node.key||(m.target==='fraction'&&e[node.key[0]]?.[node.key[1]]?.d>1n));
+ if(!target.length)return {code:ammo.kind==='scale'&&!e.l.b.eq(0)?'route':'target',text:ammo.kind==='scale'&&!e.l.b.eq(0)?'指定路線：本關先消常數，再除係數；其他等價解法亦可成立。':'目標不符：先處理提示中需要消去的項。'};
+ const op=target.filter(m=>m.op===ammo.op&&m.kind===ammo.kind);
+ if(!op.length)return {code:'operation',text:'運算不符：想一想用哪個相反運算消去這一項。'};
+ if(!op.some(m=>m.v.eq(ammo.v)))return {code:'value',text:'數值不符：運算方向正確，再檢查正負號和數值。'};
+ return null;
+}
+function newStats(){return {shots:0,hits:0,hints:0,solved:0,errors:{aim:0,target:0,value:0,operation:0,route:0}}}
+function accuracy(s){return s.shots?Math.round(100*s.hits/s.shots):0}
+function report(s){const common=Object.entries(s.errors).filter(([,n])=>n).sort((a,b)=>b[1]-a[1]);return '完成 '+s.solved+' 題 · 正確命中 '+accuracy(s)+'%（'+s.hits+'/'+s.shots+' 發） · 提示 '+s.hints+' 次'+(common.length?' · 常見：'+common.map(([k,n])=>ERROR_NAMES[k]+' '+n).join('、'):' · 暫無錯誤紀錄')}
+function operandChoices(v){v=q(v);const list=[v];for(const candidate of [v.neg(),q(1).div(v),v.add(1),v.sub(1),q(2),q(3)])if(!candidate.eq(0)&&!list.some(x=>x.eq(candidate)))list.push(candidate);return list.slice(0,3).sort((a,b)=>{const d=a.sub(b);return d.n<0n?-1:d.n>0n?1:0}).map(String)}
+const api={diagnose,newStats,accuracy,report,operandChoices,ERROR_NAMES,Q,q,eq,solution,verify,lcm,solved,moves,apply,generate,parseOperand};root.EquationMath=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 

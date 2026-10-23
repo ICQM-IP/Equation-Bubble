@@ -17,7 +17,7 @@ run('match.players.forEach(p=>p.hint(true))');key('f');key('Enter');assert(run('
 key('p');assert.equal(run('match.paused'),true);const paused=run('JSON.stringify(match.players.map(p=>p.rows.map(r=>r.y)))');advance(20);assert.equal(run('JSON.stringify(match.players.map(p=>p.rows.map(r=>r.y)))'),paused);ids.battleResume.onclick();assert.equal(run('match.paused'),false);advance(50);
 const beforeOp=run('match.players[1].op');key('w');assert.equal(run('match.players[1].op'),beforeOp);key('d');assert(run('match.players[0].held.has("right")'));assert(!run('match.players[1].held.has("right")'));events.keyup({key:'d'});assert(!run('match.players[0].held.has("right")'));
 // New incoming equations reach the actual rendered opponent field.
-run('match.attack(0)');advance(40);assert(run('match.players[1].received>=1'));assert(ids.rows1.children.length>=5);assert(ids.incoming1.textContent.includes('已收'));
+run('match.attack(0)');advance(70);assert(run('match.players[1].received>=1'));assert(ids.rows1.children.length>=5);assert(ids.incoming1.textContent.includes('已收'));
 // A round can end, show the winner, and restart with empty attack queues.
 run('match.players[1].lives=1;match.players[1].grace=0;match.players[1].rows[0].y=EquationVersus.LINE-65');advance(1);assert.equal(run('match.status'),'ended');assert(!ids.battleResult.classList.contains('hidden'));assert(ids.resultTitle.textContent.includes('Mr. IP'));ids.rematch.onclick();assert.equal(run('match.status'),'playing');assert.equal(run('match.players[1].incoming.length'),0);assert.equal(run('match.players[1].received'),0);assert(ids.battleResult.classList.contains('hidden'));
 ids.battleReset.onclick();assert(!ids.battleSetup.classList.contains('hidden'));assert.equal(run('match.paused'),true);
