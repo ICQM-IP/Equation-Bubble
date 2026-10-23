@@ -28,7 +28,7 @@ function moves(e){
 }
 function apply(e,m){
  const valid=moves(e).find(t=>t.op===m.op&&t.kind===m.kind&&t.target===m.target&&t.v.eq(m.v));
- if(!valid)throw Error('這枚炮彈不能消去所選項。請改用提示的等價步驟。');
+ if(!valid)throw Error('本關採用指定消元路線；其他等價方法亦可能成立。請按分級提示進行。');
  let n=eq(e.l.a,e.l.b,e.r.a,e.r.b);
  if(m.kind!=='expand')for(const s of ['l','r']){
   if(m.kind==='scale'){const f=m.op==='÷'?q(1).div(m.v):m.v;n[s]=side(n[s].a.mul(f),n[s].b.mul(f))}
@@ -44,6 +44,11 @@ function generate(level,rand=Math.random){
  if(level===4){const k=pick([-3,-2,2,3]);return eq(k,k*b,0,k*(x+b),{k,b})}
  const d=pick([2,3,4,6]);let f=pick([3,4,5]);if(a*f===d)f=7;return eq(q(a).div(d),q(b).div(d),q(1).div(f),q(a).div(d).sub(q(1).div(f)).mul(x).add(q(b).div(d)));
 }
-const api={Q,q,eq,solution,verify,lcm,solved,moves,apply,generate};root.EquationMath=api;if(typeof module!=='undefined')module.exports=api;
+function parseOperand(text){
+ const s=String(text).trim().replaceAll('−','-');
+ if(!/^-?\d{1,6}(?:\/-?\d{1,6})?$/.test(s))throw Error('請輸入整數或分數，例如 3、-3、1/2。');
+ const value=q(s);if(value.eq(0))throw Error('請輸入非零數值；不能乘或除以零。');return value;
+}
+const api={Q,q,eq,solution,verify,lcm,solved,moves,apply,generate,parseOperand};root.EquationMath=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 

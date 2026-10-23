@@ -46,3 +46,22 @@
 .sky-title,.battle-header h1,.menu h1,.setup-card h2{font-family:Consolas,'Courier New',monospace;font-weight:1000;letter-spacing:-1px;text-shadow:3px 3px #352415,-1px -1px #352415}
 .arena:before,.arena:after{content:'◆';position:absolute;top:-11px;color:#ffda86;text-shadow:2px 2px #5d3a24;font-size:23px;z-index:10;pointer-events:none}.arena:before{left:-10px}.arena:after{right:-10px}
 @media(prefers-reduced-motion:reduce){.score-flight{animation:none;display:none}.impact-flash{animation:none}}
+
+/* v10: readable classroom controls, manual ammunition and whole-equation stars. */
+[hidden]{display:none!important}
+#field{background:linear-gradient(#d8f4ff70,#eafaff55);border-radius:12px}
+.battle-field{background-image:linear-gradient(#d8f4ff99,#eafaff88),url('assets/sky-island-v9.png')}
+.aux{width:235px;gap:9px;font-size:20px}.aux button,.aux-versus{font-size:19px;min-height:38px;padding:7px 12px}.aux>span{font-size:18px;line-height:1.4;color:#fffbe9;background:#3e301de8;padding:5px 8px;border-radius:4px;text-shadow:none}
+.speech,.speech.long{font-size:20px;line-height:1.4;height:124px;top:470px;padding:9px}
+#teaching{font-size:20px}.teaching-heading{font-size:13px}.danger{font-size:17px!important;color:#832a35!important;border-color:#af3c4f!important;background:#fff2dc88}
+#field.shielded{box-shadow:inset 0 0 0 5px #55dcb1}
+.manual-ammo{position:absolute;left:875px;top:787px;z-index:8;color:#fff4d9;font-size:18px;width:230px;background:#50351ff5;padding:6px 10px;border:2px solid #edc47f;border-radius:8px}
+.manual-ammo input,.battle-manual input{width:100%;font:700 23px Arial,sans-serif;color:#30291f;background:#fff6df;border:2px solid #bd914f;border-radius:5px;padding:5px;margin-top:3px}
+.manual-ammo small{display:block;font-size:15px;min-height:36px;line-height:1.2;margin-top:4px}
+.manual-ammo:not([hidden])~#currentAmmo{left:1115px;width:90px;top:834px} .manual-ammo:not([hidden])~.keyboard{left:1225px;gap:12px}.manual-ammo:not([hidden])~.keyboard kbd{font-size:23px;min-width:40px}.manual-ammo:not([hidden])~.keyboard button kbd{min-width:100px}
+.battle-manual{position:absolute;left:389px;top:2px;width:170px;color:#fff4d9;font-size:16px;line-height:1.1}.battle-manual input{font-size:21px;padding:3px;margin:0}.battle-manual small{display:block;font-size:12px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.battle-manual:not([hidden])~.battle-fire{right:10px;width:160px}.battle-dock:has(.battle-manual:not([hidden])) .loaded-ammo{display:none}
+.battle-row.special:before{content:'★ 解完整題 → 攻擊';position:absolute;left:var(--special-left,0px);top:-22px;background:#61451fea;border:1px solid #ffe082;border-radius:5px;padding:2px 6px;color:#fff3a6;font:700 14px Arial,sans-serif;z-index:3;white-space:nowrap}
+.battle-row.special .star-node:after{display:none}.battle-row.special .node{box-shadow:0 3px 0 #71542f}
+.battle-message{font-size:16px;height:24px;line-height:22px;white-space:normal}.teacher-bubble{height:78px;top:2px}.battle-math{font-size:21px;height:35px}.player-controls,.player-controls button{font-size:15px}.player-controls b{font-size:17px}.incoming{font-size:17px;top:54px;left:420px}.battle-footer{font-size:14px}.setup-footnote{font-size:16px}.setup-options{gap:16px}.setup-options select{max-width:270px}.menu .instructions{font-size:20px;line-height:1.6}.menu label{font-size:20px}
+.battle-row .node.target{outline:3px dashed #fff0a0;outline-offset:3px}
