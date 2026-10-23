@@ -1,0 +1,124 @@
+/* v12 Clear View: one controller, one fixed reading panel, one visual hierarchy. */
+:root{--ui-font:Arial,'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;--panel:#183c49;--panel-raised:#234e5b;--cream:#fff5df;--muted:#bfd3d7;--p1:#66d9ec;--p2:#ff9bb8}
+body,button,select,input{font-family:var(--ui-font)}
+.sky-title,.battle-header h1,.menu h1,.setup-card h2{font-family:Consolas,'Courier New',monospace;letter-spacing:-1px}
+.node,.battle-row .orb,.orb{font-family:var(--ui-font);font-weight:800;text-shadow:1px 2px 0 #18313f,-1px -1px 0 #18313f,1px -1px 0 #18313f,-1px 1px 0 #18313f}
+.sky-title,.battle-header{border-width:3px;box-shadow:inset 0 0 0 1px #f8d99b66,0 3px 0 #34291f}
+.sky-title{font-size:42px}.sky-title small{letter-spacing:2px}
+.arena{border-width:3px;outline-width:1px;box-shadow:0 4px 15px #102d3966,inset 0 0 0 1px #f6d89c88;border-radius:10px}
+.arena:before,.arena:after,.sky-frame:before,.sky-frame:after{display:none}
+.battle-field{border-radius:7px}.battle-dock{border-top-width:2px;border-bottom-width:1px}
+.player-hud{border-radius:6px 6px 0 0;padding-left:15px!important}
+.player-hud strong{font-size:23px}.player-tag{font-size:13px;font-weight:700;letter-spacing:1.4px}.hud-score strong{font-size:28px;font-variant-numeric:tabular-nums}.hud-score small{font-size:11px}
+.p1 .player-hud{border-left:5px solid var(--p1);background:linear-gradient(90deg,#174b5a,#253b3f)}
+.p2 .player-hud{border-left:5px solid var(--p2);background:linear-gradient(90deg,#5c3448,#39393f)}
+.p1 .player-tag{color:var(--p1)}.p2 .player-tag{color:var(--p2)}
+.incoming{font-size:16px;border-width:1px;background:#173a49e8;border-radius:20px;padding:5px 12px;left:430px}
+.incoming.danger-incoming{background:#813a47;color:#fff0b8;border-width:1px}
+/* Special belongs to the whole equation, without repeating an instruction on each row. */
+.battle-row.special:before{content:'★';top:-24px;padding:0;width:25px;height:25px;text-align:center;line-height:24px;border-radius:50%;font-size:19px;background:#594626;color:#ffe58b;border:1px solid #ffdc73;text-shadow:none}
+.battle-row.special:after{content:'';position:absolute;left:calc(var(--special-left) - 4px);top:-4px;width:calc(var(--special-width) + 8px);height:74px;border:1px solid #ffdb7899;border-radius:40px;background:#ffe16b0a;pointer-events:none;z-index:-1}
+.battle-row.special .node{box-shadow:none}
+/* A clear danger marker is always visible; motion is reserved for an approaching row. */
+.danger,.battle-danger{border-top:3px dashed #cc5a49!important;color:#9a3b31!important;background:#fff0d7b8;font-family:var(--ui-font);font-weight:700;font-size:15px!important;letter-spacing:2px!important;text-shadow:none;line-height:23px}
+.urgent .danger,.battle-field.urgent .battle-danger{background:#a83e39!important;color:#fff4dd!important;border-color:#ffdd78!important;box-shadow:0 -8px 25px #ff78532e}
+.battle-danger{font-size:13px!important;line-height:20px}
+/* Keep cannon preview + one labelled main ammunition display. */
+#ammoOrb,.loaded-ammo .mini-ammo{display:none!important}
+#currentAmmo{gap:0;width:170px;justify-content:center;font-family:var(--ui-font)}
+#currentAmmo:before{content:'目前炮彈';position:absolute;top:-24px;color:#ffedbb;font-size:16px;font-weight:500}
+#ammoText{max-width:170px;font-size:35px;text-align:center}
+.loaded-ammo{display:flex;flex-direction:column;gap:0;top:8px;min-width:120px}
+.loaded-ammo small{display:block;font-size:14px;color:#f6dfad;letter-spacing:0;line-height:18px}.loaded-ammo strong{font-size:31px;line-height:34px}
+.battle-fire{background:linear-gradient(#df9c43,#b56827);border-color:#ffe5ad;color:#fffbed;font-weight:800;font-size:20px}
+.player-controls button,#hint{background:#274e5b;color:#dce9ec;border-color:#8aa6aa;box-shadow:none}
+.teacher-bubble{height:82px;background:#fff5df;border-width:2px;padding:5px 9px;box-shadow:none}
+.battle-message{font-size:16px;height:20px;line-height:20px;color:#46545a}
+.battle-math{font-size:23px;height:auto;max-height:48px;white-space:normal;flex-wrap:wrap;line-height:1.35;overflow:auto}
+.player-controls{font-size:14px}.player-controls b{font-size:17px}.player-controls button{font-size:14px;min-height:28px}
+.floating-balance{display:none!important}
+/* Solo desktop: give the fixed reading board meaningful width without changing physics. */
+body:not(.mobile-mode):not(.versus-page) #field{left:200px}
+body:not(.mobile-mode):not(.versus-page) .cannon{left:646px}
+body:not(.mobile-mode):not(.versus-page) .sky-frame{left:188px;width:1144px;border-width:3px;outline-width:1px;border-radius:10px}
+body:not(.mobile-mode):not(.versus-page) .aux{left:12px;width:178px;gap:8px}
+body:not(.mobile-mode):not(.versus-page) .aux button,body:not(.mobile-mode):not(.versus-page) .aux a{font-size:17px;border-width:1px;box-shadow:none;min-height:35px;padding:7px 10px}
+body:not(.mobile-mode):not(.versus-page) .aux>span{font-size:16px;line-height:1.3}
+body:not(.mobile-mode):not(.versus-page) .teacher-sprite{left:15px;width:160px}
+body:not(.mobile-mode):not(.versus-page) .speech{display:none}
+body:not(.mobile-mode):not(.versus-page) #teaching,body:not(.mobile-mode):not(.versus-page) #teaching.near-equation{left:1346px!important;top:190px!important;width:306px!important;height:550px!important;max-height:none;min-height:0;padding:22px 16px;border:2px solid #d2ac70;border-radius:14px;box-shadow:0 5px 18px #12364655;background:#fff6e3;display:flex;justify-content:flex-start;align-items:stretch;gap:0;pointer-events:auto;z-index:5}
+.teaching-heading{font-family:var(--ui-font);font-size:22px;color:#254b58;letter-spacing:0;font-weight:800;display:block!important}
+.reading-caption{display:block;color:#718087;font:16px/1.5 var(--ui-font)}
+body:not(.mobile-mode) #teachingMath{margin-top:32px;min-height:160px;font:700 27px/1.65 var(--ui-font);overflow-wrap:anywhere}
+body:not(.mobile-mode) #teachingMath .math-step{font-size:26px;white-space:normal;flex-wrap:wrap;gap:6px;line-height:1.65}
+body:not(.mobile-mode) #teachingMath .math-step.small{font-size:23px}
+#sideFeedback{margin-top:auto;padding:15px 12px;border-left:3px solid #b99858;border-radius:0 7px 7px 0;background:#eaf0e9;color:#355363;font:18px/1.65 var(--ui-font);text-align:left;overflow-wrap:anywhere}
+.overlay,.setup-card{border-width:3px;box-shadow:0 12px 40px #071f2d70,inset 0 0 0 1px #f3d9a155;border-radius:15px}
+.menu label,.setup-options label,.setup-description,.setup-footnote{font-family:var(--ui-font)}
+.teacher-choice{border-width:2px;border-radius:10px}.teacher-choice.chosen{outline-width:2px;outline-offset:2px}
+.teacher-choice span{font-family:var(--ui-font);font-size:14px}.chosen-name{font-family:var(--ui-font);font-size:21px}
+/* Handheld: one toolbar and one touch dock. The arena keeps only the playfield. */
+.mobile-mode #deviceToolbar{height:50px;border-bottom-width:1px;background:#153340f5;box-shadow:0 2px 10px #061f3155;font-family:var(--ui-font)}
+.mobile-mode #deviceToolbar strong{font-family:var(--ui-font);letter-spacing:.2px}
+.mobile-mode #deviceToolbar button{border-width:1px;min-height:40px;background:#244958;border-color:#64818b}
+.mobile-mode #pause,.mobile-mode .sky-title,.mobile-mode .score,.mobile-mode .stage-number,.mobile-mode .hearts{display:none!important}
+.mobile-mode #field{left:0;top:0;height:660px;border-radius:10px}
+.mobile-mode .cannon{left:446px;top:448px}
+.mobile-mode #teaching{display:none!important}
+.mobile-mode #viewport{border:1px solid #728a8a66;border-radius:12px;box-shadow:0 5px 20px #09253255}
+.mobile-mode #mobileControls,.versus-page.mobile-mode .mobile-vs-controls{background:var(--panel);border:1px solid #6d8c93;border-radius:14px;padding:13px;box-shadow:0 5px 18px #08263544;font-family:var(--ui-font)}
+.touch-hud{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid #8ba3a33d}
+.teacher-chip{display:flex;align-items:center;gap:7px;min-width:0;font-family:var(--ui-font)}
+.teacher-chip img{width:38px;height:45px;object-fit:contain;image-rendering:pixelated;flex:none;filter:drop-shadow(1px 2px #102c38)}
+.teacher-chip span,.teacher-chip strong{font-size:15px;font-weight:750;color:#f7ecd0}
+.teacher-chip small{display:block;font-size:11px;letter-spacing:1px;color:var(--p1);margin-bottom:3px}
+.touch-hud.player-2 .teacher-chip small{color:var(--p2)}
+#mobileProgress{font-size:13px;line-height:1.65;text-align:right;color:#cbe0df;max-width:165px}
+.mobile-info{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:8px 12px;background:#0d2d3b;border-radius:9px;min-height:48px}
+.ammo-caption{display:block;font:13px/1.3 var(--ui-font);color:#bdd1d7}
+.mobile-info #mobileLoaded{font:800 29px/1.25 var(--ui-font);color:#fff0b5}
+.touch-ammo{text-align:right;background:#102f3d;border-radius:8px;padding:7px 12px;min-width:100px}
+.touch-ammo strong{display:block;margin:0!important;font:800 26px/1.25 var(--ui-font)!important;color:#fff0b5}
+#mobileControls button,.mobile-vs-controls button{border:1px solid #71929a;box-shadow:inset 0 1px #ffffff25;min-height:48px;transition:background .12s ease,border-color .12s ease;position:relative}
+#mobileControls [data-op='+'],.mobile-vs-controls [data-vs-op='0']{background:linear-gradient(#2c9670,#17634b);border-color:#7ccca5}
+#mobileControls [data-op='−'],.mobile-vs-controls [data-vs-op='1']{background:linear-gradient(#c25b79,#883c58);border-color:#e9a0b7}
+#mobileControls [data-op='×'],.mobile-vs-controls [data-vs-op='2']{background:linear-gradient(#357fbb,#245b8f);border-color:#90c4ec}
+#mobileControls [data-op='÷'],.mobile-vs-controls [data-vs-op='3']{background:linear-gradient(#9865b8,#684891);border-color:#d1adeb}
+#mobileControls [data-op='LCM'],.mobile-vs-controls [data-vs-op='4']{background:linear-gradient(#bd833b,#8b5a23);border-color:#e2bf87}
+#mobileControls button.active,.mobile-vs-controls button.active{border:2px solid #fff0a3;box-shadow:0 0 0 2px #e7c766,inset 0 1px #ffffff55}
+.mobile-ops button.active:after,.mobile-vs-controls nav button.active:after{content:'✓';position:absolute;top:-7px;right:-4px;font:700 11px/17px var(--ui-font);width:17px;height:17px;background:#ffe6a4;border-radius:50%;color:#26434e}
+.mobile-actions{grid-template-columns:46px minmax(70px,.9fr) 46px minmax(110px,1.5fr);gap:7px;margin:12px 0}
+.mobile-actions button:nth-child(2){background:#244855!important;color:#dce8eb;border-color:#65838e;font-weight:500!important}
+.mobile-actions button:last-child{min-height:54px;background:linear-gradient(#eead50,#c37b2c)!important;color:#202c2a!important;border-color:#ffe0a2!important;font-weight:850!important;box-shadow:0 3px 0 #835425!important}
+.mobile-actions button:first-child,.mobile-actions button:nth-child(3){background:#29515f!important;color:#dbe9ea}
+.mobile-actions button:disabled{opacity:.55;box-shadow:none!important}
+.math-readout{background:var(--cream);color:#254754;border-radius:10px;border:1px solid #d7c59c;padding:12px;text-shadow:none;min-width:0}
+.math-readout>header{display:flex;justify-content:space-between;align-items:center;gap:8px;font:800 15px/1.4 var(--ui-font);padding-bottom:8px;border-bottom:1px solid #d2d9cf}
+.math-readout>header>span{font-size:11px;font-weight:500;letter-spacing:1px;color:#7f8c86}
+.readout-equation{padding:12px 0;min-height:57px;font:750 21px/1.7 var(--ui-font);text-align:center;overflow-wrap:anywhere}
+.readout-equation.waiting{font-size:14px;color:#788a8d;font-weight:500}
+.readout-equation .math-step{font:750 20px/1.8 var(--ui-font);white-space:normal;gap:5px;flex-wrap:wrap}
+.readout-equation .math-step.small{font-size:18px}
+.readout-equation mark{display:inline-block;padding:2px 5px;border-radius:4px;background:#f5d66b;color:#334134;margin:0 2px}
+.readout-equation .stack-frac{vertical-align:middle}
+#mobileFeedback,.mobile-vs-controls .math-readout p{font:14px/1.6 var(--ui-font);color:#567078;border-top:1px solid #d5ded4;padding-top:8px;margin:0;min-height:0}
+.mobile-tip{font-family:var(--ui-font);font-size:12px;text-align:center;color:#b3ccd0;margin-top:9px}
+#mobileValueLabel,.mobile-vs-controls label{color:#d0e0e2;margin-top:12px}.mobile-mode input{border-width:1px!important;border-color:#a3bbc0!important;border-radius:8px!important;background:#f4faf7!important;color:#284c59!important}
+.versus-page.mobile-mode .battle-header{min-height:54px;border:0;border-radius:0;box-shadow:none;background:#1e4250;padding:6px 10px;margin-bottom:0}
+.versus-page.mobile-mode .battle-header>div:nth-child(2),.versus-page.mobile-mode #deviceToggle,.versus-page.mobile-mode #battlePause{display:none}
+.versus-page.mobile-mode .battle-header a,.versus-page.mobile-mode .battle-tools button{background:#2a4f5e;border:1px solid #69878d;box-shadow:none;border-radius:7px;font-size:14px}
+.versus-page.mobile-mode .arena{height:690px;margin-bottom:calc(var(--arena-height) - 690px);border-radius:10px}
+.versus-page.mobile-mode .arena .battle-dock,.versus-page.mobile-mode .arena .teacher-strip,.versus-page.mobile-mode .arena .battle-touch{display:none!important}
+.versus-page.mobile-mode .mobile-vs-controls{margin-top:11px}
+.versus-page.mobile-mode .arena-slot:first-child .mobile-vs-controls{border-top:3px solid var(--p1)}
+.versus-page.mobile-mode .arena-slot:last-child .mobile-vs-controls{border-top:3px solid var(--p2)}
+.versus-page.mobile-mode .battle-footer{font-family:var(--ui-font);font-size:12px;color:#c8dadb;text-shadow:none;gap:4px}
+.versus-page.mobile-mode .setup-card h2{font-size:26px}.versus-page.mobile-mode .setup-description{line-height:1.6}.versus-page.mobile-mode .teacher-choice span{font-size:11px}
+@media(orientation:landscape) and (min-width:640px){body.mobile-mode:not(.versus-page) #deviceLayout{gap:12px;align-items:stretch;padding:0 8px}body.mobile-mode:not(.versus-page) #mobileControls{display:flex;flex-direction:column;min-height:calc(100dvh - 58px);max-height:calc(100dvh - 52px);padding:12px}body.mobile-mode:not(.versus-page) .math-readout{flex:1;display:flex;flex-direction:column}body.mobile-mode:not(.versus-page) .readout-equation{flex:1;display:flex;align-items:center;justify-content:center;flex-wrap:wrap}body.mobile-mode:not(.versus-page) .mobile-actions{grid-template-columns:44px minmax(55px,.8fr) 44px minmax(72px,1.2fr);gap:5px}body.mobile-mode:not(.versus-page) .touch-hud{margin-bottom:8px}body.mobile-mode:not(.versus-page) .mobile-info{padding:5px 9px;margin-bottom:9px;min-height:43px}body.mobile-mode:not(.versus-page) .teacher-chip img{width:30px;height:37px}body.mobile-mode:not(.versus-page) #mobileProgress{font-size:12px}body.mobile-mode:not(.versus-page) .teacher-chip span{font-size:13px}body.mobile-mode:not(.versus-page) .mobile-tip{margin-top:8px}}
+@media(max-width:370px){.mobile-actions{grid-template-columns:44px minmax(60px,.8fr) 44px minmax(88px,1.3fr);gap:5px}.teacher-chip span,.teacher-chip strong{font-size:14px}.touch-ammo{min-width:82px;padding:6px 8px}#mobileProgress{font-size:12px}}
+@media(prefers-reduced-motion:reduce){#mobileControls button,.mobile-vs-controls button{transition:none}}
+
+.device-brand{font-weight:800;font-size:15px!important}.device-brand small{font:11px/1.2 var(--ui-font);font-weight:500;color:#c0d9de;background:#2b5260;border-radius:4px;padding:3px 5px;margin-left:5px;vertical-align:middle}.mobile-mode .danger{font-size:30px!important;line-height:36px;border-top-width:4px!important}.mobile-mode .battle-danger{font-size:23px!important;line-height:29px}
+@media(orientation:landscape) and (min-width:640px){body.mobile-mode:not(.versus-page) #mobileControls{padding:9px}body.mobile-mode:not(.versus-page) .touch-hud{margin-bottom:6px;padding-bottom:4px}body.mobile-mode:not(.versus-page) .teacher-chip img{height:28px;width:25px}body.mobile-mode:not(.versus-page) .mobile-info{min-height:36px;margin-bottom:7px;padding:3px 8px}body.mobile-mode:not(.versus-page) .mobile-info #mobileLoaded{font-size:25px}body.mobile-mode:not(.versus-page) .mobile-ops button{min-height:44px}body.mobile-mode:not(.versus-page) .mobile-actions{margin:8px 0}body.mobile-mode:not(.versus-page) .mobile-actions button{min-height:46px;font-size:14px!important}body.mobile-mode:not(.versus-page) .mobile-actions button:last-child{min-height:48px;font-size:17px!important}body.mobile-mode:not(.versus-page) .math-readout{padding:8px;min-height:96px}body.mobile-mode:not(.versus-page) .math-readout>header{font-size:14px;padding-bottom:5px}body.mobile-mode:not(.versus-page) .readout-equation{padding:5px 0;min-height:34px;font-size:20px;line-height:1.4}body.mobile-mode:not(.versus-page) #mobileFeedback{font-size:12px;padding-top:5px;line-height:1.4}body.mobile-mode:not(.versus-page) .mobile-tip{display:none}}
+/* Place the warning label away from the cannon while keeping the same collision line. */
+.danger,.battle-danger{text-align:left!important;padding-left:18px}

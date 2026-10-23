@@ -140,3 +140,10 @@ context.document.body=new Element('body');context.document.body.classList.contai
 run('setDeviceMode(true)');assert.equal(ids.deviceToolbar.hidden,false);assert.equal(ids.mobileControls.hidden,false);assert.equal(ids.overlay.parent,context.document.body);assert.equal(run('mobileMode'),true);
 ids.mobileValue.events.focus();assert.equal(run('mobileInputEditing'),true);ids.mobileValue.value='-1/2';ids.mobileValue.events.input();assert.equal(ids.ammoValue.value,'-1/2');ids.mobileValue.events.blur();assert.equal(run('mobileInputEditing'),false);run('setDeviceMode(false)');assert.equal(ids.overlay.parent,ids.stage);assert.equal(ids.mobileControls.hidden,true);
 console.log('PASS: v11 mobile opening, collision geometry, input pause, portrait/landscape fit, real mobile script boot, menu relocation, native input sync and desktop return.');
+
+// v12 fixed readout preserves stacked-fraction DOM and avoids rebuilding unchanged content.
+Object.defineProperty(Element.prototype,'childNodes',{get(){return this.children},configurable:true});
+Element.prototype.cloneNode=function(deep){const c=new Element(this.tagName);c.className=this.className;c.attrs={...this.attrs};c._text=this._text;if(deep)c.append(...this.children.map(n=>n.cloneNode(true)));return c;};
+run('setDeviceMode(true);renderMath(document.querySelector("#teachingMath"),"x = -1/2");syncMobileHud()');
+const copiedFraction=ids.mobileMath.children.find(n=>n.className==='stack-frac');assert(copiedFraction,'fixed readout must contain a real stacked fraction');assert.equal(copiedFraction.children[0].textContent,'1');assert.equal(copiedFraction.children[1].textContent,'2');assert.notEqual(copiedFraction,ids.teachingMath.children.find(n=>n.className==='stack-frac'));run('syncMobileHud()');assert.equal(ids.mobileMath.children.find(n=>n.className==='stack-frac'),copiedFraction);
+run('setDeviceMode(false)');console.log('PASS: v12 fixed board preserves fraction DOM, keeps the source intact and caches unchanged frames.');

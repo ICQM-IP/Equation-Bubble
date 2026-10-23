@@ -3,13 +3,20 @@
 const mobileVersus=document.body.classList.contains('versus-page');
 let mobileEditor=null;
 const mobileOverlayParent=document.querySelector('#overlay')?.parentElement;
+function mirrorMath(sourceId,targetId){
+ const source=document.querySelector(sourceId),target=document.querySelector(targetId);if(!source||!target)return;
+ const signature=source.innerHTML??source.textContent;if(target._mathSignature===signature)return;target._mathSignature=signature;
+ if(!source.textContent){target.textContent='命中後顯示運算步驟';target.classList.add('waiting');return;}
+ target.classList.remove('waiting');
+ if(source.childNodes&&typeof source.cloneNode==='function')target.replaceChildren(...Array.from(source.childNodes,n=>n.cloneNode(true)));else target.textContent=source.textContent;
+}
 function syncMobileHud(){
  if(!mobileMode)return;
  document.querySelector('#deviceStatus').textContent=mobileInputEditing?'輸入中：場面暫停':'';
  if(mobileVersus){
   if(!match)return;
   for(const p of match.players){const i=p.index;
-   document.querySelector('#vsMobileLoaded'+i).textContent=p.ammo().label;
+   document.querySelector('#vsMobileLoaded'+i).textContent=p.ammo().label;document.querySelector('#vsMobileName'+i).textContent=document.querySelector('#name'+i).textContent;document.querySelector('#vsMobileTeacher'+i).src=document.querySelector('#avatar'+i).src;mirrorMath('#math'+i,'#vsMobileMath'+i);
    document.querySelector('#vsMobileMessage'+i).textContent=p.message;
    document.querySelector('#vsMobileHint'+i).textContent='提示 '+Math.min(3,p.hintLevel+1)+'/3';
    document.querySelector('#vsMobileLabel'+i).hidden=!match.challenge;
@@ -19,7 +26,7 @@ function syncMobileHud(){
   }
  }else{
   document.querySelector('#mobileLoaded').textContent=loaded?.label||'選擇運算';
-  document.querySelector('#mobileProgress').textContent='♥ '+lives+' · 第 '+level+' 關 · '+cleared+'/4';
+  document.querySelector('#mobileProgress').textContent=score+' 分 · ♥ '+lives+' · 第 '+level+' 關 · '+cleared+'/4';document.querySelector('#mobileTeacherIcon').src=document.querySelector('#teacher').src;document.querySelector('#mobileTeacherName').textContent=String(document.querySelector('#teacher').alt||'').replace(' 指導老師','');mirrorMath('#teachingMath','#mobileMath');
   document.querySelector('#mobileFeedback').textContent=document.querySelector('#speech').textContent;
   document.querySelector('#mobileHint').textContent='提示 '+Math.min(3,hintLevel+1)+'/3';
   document.querySelector('#mobileValueLabel').hidden=!challenge;
