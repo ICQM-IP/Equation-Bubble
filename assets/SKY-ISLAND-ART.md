@@ -1,0 +1,1 @@
+Sky Island v9 background generated with ImageGen from the approved single/versus concept. Environment-only pixel landscape; no embedded UI or equations. Shared by both modes; UI remains separate HTML/CSS. Teachers retain the existing right-pointing roster.

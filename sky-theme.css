@@ -1,0 +1,48 @@
+/* Shared v9 art direction. Physics coordinates remain independent of scenery. */
+:root{--wood:repeating-linear-gradient(0deg,#ffffff08 0 3px,transparent 3px 12px),linear-gradient(#a66d38,#69401f);--gold:#edbc6b;--ink:#32251c}
+.scene,.battle-backdrop{background:#59c6f5 url('assets/sky-island-v9.png') center/cover no-repeat;filter:none;image-rendering:pixelated}
+.sky-title,.battle-header{background:var(--wood);border:5px solid var(--gold);box-shadow:inset 0 0 0 4px #603719,0 5px 0 var(--ink);color:#ffe785;text-shadow:3px 3px #302117}
+.sky-title{position:absolute;left:430px;top:13px;width:812px;height:92px;text-align:center;font-size:47px;font-weight:1000;letter-spacing:-2px;line-height:1.15;padding:5px;z-index:2}
+.sky-title em{font-style:normal;color:#7de5ff}.sky-title small{display:block;font-size:13px;letter-spacing:4px;color:#fff4d2;text-shadow:2px 2px #302117}
+.sky-frame{position:absolute;left:374px;top:112px;width:856px;height:676px;border:9px solid #96602e;outline:3px solid #34271c;box-shadow:inset 0 0 0 3px #f0c67c,0 0 0 4px #edba67;background:#8adaf529;pointer-events:none;z-index:-1}
+.sky-frame:before,.sky-frame:after{content:'✦';position:absolute;top:-13px;color:#ffe497;font-size:27px;text-shadow:2px 2px #55341c}.sky-frame:before{left:-14px}.sky-frame:after{right:-14px}
+.sky-dock{position:absolute;left:100px;right:100px;top:795px;height:132px;background:var(--wood);border:5px solid var(--gold);box-shadow:inset 0 0 0 5px #663b20,0 5px #30251b}
+.score{left:35px;top:22px;width:295px;height:65px;padding:9px 9px 9px 100px;background:var(--wood);border:4px solid var(--gold);font-size:32px;letter-spacing:0}.score:before{content:'SCORE';position:absolute;left:12px;top:17px;font-size:20px;color:#fff4d2}
+.stage-number{left:1280px;top:22px;width:120px;height:65px;padding:15px 8px 8px 65px;font-size:27px;background:var(--wood);border:4px solid var(--gold)}.stage-number:before{content:'STAGE';position:absolute;left:6px;top:23px;font-size:13px;color:#fff4d2}
+.hearts{left:1410px;top:26px;font-size:32px;background:#52351eea;border:3px solid var(--gold);padding:7px}#pause{top:28px}
+.teacher-sprite{left:145px;top:551px;width:219px;height:235px}.speech{left:87px;top:438px;width:274px;height:86px;background:#fff4d8;border:4px solid #a8783f;box-shadow:3px 4px #392c20;border-radius:13px;font-size:19px}.speech:after{content:'';position:absolute;bottom:0;left:30px}
+#teaching{left:1260px;top:561px;width:370px;height:160px;background:#fff1d3;border:5px solid #c59550;box-shadow:inset 0 0 0 3px #ffe3a9,4px 5px #53351f;padding:12px;border-radius:7px;font-size:19px}.math-step{font-size:22px;gap:4px}.math-step.small{font-size:17px}.teaching-heading{font-size:11px}
+.aux{left:35px;top:115px}.aux button,.aux-versus,.battle-tools button,.battle-header a{background:#304d62;border:2px solid #edd19b;box-shadow:2px 3px #253544;color:#fff8df}
+.battle-header{height:90px;margin:0 15px;padding:8px 17px}.battle-header h1{color:#ffe785;font-size:31px}.battle-header h1 em{color:#7ee3ff}.battle-header small{color:#fff0c9}
+.arena{background:var(--wood);border-color:#8c592d;outline-color:#f2cc80;box-shadow:inset 0 0 0 3px #d6a85d,0 6px #3b291c}
+.battle-field{background:linear-gradient(#9cdfff16,#99ddff16),url('assets/sky-island-v9.png') center/cover;box-shadow:inset 0 0 0 3px #dbb16e}.battle-field:after{display:none}
+.player-hud{background:#50351fea;border-bottom-color:#ecc67d}.p1 .player-hud{box-shadow:inset 4px 0 #68deff}.p2 .player-hud{box-shadow:inset 4px 0 #ff829d}
+.battle-dock{background:var(--wood);border-color:#e8b96e}.teacher-strip{background:#5a3c24eb;border-color:#d3aa69}.teacher-bubble{background:#fff1d3;border-color:#c59550}.battle-teacher{width:96px;height:103px;top:-16px}
+.overlay,.setup-card{background:linear-gradient(#234b60f5,#19364aF5);border-color:#edbf73;box-shadow:inset 0 0 0 4px #644126,5px 6px #263b39}.menu h1,.setup-card h2{color:#ffe08a}.teacher-choice{border-color:#dbb16f;background:linear-gradient(#7ec7ce,#386876)}.teacher-choice.chosen{border-color:#ffe96e}
+#ops .orb,.battle-ops .orb{--control-top:#bdffd9;--control-mid:#24cb69;--control-dark:#087339;--control-rim:#a7ffd1}
+#ops .red,.battle-ops .red{--control-top:#ffd0e0;--control-mid:#f34b7d;--control-dark:#a81849;--control-rim:#ffb6ce}
+#ops .blue,.battle-ops .blue{--control-top:#d3f5ff;--control-mid:#239cfa;--control-dark:#1559a9;--control-rim:#9ce5ff}
+#ops .purple,.battle-ops .purple{--control-top:#f4d5ff;--control-mid:#b35beb;--control-dark:#642b9c;--control-rim:#e2b5ff}
+#ops .orange,.battle-ops .orange{--control-top:#fff1ba;--control-mid:#ff9f2e;--control-dark:#b85a0e;--control-rim:#ffe293}
+#ops .orb:before,.battle-ops .orb:before{filter:none;border-radius:50%;border:3px solid var(--control-rim);background:radial-gradient(ellipse at 29% 20%,#ffffffed 0 4%,transparent 10%),radial-gradient(ellipse at 37% 30%,var(--control-top),var(--control-mid) 42%,var(--control-dark) 83%);box-shadow:inset 2px 3px 1px #ffffff88,inset -3px -5px 2px #10213566,0 3px 0 #15202c}
+#ops .orb.active:after,.battle-ops .active:after{border-color:#ffe45f;box-shadow:0 0 12px #fff284;border-radius:12px}
+.battle-guide path,#trajectory path{stroke:#edff9f}.battle-footer{color:#fff9dd;text-shadow:2px 2px #243e50}
+
+/* v9.1: expanded solo arena and shared readable feedback. */
+#field{left:276px;width:1120px}.sky-frame{left:260px;width:1152px}
+.teacher-sprite{left:87px;top:600px;width:175px;height:185px}.speech{left:33px;top:476px;width:220px;height:99px;font-size:17px}.speech.long{font-size:15px}
+#teaching{left:1425px;top:474px;width:224px;height:260px;padding:10px;font-size:17px}.math-step{flex-wrap:wrap;font-size:19px}.math-step.small{font-size:16px}.teaching-heading{font-size:10px;letter-spacing:1px}
+#teaching.near-equation{width:528px;height:auto;min-height:76px;max-height:150px;z-index:14;pointer-events:none;padding:7px 12px;box-shadow:0 0 18px #fff4a877,3px 4px #51351f}.near-equation .teaching-heading{display:none}.near-equation .math-step{font-size:25px;flex-wrap:wrap}.near-equation .math-step.small{font-size:20px}
+.overlay{left:276px;right:276px}.touch{left:490px}
+.aim-ready{outline:3px solid #fff28a!important;outline-offset:1px!important;filter:drop-shadow(0 0 8px #ffef66)!important}.battle-row .orb.aim-ready{outline-width:3px!important}
+.floating-balance{position:absolute;z-index:15;width:470px;min-height:66px;padding:9px 12px;background:#fff2d9f5;border:3px solid #d3a15e;border-radius:8px;color:#2f291e;box-shadow:3px 4px #4d3428,0 0 12px #ffe38677;font-size:22px;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;pointer-events:none}.floating-balance mark{background:#ffe15c;padding:3px;border:1px solid #e4ae30;border-radius:4px;animation:arrive .25s steps(4)}
+.score-flight{position:absolute;z-index:19;color:#fff078;font-size:39px;font-weight:1000;text-shadow:3px 3px #3b2b22;pointer-events:none;animation:score-to-hud .85s ease-in both}.vs-score-flight{left:380px;top:350px;font-size:32px;animation-name:vs-score-to-hud}
+@keyframes score-to-hud{0%{opacity:0;transform:scale(.7)}18%{opacity:1;transform:scale(1.2)}85%{opacity:1}100%{opacity:0;transform:translate(-600px,-350px) scale(.5)}}
+@keyframes vs-score-to-hud{0%{opacity:0;transform:scale(.7)}18%{opacity:1;transform:scale(1.2)}85%{opacity:1}100%{opacity:0;transform:translate(-75px,-320px) scale(.5)}}
+.impact-flash{animation:hit-light .3s ease-out}.row.operation{filter:drop-shadow(0 0 13px #fff4a2)}@keyframes hit-light{40%{box-shadow:inset 0 0 30px #fff8aa}}
+.p1 .player-hud{border-left:6px solid #65dcff}.p2 .player-hud{border-left:6px solid #ff829d}.p1{outline-color:#8ddcf1}.p2{outline-color:#f2a0ad}
+.incoming{top:58px;left:370px;font-size:14px;letter-spacing:0}.incoming.danger-incoming{background:#823746f2;border:2px solid #ffe18c;color:#fff1af}
+.aux button,.aux-versus,.battle-tools button,.battle-header a,.player-controls button,.result-actions>a,.result-actions button:not(.start-button){background:var(--wood);border:2px solid #edc47f;box-shadow:inset 0 0 0 2px #684125,2px 3px #32251e;border-radius:3px;color:#fff3d2}
+.sky-title,.battle-header h1,.menu h1,.setup-card h2{font-family:Consolas,'Courier New',monospace;font-weight:1000;letter-spacing:-1px;text-shadow:3px 3px #352415,-1px -1px #352415}
+.arena:before,.arena:after{content:'◆';position:absolute;top:-11px;color:#ffda86;text-shadow:2px 2px #5d3a24;font-size:23px;z-index:10;pointer-events:none}.arena:before{left:-10px}.arena:after{right:-10px}
+@media(prefers-reduced-motion:reduce){.score-flight{animation:none;display:none}.impact-flash{animation:none}}

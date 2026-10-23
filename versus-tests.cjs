@@ -1,0 +1,28 @@
+'use strict';
+const assert=require('node:assert/strict'),M=require('./math.js'),V=require('./versus-engine.js'),roster=require('./characters.js');
+const play=(options={})=>{const match=new V.Match({seed:101,level:2,...options});match.countdown=0;return match};
+const advance=(match,seconds)=>{for(let i=0;i<Math.ceil(seconds/.025);i++)match.step(.025)};
+function directMove(match,index,row,move){const p=match.players[index];const node=row.nodes.find(n=>V.terms(row.e).some(t=>t.key===n.key)&&(move.target===n.key||move.target==='fraction'&&row.e[n.key[0]]?.[n.key[1]]?.d>1n));assert(node,'valid target exists');p.impact({row,node},{ammo:move,bounces:0});advance(match,.85)}
+function solveRow(match,index,row){let steps=0;while(match.players[index].rows.includes(row)&&steps++<12){directMove(match,index,row,M.moves(row.e)[0])}assert(steps<12,'no mathematical softlock')}
+assert.equal(roster.length,5);assert.deepEqual(roster.map(t=>t.name),['Ms. Tong','Mr. IP','Yeung Sir','Mr. Kwok','Ip Sir']);
+let match=play({teachers:[4,4]});assert.equal(match.players[0].teacher,4);assert.equal(match.players[1].teacher,4);for(let i=0;i<4;i++){assert.equal(V.equationText(match.players[0].rows[i].e),V.equationText(match.players[1].rows[i].e));assert.equal(match.players[0].rows[i].special,match.players[1].rows[i].special)}
+assert.notEqual(match.players[0].rows[0].e,match.players[1].rows[0].e);assert.notEqual(match.players[0].rows[0].e.l,match.players[1].rows[0].e.l);
+// Fully solving a star equation creates exactly one incoming attack, never two.
+match=play();const p=match.players[0],q=match.players[1],star=p.rows[0],beforeOther=q.rows.map(r=>V.equationText(r.e));assert(star.special);solveRow(match,0,star);assert.equal(p.sent,1);assert.equal(p.specialClears,1);assert.equal(q.incoming.length,1);assert.equal(q.rows.length,4);assert.deepEqual(q.rows.map(r=>V.equationText(r.e)),beforeOther);advance(match,1);assert.equal(q.incoming.length,0);assert.equal(q.rows.length,5);assert.equal(q.received,1);const incoming=q.rows.find(r=>r.attack);assert(incoming);assert.equal(incoming.special,false);assert(!M.solved(incoming.e));assert(M.verify(incoming.original,M.solution(incoming.e)));
+// An ordinary solved equation and an invalid hit must never send attacks.
+match=play();const ordinary=match.players[0].rows.find(r=>!r.special);solveRow(match,0,ordinary);assert.equal(match.players[0].sent,0);assert.equal(match.players[1].incoming.length,0);const target=match.players[0].rows[0];const snapshot=V.equationText(target.e);match.players[0].impact({row:target,node:target.nodes.find(n=>n.key!=='equals')},{ammo:{op:'÷',kind:'scale',v:M.q(0)},bounces:0});assert.equal(V.equationText(target.e),snapshot);assert.equal(match.players[0].sent,0);
+// Pausing freezes both players, animations, countdown and attack delivery.
+match=play();match.attack(0);match.players.forEach(p=>p.hint());match.players.forEach(p=>p.fire());const bullets=match.players.map(p=>p.bullet.y),ys=match.players.map(p=>p.rows[0].y),delay=match.players[1].incoming[0].delay;match.pause();advance(match,3);assert.deepEqual(match.players.map(p=>p.bullet.y),bullets);assert.deepEqual(match.players.map(p=>p.rows[0].y),ys);assert.equal(match.players[1].incoming[0].delay,delay);match.pause();advance(match,.2);assert(match.players.some((p,i)=>p.bullet===null||p.bullet.y<bullets[i]));
+// Independent angles and ammo selections, simultaneous real projectiles.
+match=play();match.players[0].hint();match.players[1].hint();const op1=match.players[1].op;match.players[0].cycle(1);assert.equal(match.players[1].op,op1);match.players[0].hint();assert(match.players[0].fire());assert(match.players[1].fire());advance(match,1.8);assert(match.players.every(p=>p.score>0));assert(match.players.every(p=>p.rows.every(r=>M.verify(r.original,M.solution(r.e)))));
+// Life loss has a grace interval; a simultaneous knockout is a draw.
+match=play();match.players[0].rows[0].y=V.LINE-65;match.step(.025);assert.equal(match.players[0].lives,2);assert(match.players[0].grace>0);const safeY=match.players[0].rows[0].y;advance(match,.5);assert.equal(match.players[0].rows[0].y,safeY);assert.equal(match.players[1].lives,3);
+match=play();match.players.forEach(p=>{p.lives=1;p.rows[0].y=V.LINE-65});match.step(.025);assert.equal(match.status,'ended');assert.equal(match.winner,null);
+match=play();match.players[1].lives=1;match.players[1].rows[0].y=V.LINE-65;match.step(.025);assert.equal(match.status,'ended');assert.equal(match.winner,0);assert(match.players.every(p=>p.bullet===null&&p.phase===null&&p.incoming.length===0));
+// Full boards retain pending attacks instead of overlapping or losing them.
+match=play();while(match.players[1].rows.length<12)match.players[1].spawn({attack:true});match.attack(0);advance(match,1);assert.equal(match.players[1].rows.length,12);assert.equal(match.players[1].incoming.length,1);
+// Fresh rounds do not inherit old bullets or attacks.
+const old=play();old.attack(0);old.players[0].fire();const fresh=play({seed:202});assert(fresh.players.every(p=>p.incoming.length===0&&p.bullet===null&&p.score===0));
+// All five equation types can be solved using the same strict single-player rules.
+for(let level=1;level<=5;level++){for(let seed=1;seed<=15;seed++){const m=play({level,seed});const row=m.players[0].rows[0];solveRow(m,0,row);assert.equal(m.players[0].clears,1);assert.equal(m.players[0].sent,1)}}
+console.log('PASS: five teachers; shared fair opening; separate player state; verified star clear sends exactly one equation; ordinary/invalid moves cannot attack; delayed queue; pause; simultaneous controls/projectiles; grace; win/draw; capacity; clean rematch; all five math levels (75 attack solves).');
