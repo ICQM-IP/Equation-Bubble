@@ -29,3 +29,8 @@ console.log('PASS: all ten operation controls use resolution-independent SVG ico
 
 for(const teacher of require('./characters.js'))assert(teacher.image==='assets/teacher.png'||teacher.image.endsWith('-point-right.png'));
 console.log('PASS: all five screens use the pointing teacher roster; Yeung Sir retained and four edited right-pointing assets present.');
+
+run('mobileMode=true;innerWidth=390;fitBattle()');assert.equal(ids.battleStage.style.transform,'none');assert.equal(ids.battleViewport.style.width,'100%');assert(+ids.battleStage.style['--arena-scale']<1);
+run('begin();mobileInputEditing=true');const mobileCountdown=run('match.countdown');advance(20);assert.equal(run('match.countdown'),mobileCountdown);run('mobileInputEditing=false');advance(10);assert(run('match.countdown')<mobileCountdown);
+run('mobileMode=false;fitBattle()');assert.equal(ids.battleStage.style.width,'1672px');
+console.log('PASS: v11 stacked mobile arena scaling; native editing freezes both countdowns; desktop layout restores.');

@@ -129,3 +129,14 @@ ids.learningMode.value='assist';run('preparePair();cleared=3;rows[0].original=M.
 // A cluster of equations crossing the line loses only one heart during grace.
 run('preparePair();frantic=true;practice=false;rows[0].lane=0;rows[1].lane=1;for(const r of rows)r.y=LIMIT;descend(.05)');assert.equal(run('lives'),2);assert.equal(run('graceTimer'),1.8);run('descend(1)');assert.equal(run('lives'),2);
 console.log('PASS: v10 staged reachable hints; challenge validation and immutable shot operand; typing preserves input; clean stage transitions; single-life cluster protection.');
+
+// v11 mobile core: larger one-column targets and stable pointer geometry.
+run('mobileMode=true;reset()');assert.equal(run('rows.length'),2);assert(run('rows.every(r=>r.lane===0&&r.height===132)'));assert.equal(run('PACE.maxRows'),4);run('hint(true);launch()');step(120);assert.equal(run('score'),10);
+// Input editing freezes physics, bullets and animation without opening an overlay.
+run('reset();mobileInputEditing=true;practice=false');const mobileY=run('JSON.stringify(rows.map(r=>r.y))');step(20);assert.equal(run('JSON.stringify(rows.map(r=>r.y))'),mobileY);run('mobileInputEditing=false');step(5);assert.notEqual(run('JSON.stringify(rows.map(r=>r.y))'),mobileY);
+run('innerWidth=390;innerHeight=844;fit()');assert.equal(ids.stage.style.width,'1120px');assert.equal(ids.viewport.style.width,'390px');run('innerWidth=844;innerHeight=390;fit()');assert(parseFloat(ids.viewport.style.height)<=334);assert(parseFloat(ids.viewport.style.width)<=558);
+// Load the actual mobile bridge against this DOM fixture, including native input focus.
+context.document.body=new Element('body');context.document.body.classList.contains=x=>context.document.body.className.split(' ').includes(x);ids.overlay.parentElement=ids.stage;ids.stage.append(ids.overlay);run('mobileMode=false;busy=false;phase=null;bullet=null');vm.runInContext(fs.readFileSync(__dirname+'/mobile.js','utf8'),context);
+run('setDeviceMode(true)');assert.equal(ids.deviceToolbar.hidden,false);assert.equal(ids.mobileControls.hidden,false);assert.equal(ids.overlay.parent,context.document.body);assert.equal(run('mobileMode'),true);
+ids.mobileValue.events.focus();assert.equal(run('mobileInputEditing'),true);ids.mobileValue.value='-1/2';ids.mobileValue.events.input();assert.equal(ids.ammoValue.value,'-1/2');ids.mobileValue.events.blur();assert.equal(run('mobileInputEditing'),false);run('setDeviceMode(false)');assert.equal(ids.overlay.parent,ids.stage);assert.equal(ids.mobileControls.hidden,true);
+console.log('PASS: v11 mobile opening, collision geometry, input pause, portrait/landscape fit, real mobile script boot, menu relocation, native input sync and desktop return.');
