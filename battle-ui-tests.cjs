@@ -34,3 +34,6 @@ run('mobileMode=true;innerWidth=390;fitBattle()');assert.equal(ids.battleStage.s
 run('begin();mobileInputEditing=true');const mobileCountdown=run('match.countdown');advance(20);assert.equal(run('match.countdown'),mobileCountdown);run('mobileInputEditing=false');advance(10);assert(run('match.countdown')<mobileCountdown);
 run('mobileMode=false;fitBattle()');assert.equal(ids.battleStage.style.width,'1672px');
 console.log('PASS: v11 stacked mobile arena scaling; native editing freezes both countdowns; desktop layout restores.');
+
+ids.battleTurbo.checked=true;ids.battleDuration.value='180';run('begin();match.countdown=0');assert.equal(run('match.turbo'),true);assert.equal(run('match.players[0].rows.length'),2);key('r');assert.equal(run('match.players[0].rescueUsed'),true);assert.equal(run('match.players[1].rescueUsed'),false);key('/');assert.equal(run('match.players[1].rescueUsed'),true);run('fitBattle()');assert.equal(ids.battleStage.style.height,'1290px');run('begin();match.countdown=0');assert.equal(run('match.players[0].rescueUsed'),false);
+console.log('PASS: turbo UI configuration, independent rescue keys, clean rematch and desktop height.');
