@@ -3,3 +3,4 @@
 .turbo-active .cannon,.turbo-active .battle-cannon{filter:drop-shadow(0 0 calc(var(--heat,0)*2px) #ffb34f)}
 body:not(.mobile-mode):not(.versus-page) #teaching,body:not(.mobile-mode):not(.versus-page) #teaching.near-equation{top:155px!important;height:710px!important}
 body:not(.mobile-mode):not(.versus-page) #teaching #sideFeedback{position:absolute;left:16px;right:16px;bottom:280px!important;margin:0;font-size:17px;padding:10px}
+.effects-off .impact-flash,.effects-off .hit-attack,.effects-off .clear-kick,.effects-off .victory-impact{animation:none!important}

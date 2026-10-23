@@ -34,4 +34,4 @@ function excitementEvent(e){const enabled=excitementBattle?!!match?.turbo:turbo;
  const packet=document.createElement('div');packet.className='duel-flight';packet.textContent=(e.bounces?'↩':'⚔')+' ×'+e.strength;packet.setAttribute('aria-hidden','true');const from=document.querySelector('#field'+i).getBoundingClientRect(),to=document.querySelector('#field'+(1-i)).getBoundingClientRect();const x=from.left+from.width/2,y=Math.min(innerHeight-35,Math.max(35,from.top+from.height/2));packet.style.left=x+'px';packet.style.top=y+'px';packet.style.setProperty('--flight-x',(to.left+to.width/2-x)+'px');packet.style.setProperty('--flight-y',(Math.min(innerHeight-35,Math.max(35,to.top+to.height/2))-y)+'px');document.body.append(packet);setTimeout(()=>packet.remove(),850);
  }
 }
-const excitementCSS=document.createElement('link');excitementCSS.rel='stylesheet';excitementCSS.href='excitement.css?v=140';document.head.append(excitementCSS);updateExcitement();
+const excitementCSS=document.createElement('link');excitementCSS.rel='stylesheet';excitementCSS.href='excitement.css?v=141';document.head.append(excitementCSS);updateExcitement();
