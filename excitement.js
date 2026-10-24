@@ -21,7 +21,7 @@ function updateExcitement(){
  if(enabled&&active&&!mobileInputEditing&&excitementMusic&&sound){const elapsed=excitementBattle?match.elapsed:sessionElapsed,beat=Math.floor(elapsed/(finale?.18:.34));if(beat!==lastBeat){lastBeat=beat;const notes=finale?[440,554,659,880,659,554]:[220,330,440,330];if(excitementBattle)tone(notes[beat%notes.length]);else beep(notes[beat%notes.length]);}}
  lastFrenzy=finale;
 }
-function excitementEvent(e){const enabled=excitementBattle?!!match?.turbo:turbo;if(!enabled)return;
+function excitementEvent(e){if(typeof teacherEvent==='function')teacherEvent(e);const enabled=excitementBattle?!!match?.turbo:turbo;if(!enabled)return;
  const i=e.player||0,field=document.querySelector(excitementBattle?'#field'+i:'#field');
  if(e.type==='fire'){const cannon=document.querySelector(excitementBattle?'#cannon'+i:'#cannon');cannon.classList.remove('turbo-recoil');void cannon.offsetWidth;cannon.classList.add('turbo-recoil');}
  if(['clear','rescue','attack-reflect','frenzy','chain'].includes(e.type)){

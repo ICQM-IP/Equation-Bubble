@@ -1,0 +1,5 @@
+const assert=require('node:assert/strict'),{Controller,eventAction,ACTIONS}=require('./teacher-motion.js');
+for(const action of Object.keys(ACTIONS)){const c=new Controller();assert(c.play(action,{force:true}));assert.equal(c.action,action);}
+const c=new Controller();c.play('rescue');assert.equal(c.play('fire'),false);assert.equal(c.action,'rescue');const t=c.clock,left=c.left;c.step(.5,{paused:true});assert.equal(c.clock,t);assert.equal(c.left,left);c.step(2);assert.equal(c.action,'idle');c.step(.1,{danger:true});assert.equal(c.action,'danger');c.step(.1,{aim:-30});assert.equal(c.action,'aim');assert.equal(c.direction,-1);
+assert.equal(eventAction({type:'clear'},1),'clear');assert.equal(eventAction({type:'clear'},2),'clap');assert.equal(eventAction({type:'clear'},4),'pump');for(const type of ['fire','hit','miss','rescue','attack-send','attack-reflect','attack-cancel','attack-receive','life-loss'])assert(eventAction({type}));
+console.log('PASS: 16 teacher actions, event mapping, escalating chains, rescue priority, expiry, pause and aim direction.');
