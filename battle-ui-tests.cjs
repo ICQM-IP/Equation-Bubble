@@ -42,3 +42,16 @@ console.log('PASS: turbo UI configuration, independent rescue keys, clean rematc
 run('const excitementBattle=true;let excitementEffects=false;');const excitementSource=fs.readFileSync(__dirname+'/excitement.js','utf8');vm.runInContext(excitementSource.slice(excitementSource.indexOf('function excitementEvent(e)'),excitementSource.indexOf('\nconst excitementCSS')),ctx);
 run('begin();match.countdown=0;match.players[0].chain=2;match.events.push({type:"clear",player:0,x:"2",points:200,y:100,special:false},{type:"chain",player:0,chain:2});events()');assert.equal(ids.effects0.children.filter(e=>e.className.split(' ').includes('battle-callout')).length,1);assert(ids.effects0._announcement.textContent.includes('SOLVED!'));assert(ids.effects0._announcement.textContent.includes('2 連解'));run('callout(0,"BANK SHOT!");callout(0,"rescue")');assert.equal(ids.effects0.children.filter(e=>e.className.split(' ').includes('battle-callout')).length,1);
 console.log('PASS: actual turbo and battle presenters share one non-overlapping announcement per player, including consecutive events.');
+
+// IMEs may report Process/Unidentified/non-Latin key values for Latin physical keys.
+run('begin();match.countdown=0');
+const physical=(code,key='Process',extra={})=>events.keydown({code,key,repeat:false,preventDefault(){},...extra});
+physical('KeyA');assert(run('match.players[0].held.has("left")'));
+events.keyup({code:'KeyA',key:'Unidentified'});assert(!run('match.players[0].held.has("left")'));
+physical('KeyD','ㄎ');assert(run('match.players[0].held.has("right")'));
+events.keyup({code:'KeyD',key:'Process'});assert(!run('match.players[0].held.has("right")'));
+const firstOp=run('match.players[0].op');physical('KeyW');assert.notEqual(run('match.players[0].op'),firstOp);physical('KeyS');assert.equal(run('match.players[0].op'),firstOp);
+run('match.players[0].hint(true)');physical('KeyF');assert(run('match.players[0].bullet!==null'));assert(run('match.players[1].bullet===null'));
+physical('KeyA','a',{target:{matches:()=>true}});assert(!run('match.players[0].held.has("left")'));
+physical('KeyD','d',{metaKey:true});assert(!run('match.players[0].held.has("right")'));
+console.log('PASS: physical WASDF keys work with IME/non-Latin key values; release clears holds; typing and browser shortcuts stay isolated.');

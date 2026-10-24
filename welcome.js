@@ -4,26 +4,18 @@
   const home = document.querySelector('.home-menu');
   if (!home) return;
   const byId = id => document.getElementById(id);
-  let activity = 'practice';
-  const activityButtons = [...home.querySelectorAll('[data-activity]')];
-  const setActivity = next => {
-    activity = next;
-    const practice = next === 'practice';
-    byId('practice').checked = practice;
-    byId('sessionLength').value = practice ? '0' : '180';
-    byId('soloTurbo').checked = !practice;
-    byId('fallSpeed').value = practice ? '1' : '1.6';
-    byId('gentlePace').checked = true;
-    activityButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.activity === next)));
-    refreshSummary();
-  };
+  byId('practice').checked = true;
+  byId('sessionLength').value = '0';
+  byId('soloTurbo').checked = false;
+  byId('fallSpeed').value = '1';
+  byId('gentlePace').checked = true;
   function refreshSummary() {
     const practice = byId('practice').checked;
     const timed = byId('sessionLength').value === '180';
     byId('activityNote').textContent = practice
       ? (timed ? '方程停止下降，在三分鐘內按自己的節奏解題。' : '方程停止下降，留一點時間想清楚。')
       : (timed ? '三分鐘內逐題解開方程，看看自己的進步。' : '方程持續下降，解題時也要留意危險線。');
-    const label = activity === 'timed' ? '開始挑戰' : '開始練習';
+    const label = '開始練習';
     byId('start').replaceChildren(document.createTextNode(label + ' '));
     const arrow = document.createElement('span');
     arrow.textContent = '→';
@@ -32,7 +24,12 @@
     byId('fallSpeed').disabled = practice;
     byId('soloTurbo').disabled = practice;
   }
-  activityButtons.forEach(button => button.addEventListener('click', () => setActivity(button.dataset.activity)));
+  home.querySelector('[data-activity=practice]').addEventListener('click', () => {
+    byId('practice').checked = true;
+    byId('sessionLength').value = '0';
+    byId('soloTurbo').checked = false;
+    refreshSummary();
+  });
   for (const id of ['practice', 'sessionLength']) byId(id).addEventListener('change', refreshSummary);
   const teacherPreview = () => {
     const teacher = EquationTeachers[Number(byId('singleTeacher').value)] || EquationTeachers[2];
@@ -50,6 +47,6 @@
   });
   // Avoid a game shortcut taking over while the native welcome form is open.
   home.addEventListener('keydown', event => event.stopPropagation());
-  setActivity('practice');
+  refreshSummary();
   teacherPreview();
 })();
