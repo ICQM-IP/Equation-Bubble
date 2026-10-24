@@ -21,18 +21,17 @@
         <button type="button" class="activity-card practice-card" data-activity="practice" aria-pressed="true"><span class="activity-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 9h20M16 5v22M7 10l-4 9h8l-4-9Zm18 0-4 9h8l-4-9ZM10 27h12"/></svg></span><strong>自主練習</strong><small>按自己的節奏</small><span class="activity-check" aria-hidden="true">✓</span></button>
         <a class="activity-card battle-card" href="battle.html?v=201"><span class="activity-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m6 4 22 22M26 4 4 26M4 4l2 7 5-5-7-2Zm24 0-2 7-5-5 7-2ZM4 20l8 8M20 28l8-8"/></svg></span><strong>雙人對戰</strong><small>與同學切磋</small><span class="activity-arrow" aria-hidden="true">↗</span></a>
       </nav>
-      <div class="basic-settings">
+      <input id="learningMode" type="hidden" value="assist"><div class="basic-settings">
         <label for="startLevel">練習課題<select id="startLevel"><option value="0">混合課題 · 全部五類</option><option value="1" selected>一步方程</option><option value="2">兩步方程</option><option value="3">兩邊未知數</option><option value="4">括號</option><option value="5">分數與 LCM</option></select></label>
-        <label for="learningMode">答題方式<select id="learningMode" disabled aria-label="答題方式固定為自動配數值"><option value="assist" selected>自動配數值</option></select></label>
       </div>
-      <p class="activity-note" id="activityNote" role="status">方程停止下降，留一點時間想清楚。</p>
+      <p class="activity-note" id="activityNote" role="status">方程持續下降，解題時也要留意危險線。</p>
       <button id="start" class="start-button home-start">開始練習 <span aria-hidden="true">→</span></button>
       <p class="home-route">解題路線：先消左常數、右邊 x 項，再除係數；括號先除外係數。</p>
       <details class="home-details" id="homeAdvanced"><summary>更多設定 <span>老師、速度與效果</span></summary><div class="advanced-grid">
         <label for="singleTeacher">指導老師<select id="singleTeacher"><option value="0">Ms. Tong</option><option value="1">Mr. IP</option><option value="2" selected>Yeung Sir</option><option value="3">Mr. Kwok</option><option value="4">Ip Sir</option></select></label>
         <label for="fallSpeed">下降速度<select id="fallSpeed"><option value="0.65">慢速 · 0.65×</option><option value="1" selected>標準 · 1×</option><option value="1.6">快速 · 1.6×</option><option value="2.3">極速 · 2.3×</option></select></label>
         <label for="sessionLength">練習時間<select id="sessionLength"><option value="0">不限時</option><option value="180">3 分鐘</option></select></label>
-        <label class="check-setting"><input id="practice" type="checkbox" checked> 停止下降</label>
+        <label class="check-setting"><input id="practice" type="checkbox"> 停止下降</label>
         <label class="check-setting"><input id="soloTurbo" type="checkbox"> 連擊與救援</label>
         <label class="check-setting"><input id="gentlePace" type="checkbox" checked> 較疏落的題目排列</label>
         <label class="check-setting"><input id="deviceChoice" type="checkbox"> 手提裝置操作台</label>
@@ -41,4 +40,4 @@
       <footer class="panel-footer"><span>五類課題 · 精確分數運算</span><span>SKY ISLAND EDITION</span></footer>
     </div>
   </section>
-</div><script src="math.js?v=200"></script><script src="characters.js?v=150"></script><script src="arcade.js?v=206"></script><script src="mobile.js?v=200"></script><script src="learning.js?v=206"></script><script src="excitement.js?v=200"></script><script src="teacher-motion.js?v=203"></script><script src="welcome.js?v=205"></script><script src="arcade-art.js?v=203"></script><script src="mentor-entrance.js?v=204"></script></body></html>
+</div><script src="math.js?v=200"></script><script src="characters.js?v=150"></script><script src="arcade.js?v=207"></script><script src="mobile.js?v=200"></script><script src="learning.js?v=206"></script><script src="excitement.js?v=200"></script><script src="teacher-motion.js?v=203"></script><script src="welcome.js?v=207"></script><script src="arcade-art.js?v=203"></script><script src="mentor-entrance.js?v=204"></script></body></html>
