@@ -6,7 +6,7 @@
   const byId = id => document.getElementById(id);
   byId('practice').checked = false;
   byId('sessionLength').value = '0';
-  byId('soloTurbo').checked = false;
+  byId('soloTurbo').checked = true;
   byId('fallSpeed').value = '1.6';
   byId('gentlePace').checked = true;
   function refreshSummary() {
@@ -27,7 +27,7 @@
   home.querySelector('[data-activity=practice]').addEventListener('click', () => {
     byId('practice').checked = false;
     byId('sessionLength').value = '0';
-    byId('soloTurbo').checked = false;
+    byId('soloTurbo').checked = true;
     refreshSummary();
   });
   for (const id of ['practice', 'sessionLength']) byId(id).addEventListener('change', refreshSummary);
