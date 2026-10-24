@@ -11,7 +11,7 @@ const solution=e=>e.r.b.sub(e.l.b).div(e.l.a.sub(e.r.a));
 const verify=(e,x)=>e.l.a.mul(x).add(e.l.b).eq(e.r.a.mul(x).add(e.r.b));
 const lcm=e=>[e.l.a,e.l.b,e.r.a,e.r.b].reduce((a,v)=>a/gcd(a,v.d)*v.d,1n);
 const solved=e=>!e.group&&e.l.a.eq(1)&&e.l.b.eq(0)&&e.r.a.eq(0);
-const operationLabel=(op,v)=>op+(op==='÷'&&q(v).n<0n?'('+q(v)+')':q(v));
+const operationLabel=(op,v)=>op+((op==='÷'||op==='×')&&q(v).n<0n?'('+q(v)+')':q(v));
 function moves(e){
  if(e.group)return [{op:'÷',v:q(e.group.k),kind:'scale',target:'group',label:operationLabel('÷',e.group.k)}];
  const out=[];const add=(op,v,kind,target)=>out.push({op,v:q(v),kind,target,label:operationLabel(op,v)+(kind==='x'?'x':'')});
@@ -22,7 +22,7 @@ function moves(e){
  }
  if(e.l.b.eq(0)&&e.r.a.eq(0)&&!e.l.a.eq(0)&&!e.l.a.eq(1)){
   add('÷',e.l.a,'scale','la');
-  if(e.l.a.d!==1n)add('×',q(1).div(e.l.a),'scale','la');
+  if(e.l.a.d!==1n||e.l.a.eq(-1))add('×',q(1).div(e.l.a),'scale','la');
  }
  return out;
 }

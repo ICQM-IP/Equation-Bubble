@@ -31,3 +31,15 @@ console.log('PASS: negative divisors use parentheses, including -1, -3, negative
 
 assert.equal(M.moves(M.eq('1/2','1/5',0,3)).find(m=>m.op==='LCM').label,'×10');
 console.log('PASS: LCM operation displays only actual multiplier ×10.');
+
+// Both sign reversal operations are valid once the coefficient is -1.
+for(const rhs of [1,-3,0,'1/2']){
+ const e=M.eq(-1,0,0,rhs);
+ for(const op of ['×','÷']){
+  const m=M.moves(e).find(m=>m.op===op&&m.v.eq(-1));
+  assert(m);assert.equal(m.label,op+'(-1)');
+  const n=M.apply(e,m);assert(M.solved(n));assert(M.verify(e,n.r.b));
+  assert.equal(M.diagnose(e,{key:'la'},m),null);
+ }
+}
+console.log('PASS: -x accepts both multiplication and division by -1.');

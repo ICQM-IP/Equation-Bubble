@@ -80,7 +80,7 @@ const firstLayout=run('rows.map(r=>r.y+","+r.scatterX).join("|")');run('prepareP
 console.log('PASS: irregular horizontal placement; staggered layer heights; layouts vary between waves while maintaining readable equation order.');
 
 ids.paceMode.value='normal';ids.practice.checked=false;
-run('preparePair();const slowY=rows[0].y');step(20);assert(Math.abs(run('rows[0].y-slowY')-7.5)<.001);
+run('preparePair();const slowY=rows[0].y');step(20);assert(Math.abs(run('rows[0].y-slowY')-7.5*.85)<.001);
 console.log('PASS: matching equations remain independent; no chain lines or energy rewards; descent reduced by 50%; no discrete pressure drop.');
 
 ids.paceMode.value='normal';ids.practice.checked=true;
@@ -172,3 +172,7 @@ run('gentle=false;for(const r of [...rows])remove(r);spawnLaneBag=[];const refil
 run('for(const r of [...rows])remove(r);spawn({lane:0});rows[0].y=0');assert.equal(run('refillDense()'),true);assert.equal(run('rows[1].lane'),1,'use the empty right lane when left entry is blocked');
 run('mobileMode=true;for(const r of [...rows])remove(r);spawnLaneBag=[];const phoneSides=[];for(let i=0;i<4;i++){spawn();const r=rows[rows.length-1];const center=(r.nodes[0].x+r.nodes[r.nodes.length-1].x+r.nodes[r.nodes.length-1].w)/2;phoneSides.push([r.spawnSide,center]);}');for(const [side,center]of run('phoneSides'))assert(side===0?center<560:center>560);assert.equal(new Set(run('phoneSides.map(x=>x[0])')).size,2);
 run('mobileMode=false');console.log('PASS: randomized opening side, balanced random waves, randomized refills, blocked-lane safety and mobile left/right positioning.');
+
+run('mobileMode=false;gentle=false;reset();while(rows.length<2)spawn();frantic=true;practice=false;turbo=false;gentle=false;graceTimer=0;fallSpeed=1.6;level=3;rows[0].lane=0;rows[1].lane=1;rows[0].y=100;rows[1].y=-100;const slowerStart=rows[0].y;descend(.1)');
+assert(Math.abs(run('rows[0].y-slowerStart')-(12+3)*.5*.85*1.6*.1)<1e-8);
+console.log('PASS: solo descent is 15% slower at the selected speed.');
