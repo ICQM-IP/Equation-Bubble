@@ -40,7 +40,7 @@ function generate(level,rand=Math.random){
  const pick=a=>a[Math.floor(rand()*a.length)], x=pick([-5,-3,-2,0,2,3,4,6]),a=pick([-4,-3,2,3,4,5]),b=pick([-7,-4,-2,3,5,8]);
  if(level===1)return rand()<.5?eq(1,b,0,x+b):eq(a,0,0,a*x);
  if(level===2)return eq(a,b,0,a*x+b);
- if(level===3){const c=a+pick([-3,-1,1,2]);return eq(a,b,c,(a-c)*x+b)}
+ if(level===3){let c=a+pick([-3,-1,1,2]);if(c===0)c=1;return eq(a,b,c,(a-c)*x+b)}
  if(level===4){const k=pick([-3,-2,2,3]);return eq(k,k*b,0,k*(x+b),{k,b})}
  const d=pick([2,3,4,6]);let f=pick([3,4,5]);if(a*f===d)f=7;return eq(q(a).div(d),q(b).div(d),q(1).div(f),q(a).div(d).sub(q(1).div(f)).mul(x).add(q(b).div(d)));
 }
@@ -63,6 +63,14 @@ function newStats(){return {shots:0,hits:0,hints:0,solved:0,errors:{aim:0,target
 function accuracy(s){return s.shots?Math.round(100*s.hits/s.shots):0}
 function report(s){const common=Object.entries(s.errors).filter(([,n])=>n).sort((a,b)=>b[1]-a[1]);return '完成 '+s.solved+' 題 · 正確命中 '+accuracy(s)+'%（'+s.hits+'/'+s.shots+' 發） · 提示 '+s.hints+' 次'+(common.length?' · 常見：'+common.map(([k,n])=>ERROR_NAMES[k]+' '+n).join('、'):' · 暫無錯誤紀錄')}
 function operandChoices(v){v=q(v);const list=[v];for(const candidate of [v.neg(),q(1).div(v),v.add(1),v.sub(1),q(2),q(3)])if(!candidate.eq(0)&&!list.some(x=>x.eq(candidate)))list.push(candidate);return list.slice(0,3).sort((a,b)=>{const d=a.sub(b);return d.n<0n?-1:d.n>0n?1:0}).map(String)}
-const api={diagnose,newStats,accuracy,report,operandChoices,ERROR_NAMES,Q,q,eq,solution,verify,lcm,solved,moves,apply,generate,parseOperand};root.EquationMath=api;if(typeof module!=='undefined')module.exports=api;
+// Balanced, deterministic groups of five keep mixed decks fair for both players.
+function topicAt(index,topic=0,seed=1){
+ topic=Number(topic);if(topic>=1&&topic<=5)return topic;
+ const bag=[1,2,3,4,5];let n=(seed^Math.imul(1+Math.floor(index/5),0x9e3779b9))>>>0;
+ for(let i=4;i>0;i--){n=(Math.imul(n,1664525)+1013904223)>>>0;const j=n%(i+1);[bag[i],bag[j]]=[bag[j],bag[i]];}
+ return bag[index%5];
+}
+function speedMultiplier(value){const n=Number(value);return [.65,1,1.6,2.3].includes(n)?n:1.6}
+const api={topicAt,speedMultiplier,diagnose,newStats,accuracy,report,operandChoices,ERROR_NAMES,Q,q,eq,solution,verify,lcm,solved,moves,apply,generate,parseOperand};root.EquationMath=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 

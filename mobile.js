@@ -26,7 +26,7 @@ function syncMobileHud(){
   }
  }else{
   document.querySelector('#mobileLoaded').textContent=loaded?.label||'選擇運算';
-  document.querySelector('#mobileProgress').textContent=score+' 分 · ♥ '+lives+' · 第 '+level+' 關 · '+cleared+'/4';document.querySelector('#mobileTeacherIcon').src=document.querySelector('#teacher').src;document.querySelector('#mobileTeacherName').textContent=String(document.querySelector('#teacher').alt||'').replace(' 指導老師','');mirrorMath('#teachingMath','#mobileMath');
+  document.querySelector('#mobileProgress').textContent=score+' 分 · ♥ '+lives+' · '+topicName()+' · '+learningStats.solved+' 題';document.querySelector('#mobileTeacherIcon').src=document.querySelector('#teacher').src;document.querySelector('#mobileTeacherName').textContent=String(document.querySelector('#teacher').alt||'').replace(' 指導老師','');mirrorMath('#teachingMath','#mobileMath');
   document.querySelector('#mobileFeedback').textContent=document.querySelector('#speech').textContent;
   document.querySelector('#mobileHint').textContent='提示 '+Math.min(3,hintLevel+1)+'/3';
   document.querySelector('#mobileValueLabel').hidden=!challenge;

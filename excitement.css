@@ -4,3 +4,14 @@
 body:not(.mobile-mode):not(.versus-page) #teaching,body:not(.mobile-mode):not(.versus-page) #teaching.near-equation{top:155px!important;height:710px!important}
 body:not(.mobile-mode):not(.versus-page) #teaching #sideFeedback{position:absolute;left:16px;right:16px;bottom:280px!important;margin:0;font-size:17px;padding:10px}
 .effects-off .impact-flash,.effects-off .hit-attack,.effects-off .clear-kick,.effects-off .victory-impact{animation:none!important}
+
+/* Keep the fire control fully outside the teaching panel. */
+body:not(.mobile-mode):not(.versus-page) #teaching,body:not(.mobile-mode):not(.versus-page) #teaching.near-equation{top:120px!important;height:650px!important;overflow-y:auto;flex-direction:column}
+body:not(.mobile-mode):not(.versus-page) #teachingMath{min-height:90px;margin-top:12px;flex:1;font-size:24px}
+body:not(.mobile-mode):not(.versus-page) #teaching #sideFeedback{position:static!important;margin:8px 0;flex:none;font-size:16px;padding:8px}
+body:not(.mobile-mode):not(.versus-page) #teaching .learning-panel{position:static!important;margin-top:auto;flex:none}
+body:not(.mobile-mode) #fire{position:relative;z-index:8;cursor:pointer}
+.battle-callout{font-size:32px;line-height:1.2}.battle-callout .answer{font-size:48px;line-height:1.35}.battle-callout .points{font-size:24px}
+.stage-number:before{content:'課題'!important}.vs-stage-number:before{content:'課題 '!important}
+
+.operand-choices button.chosen-operand{background:#ffdf81;color:#17324a;border-color:#ffe9a5;outline:2px solid #ffcc45}
