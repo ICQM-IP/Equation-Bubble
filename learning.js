@@ -13,7 +13,7 @@ function clockText(elapsed,limit){if(!limit)return '不限時';const n=Math.max(
 function refreshLearningUI(){
  for(const ui of learningPanels){let ammo,stats,mode,active,elapsed,limit;
  const i=Number(ui.panel.dataset.learningPlayer);
- if(learningBattle){if(!match){ui.panel.hidden=true;continue}const p=match.players[i];ammo=p.ammo();stats=p.stats;mode=document.querySelector('#battleMode').value;active=p.canFire;elapsed=match.elapsed;limit=match.duration;}
+ if(learningBattle){if(!match){ui.panel.hidden=true;continue}const p=match.players[i];ammo=p.ammo();stats=p.stats;mode='assist';active=p.canFire;elapsed=match.elapsed;limit=match.duration;}
  else{ammo=loaded;stats=learningStats;mode=singleLearningMode;active=canAct();elapsed=sessionElapsed;limit=sessionLimit;}
  if(learningBattle){document.querySelector('#manual'+i).hidden=mode!=='challenge';document.querySelector('#vsMobileLabel'+i).hidden=mode!=='challenge';}else{document.querySelector('#manualAmmo').hidden=mode!=='challenge';document.querySelector('#mobileValueLabel').hidden=mode!=='challenge';}ui.panel.hidden=false;ui.time.textContent=clockText(elapsed,limit);ui.status.textContent='已解 '+stats.solved+' 題 · 正確命中 '+M.accuracy(stats)+'% · 提示 '+stats.hints+' 次';
  ui.choices.hidden=mode!=='choices';
@@ -25,7 +25,7 @@ function refreshLearningUI(){
  if(mode==='choices'){const chosen=learningBattle?match.players[i].manualValue:document.querySelector('#ammoValue').value;for(const button of ui.choices.children){if(!button.dataset.operand)continue;const selected=button.dataset.operand===chosen;button.classList.toggle('chosen-operand',selected);button.setAttribute('aria-pressed',String(selected));}}
  }
 }
-for(const button of document.querySelectorAll('[data-preset]'))button.onclick=()=>{const preset=button.dataset.preset;document.querySelector('#sessionLength').value=preset==='timed'?'180':'0';document.querySelector('#practice').checked=preset==='practice';document.querySelector('#gentlePace').checked=true;document.querySelector('#learningMode').value=preset==='timed'?'choices':'assist';for(const b of document.querySelectorAll('[data-preset]'))b.setAttribute('aria-pressed',String(b===button));};
+for(const button of document.querySelectorAll('[data-preset]'))button.onclick=()=>{const preset=button.dataset.preset;document.querySelector('#sessionLength').value=preset==='timed'?'180':'0';document.querySelector('#practice').checked=preset==='practice';document.querySelector('#gentlePace').checked=true;document.querySelector('#learningMode').value='assist';for(const b of document.querySelectorAll('[data-preset]'))b.setAttribute('aria-pressed',String(b===button));};
 const learningStyle=document.createElement('style');learningStyle.textContent=`
 .aim-contact{outline:4px solid #fff4a5!important;outline-offset:5px;filter:brightness(1.12)}
 .aim-end{position:absolute;z-index:12;pointer-events:none;transform:translate(-50%,-50%);font:900 30px Arial;color:#fff7a4;text-shadow:0 1px 3px #182c41}.aim-end.no-contact{color:#e8edf4;opacity:.65}
