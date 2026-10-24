@@ -176,3 +176,17 @@ run('mobileMode=false');console.log('PASS: randomized opening side, balanced ran
 run('mobileMode=false;gentle=false;reset();while(rows.length<2)spawn();frantic=true;practice=false;turbo=false;gentle=false;graceTimer=0;fallSpeed=1.6;level=3;rows[0].lane=0;rows[1].lane=1;rows[0].y=100;rows[1].y=-100;const slowerStart=rows[0].y;descend(.1)');
 assert(Math.abs(run('rows[0].y-slowerStart')-(12+3)*.5*.85*1.6*.1)<1e-8);
 console.log('PASS: solo descent is 15% slower at the selected speed.');
+
+// Physical single-player keys must survive IMEs and native focus changes.
+let focusCalls=0;ids.stage.focus=()=>focusCalls++;
+ids.learningMode.value='assist';ids.practice.checked=true;ids.startLevel.value='1';run('reset();hint(true)');assert(focusCalls>0,'start hands keyboard focus to arena');
+const soloKey=(code,key='Process',extra={})=>events.keydown({code,key,repeat:false,target:{matches:()=>false},preventDefault(){},...extra});
+soloKey('ArrowRight');assert(run('keys.has("right")'));events.keyup({code:'ArrowRight',key:'Unidentified'});assert(!run('keys.has("right")'));
+const chosenOp=run('ammoIndex');soloKey('ArrowDown');assert.notEqual(run('ammoIndex'),chosenOp);soloKey('ArrowUp');assert.equal(run('ammoIndex'),chosenOp);
+soloKey('KeyH');assert(run('hintLevel>0'));soloKey('Space');assert(run('bullet!==null'),'physical Space fires with IME Process key');const shots=run('learningStats.shots');soloKey('Space','Process',{repeat:true});assert.equal(run('learningStats.shots'),shots);
+soloKey('KeyP');assert(run('paused'));soloKey('KeyP','Process',{repeat:true});assert(run('paused'),'held pause must not repeatedly toggle');const beforeResume=focusCalls;soloKey('KeyP');assert(!run('paused'));assert(focusCalls>beforeResume,'resume returns focus to arena');
+run('bullet=null;busy=false;phase=null');soloKey('Space',' ',{metaKey:true});assert.equal(run('bullet'),null);soloKey('Space',' ',{target:{matches:()=>true}});assert.equal(run('bullet'),null,'typing cannot fire');
+ids.learningMode.value='challenge';run('reset()');ids.ammoValue.value='3';let blurred=0;ids.ammoValue.blur=()=>blurred++;const beforeEdit=focusCalls;ids.ammoValue.events.keydown({code:'Enter',key:'Process',preventDefault(){}});assert.equal(blurred,1);assert(focusCalls>beforeEdit);assert.equal(run('bullet'),null,'commit operand does not accidentally fire');
+ids.learningMode.value='choices';run('reset();rows[0].e=M.eq(3,0,0,6);rows[0].original=rows[0].e;renderRow(rows[0]);hint(true);document.querySelector("#ammoValue").value="";load();refreshLearningUI()');run('launch()');assert.equal(run('bullet'),null);assert(ids.sideFeedback.textContent.includes('先選運算'));
+const operand=run('learningPanels[0].choices.children.find(b=>b.dataset.operand==="3")');assert(operand);const beforeChoice=focusCalls;operand.onclick();assert(focusCalls>beforeChoice,'choosing a value returns keyboard focus');soloKey('Enter');assert(run('bullet!==null'),'three-choice keyboard fire works after choosing value');
+console.log('PASS: solo physical arrow/H/Space/Enter/P keys with IME values; repeat, typing and shortcut guards; start/resume/value focus; challenge commit; real three-choice firing.');

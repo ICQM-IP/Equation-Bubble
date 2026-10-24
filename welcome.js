@@ -43,10 +43,13 @@
   home.querySelector('.turbo-help')?.remove(); // The same controls are explained under 玩法說明.
   byId('start').addEventListener('click', () => {
     document.body.classList.remove('home-open');
-    document.querySelector('#field .node')?.focus({preventScroll:true});
+    if (typeof focusSoloStage === 'function') focusSoloStage();
+    else document.querySelector('#field .node')?.focus({preventScroll:true});
   });
   // Avoid a game shortcut taking over while the native welcome form is open.
-  home.addEventListener('keydown', event => event.stopPropagation());
+  home.addEventListener('keydown', event => {
+    if (document.body.classList.contains('home-open')) event.stopPropagation();
+  });
   refreshSummary();
   teacherPreview();
 })();
