@@ -29,7 +29,7 @@ function draw(ctx,img,controller,id,actor){
 function mount(img,i,preview=false){if(!img)return;const canvas=document.createElement('canvas');canvas.width=256;canvas.height=280;canvas.className='teacher-actor';canvas.setAttribute('aria-hidden','true');img.after(canvas);actors.push({img,canvas,ctx:canvas.getContext('2d'),i,preview});}
 if(battle){for(let i=0;i<2;i++){mount(document.querySelector('#avatar'+i),i);mount(document.querySelector('#vsMobileTeacher'+i),i);}}else{mount(document.querySelector('#teacher'),0);mount(document.querySelector('#mobileTeacherIcon'),0);}
 let resultEvent=null;
-function teacherEvent(e){if(e.type==='end'){resultEvent=e;for(let i=0;i<(battle?2:1);i++)controllers[i].play(e.winner===null||e.winner===i?'victory':'recover',{force:true});return;}const i=e.player||0,chain=e.chain||(battle?match?.players[i]?.chain:typeof fastChain!=='undefined'?fastChain:0),action=eventAction(e,chain);if(action)controllers[i].play(action,{chain});}
+function teacherEvent(e){if(typeof root.arcadeArtEvent==='function')root.arcadeArtEvent(e);if(e.type==='end'){resultEvent=e;for(let i=0;i<(battle?2:1);i++)controllers[i].play(e.winner===null||e.winner===i?'victory':'recover',{force:true});return;}const i=e.player||0,chain=e.chain||(battle?match?.players[i]?.chain:typeof fastChain!=='undefined'?fastChain:0),action=eventAction(e,chain);if(action)controllers[i].play(action,{chain});}
 root.teacherEvent=teacherEvent;
 const previewController=new Controller();let previewId=2,previewActive=false;
 const dialog=document.createElement('dialog');dialog.className='teacher-preview';dialog.setAttribute('aria-label','老師動作預覽');

@@ -1,0 +1,54 @@
+/* Arcade finish, without changing a playfield, cannon or control's layout box. */
+:root { --arcade-gold:#e8c17b; --arcade-navy:#132d42; --arcade-teal:#69eedb; }
+.sky-title,.battle-header { background:linear-gradient(135deg,#173b52,#112637 75%); border-color:var(--arcade-gold); box-shadow:inset 0 0 0 2px #2b5967,inset 0 -6px 0 #071b2a66,0 4px 0 #081c2a; }
+.sky-title { color:#ffdd81; text-shadow:2px 3px #071e32,0 0 14px #f5c86a33; }
+.sky-title em { color:#9df6ee; }.sky-title small { color:#b3d6db; letter-spacing:3px; }
+.score,.stage-number { background:linear-gradient(145deg,#1e4658,#112839); border-color:#d7b678; border-radius:8px; box-shadow:inset 0 0 0 2px #ffffff0a,0 3px 0 #081e2c; color:#ffe29a; }
+.hearts { background:#173647; border-color:#ccac70; border-radius:8px; }
+.sky-frame { border-color:#c5a46a!important; background:linear-gradient(180deg,#bcf9ff0d,#10263d10); box-shadow:inset 0 0 0 2px #e7ebc855,inset 0 0 24px #b0f5ff17,0 4px 0 #102b3d55; }
+.sky-dock,.battle-dock { background:linear-gradient(180deg,#294c5a,#162d40); border-color:#d1b375; box-shadow:inset 0 3px 0 #f6d48f44,inset 0 -5px 0 #081e2b; }
+.battle-field { box-shadow:inset 0 0 0 2px #cdb782,inset 0 0 35px #5bd5ee18; }.arena { background:linear-gradient(135deg,#274a5a,#152e43); }
+.teacher-strip { background:linear-gradient(90deg,#214a5b,#192d40); border-color:#b89d6a; }
+.cannon,.battle-cannon { filter:drop-shadow(0 3px 0 #0b2938) drop-shadow(0 0 5px #78fff01c); }
+.cannon::before,.battle-cannon::before { content:''; position:absolute; left:17%; right:17%; bottom:4%; height:12%; border:2px solid #dbb873; border-radius:50%; background:radial-gradient(ellipse,#68e8db66,#102d4166 67%); box-shadow:0 3px 0 #193448,inset 0 0 8px #71ede955; z-index:-1; pointer-events:none; }
+.cannon::after,.battle-cannon::after { content:''; position:absolute; left:42%; top:6%; width:16%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,#fff9cd,#83fff1 30%,#6edbff44 58%,transparent 72%); opacity:0; pointer-events:none; }
+.arcade-shot::after { animation:arcade-muzzle .24s ease-out; }
+#field .orb::before,.battle-field .orb::before { filter:hue-rotate(var(--hue)) saturate(var(--sat)) brightness(1.035); }
+#field .node.aim-contact,.battle-field .node.aim-contact { outline-color:#fff0a3!important; filter:drop-shadow(0 0 7px #fff1a077); }
+#field .row.special,.battle-row.special { filter:drop-shadow(0 0 4px #fbd76e55); }
+#projectile,.battle-bullet { filter:drop-shadow(0 0 6px #aafdf1); }
+#trajectory path,.battle-guide path { stroke:#e5ffe6; filter:drop-shadow(0 0 2px #75eddb); }
+#ops .orb.active::after,.battle-ops .orb.active::after { border-color:#fff0ab; box-shadow:0 0 0 2px #77502a,0 0 14px #ffdc7055; }
+#fire kbd,.battle-fire { background:linear-gradient(#328d87,#1b655f); color:#fff5d1; border-color:#e6cd90; border-radius:10px; box-shadow:0 4px 0 #0c373e,inset 0 2px 0 #9bf2df55; }
+#fire:active kbd,.battle-fire:active { filter:brightness(1.13); }
+.score-jump { text-shadow:0 0 16px #ffe383,2px 3px #152c3b; }
+.mentor-stage { position:absolute; z-index:4; pointer-events:none; isolation:isolate; }
+.mentor-stage[hidden] { display:none; }
+.mentor-stage::before { content:''; position:absolute; left:3%; right:3%; bottom:0; height:12%; border-radius:50%; border:1px solid #d3bc77; background:linear-gradient(#164e5ecc,#112e42); box-shadow:0 3px 0 #0d2735,0 0 15px #7ffbe51c; }
+.mentor-glow { position:absolute; inset:0 -2% 0; background:radial-gradient(ellipse at 50% 73%,#65e7d91e,transparent 65%); opacity:.7; }
+.mentor-caption { position:absolute; z-index:7; left:0; right:0; bottom:-6px; text-align:center; border:1px solid #dcbf7c; border-radius:4px; padding:5px 3px; background:linear-gradient(120deg,#224d5b,#132b42); color:#f8e5ad; font:800 12px/1.2 Arial,'PingFang TC',sans-serif; letter-spacing:1px; box-shadow:0 3px 0 #0c2434; }
+.mentor-stage.is-reacting .mentor-caption { background:linear-gradient(120deg,#ffe79e,#dcb45d); border-color:#fff0b5; color:#233e4d; }
+.mentor-stage.is-reacting .mentor-glow { opacity:1; background:radial-gradient(ellipse at 50% 65%,#7affdf70,transparent 68%); }
+.mentor-cut-in { display:none; position:absolute; left:0; top:-55%; width:100%; height:72%; object-fit:cover; object-position:center 12%; border:2px solid #f1d28a; background:repeating-linear-gradient(155deg,#208e9d 0 5px,#174455 5px 12px); clip-path:polygon(0 13%,100% 0,100% 85%,0 100%); filter:drop-shadow(0 4px 1px #0d2735); opacity:.98; }
+.is-special .mentor-cut-in { display:block; }
+.is-special .mentor-caption { box-shadow:0 0 16px #ffd46a66,0 3px 0 #0c2434; }
+.arcade-mentor-reacting { filter:drop-shadow(0 0 4px #95ffec)!important; }
+.arcade-mentor-special { transform:scale(1.06); transform-origin:50% 100%; filter:drop-shadow(0 0 6px #ffde8a)!important; }
+.teacher-strip .mentor-caption { font-size:10px; bottom:-2px; padding:3px; }.teacher-strip .mentor-cut-in { top:-65%; }
+.teacher-chip .mentor-stage { z-index:0; }.teacher-chip .mentor-caption { bottom:-3px; font-size:8px; padding:2px 0; letter-spacing:0; white-space:nowrap; }.teacher-chip .mentor-cut-in { display:none!important; }
+.teacher-chip .mentor-stage::before { bottom:2%; }.teacher-chip .mentor-glow { inset:0; }
+.mobile-mode #mobileControls,.mobile-mode .mobile-vs-controls { background:linear-gradient(150deg,#214959,#152d42); border-color:#b6a573; box-shadow:inset 0 1px 0 #e7d8a933,0 4px 12px #0c293a55; }
+.mobile-mode #mobileFire,.mobile-mode #vsMobileFire0,.mobile-mode #vsMobileFire1 { background:linear-gradient(#328d87,#1b655f)!important; border-color:#e6cd90; box-shadow:0 3px 0 #0b3740; }
+.mobile-mode .cannon::before { border-width:3px; }
+body.effects-off .arcade-shot::after { animation:none; }body.effects-off .arcade-mentor-special { transform:none; }
+@keyframes arcade-muzzle { 0% { opacity:1; scale:.6; }40% { opacity:.9; scale:1.8; }100% { opacity:0; scale:2.3; } }
+@media(prefers-reduced-motion:reduce) { .arcade-shot::after { animation:none!important; }.arcade-mentor-special { transform:none; } }
+
+.arcade-art-paused .arcade-shot::after { animation-play-state:paused; }
+
+.teacher-chip .mentor-stage { z-index:6; }
+.mobile-mode #mobileFire,.mobile-mode #vsMobileFire0,.mobile-mode #vsMobileFire1 { color:#fff6dc!important; }
+/* Special portraits stay inside the existing teacher region, clear of operation controls. */
+.mentor-stage { z-index:6; }
+.mentor-cut-in { top:0; height:68%; }
+.teacher-strip .mentor-cut-in { top:0; height:80%; }
