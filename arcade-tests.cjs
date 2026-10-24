@@ -116,7 +116,7 @@ console.log('PASS: no pace selector; standard game always uses the former franti
 
 
 for(let teacherId=0;teacherId<5;teacherId++){ids.singleTeacher.value=String(teacherId);run('chooseSingleTeacher()');assert.equal(ids.teacher.src,require('./characters.js')[teacherId].image)}
-assert(html.includes('href="battle.html"'));console.log('PASS: single-player menu links to VS mode and supports all five teacher sprites.');
+assert(/href="battle\.html(?:\?[^"]*)?"/.test(html));console.log('PASS: single-player menu links to VS mode and supports all five teacher sprites.');
 
 // v10: progressive hints do not immediately choose ammo or aim.
 ids.learningMode.value='assist';run('preparePair();hintKey=null;hintLevel=0;angle=30;ammoIndex=2;updateAim();hint()');assert.equal(run('angle'),30);assert.equal(run('ammoIndex'),2);assert.equal(run('hintLevel'),1);run('hint()');assert.equal(run('angle'),30);assert.equal(run('hintLevel'),2);run('hint()');assert.equal(run('hintLevel'),3);assert.equal(run('trace().hit.node.key'),'lb');
