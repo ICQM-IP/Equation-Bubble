@@ -7,7 +7,7 @@
   byId('practice').checked = false;
   byId('sessionLength').value = '0';
   byId('soloTurbo').checked = false;
-  byId('fallSpeed').value = '1';
+  byId('fallSpeed').value = '1.6';
   byId('gentlePace').checked = true;
   function refreshSummary() {
     const practice = byId('practice').checked;
