@@ -26,7 +26,7 @@ function excitementEvent(e){const enabled=excitementBattle?!!match?.turbo:turbo;
  if(e.type==='fire'){const cannon=document.querySelector(excitementBattle?'#cannon'+i:'#cannon');cannon.classList.remove('turbo-recoil');void cannon.offsetWidth;cannon.classList.add('turbo-recoil');}
  if(['clear','rescue','attack-reflect','frenzy','chain'].includes(e.type)){
  const label=e.type==='rescue'?'🛟 救援啟動':e.type==='attack-reflect'?'↩ 反彈攻擊！':e.type==='frenzy'?'🔥 最後 30 秒！':e.type==='chain'?e.chain+' 連解！':(excitementBattle?match.players[i].chain:fastChain)>=2?'連擊爆發！':'漂亮解題！';
- if(excitementBattle){if(!['clear','chain'].includes(e.type))callout(i,label);}else callout(label,'#ffe68b');
+ if(excitementBattle){if(!['clear','chain'].includes(e.type))callout(i,label);}else if(!['clear','chain'].includes(e.type))callout(label,'#ffe68b');
  if(excitementEffects){field.classList.remove('turbo-burst');void field.offsetWidth;field.classList.add('turbo-burst');if(navigator.vibrate)navigator.vibrate(e.type==='rescue'?[35,30,35]:30);}
  if(e.type==='clear'){const teacher=document.querySelector(excitementBattle?'#avatar'+i:'#teacher');teacher.classList.remove('turbo-cheer');void teacher.offsetWidth;teacher.classList.add('turbo-cheer');if(sound){if(excitementBattle)tone(880);else beep(880);}}
  }
