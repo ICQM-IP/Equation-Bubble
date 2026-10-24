@@ -14,7 +14,7 @@ function refreshLearningUI(){
  for(const ui of learningPanels){let ammo,stats,mode,active,elapsed,limit;
  const i=Number(ui.panel.dataset.learningPlayer);
  if(learningBattle){if(!match){ui.panel.hidden=true;continue}const p=match.players[i];ammo=p.ammo();stats=p.stats;mode=document.querySelector('#battleMode').value;active=p.canFire;elapsed=match.elapsed;limit=match.duration;}
- else{ammo=loaded;stats=learningStats;mode=document.querySelector('#learningMode').value;active=canAct();elapsed=sessionElapsed;limit=sessionLimit;}
+ else{ammo=loaded;stats=learningStats;mode=singleLearningMode;active=canAct();elapsed=sessionElapsed;limit=sessionLimit;}
  if(learningBattle){document.querySelector('#manual'+i).hidden=mode!=='challenge';document.querySelector('#vsMobileLabel'+i).hidden=mode!=='challenge';}else{document.querySelector('#manualAmmo').hidden=mode!=='challenge';document.querySelector('#mobileValueLabel').hidden=mode!=='challenge';}ui.panel.hidden=false;ui.time.textContent=clockText(elapsed,limit);ui.status.textContent='已解 '+stats.solved+' 題 · 正確命中 '+M.accuracy(stats)+'% · 提示 '+stats.hints+' 次';
  ui.choices.hidden=mode!=='choices';
  // Values come from the selected operation on the physically reachable target.
