@@ -80,8 +80,8 @@ const firstLayout=run('rows.map(r=>r.y+","+r.scatterX).join("|")');run('prepareP
 console.log('PASS: irregular horizontal placement; staggered layer heights; layouts vary between waves while maintaining readable equation order.');
 
 ids.paceMode.value='normal';ids.practice.checked=false;
-run('preparePair();const slowY=rows[0].y');step(20);assert(Math.abs(run('rows[0].y-slowY')-7.5*.85)<.001);
-console.log('PASS: matching equations remain independent; no chain lines or energy rewards; descent reduced by 50%; no discrete pressure drop.');
+run('preparePair();gentle=false;turbo=false;level=2;fallSpeed=1;const slowY=rows[0].y');step(20);assert(Math.abs(run('rows[0].y-slowY')-7)<.001);
+console.log('PASS: matching equations remain independent; no chain lines or energy rewards; descent matches versus standard speed; no discrete pressure drop.');
 
 ids.paceMode.value='normal';ids.practice.checked=true;
 run('preparePair();rows[0].e=M.eq(2,-7,0,13);rows[0].original=rows[0].e;rows[1].e=M.eq(3,-4,0,8);rows[1].original=rows[1].e;renderRow(rows[0]);renderRow(rows[1]);selected=rows[0];hint(true)');
@@ -174,8 +174,8 @@ run('mobileMode=true;for(const r of [...rows])remove(r);spawnLaneBag=[];const ph
 run('mobileMode=false');console.log('PASS: randomized opening side, balanced random waves, randomized refills, blocked-lane safety and mobile left/right positioning.');
 
 run('mobileMode=false;gentle=false;reset();while(rows.length<2)spawn();frantic=true;practice=false;turbo=false;gentle=false;graceTimer=0;fallSpeed=1.6;level=3;rows[0].lane=0;rows[1].lane=1;rows[0].y=100;rows[1].y=-100;const slowerStart=rows[0].y;descend(.1)');
-assert(Math.abs(run('rows[0].y-slowerStart')-(12+3)*.5*.85*1.6*.1)<1e-8);
-console.log('PASS: solo descent is 15% slower at the selected speed.');
+assert(Math.abs(run('rows[0].y-slowerStart')-(6+3*.5)*1.6*.1)<1e-8);
+console.log('PASS: solo descent matches versus at the selected speed.');
 
 // Physical single-player keys must survive IMEs and native focus changes.
 let focusCalls=0;ids.stage.focus=()=>focusCalls++;
