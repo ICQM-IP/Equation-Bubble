@@ -38,10 +38,10 @@ html[lang=en] .vs-stage-number{display:flex;align-items:center;gap:8px;line-heig
 html[lang=en] .vs-stage-number:before{position:static;line-height:1.2}
 /* Solo desktop: reserve separate rows for working, feedback and match statistics. */
 html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching,
-html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching.near-equation{left:451px!important;width:551px!important;height:104px!important;padding:6px 10px;grid-template-rows:minmax(0,1fr) auto}
+html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching.near-equation{left:543px!important;width:459px!important;height:104px!important;padding:6px 10px;grid-template-rows:minmax(0,1fr) auto}
 html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teachingMath{font-size:18px;line-height:1.25;overflow:auto}
 html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #sideFeedback{font-size:14px;line-height:1.3;min-height:20px}
-html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching .learning-panel{left:-18px;top:108px;width:806px;height:84px;min-height:84px;max-height:none;display:grid;grid-template-columns:minmax(0,1fr) 190px;grid-template-rows:auto auto auto;column-gap:12px;row-gap:2px;padding:6px 12px;overflow:visible;align-items:center}
+html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching .learning-panel{left:-110px;top:108px;width:806px;height:84px;min-height:84px;max-height:none;display:grid;grid-template-columns:minmax(0,1fr) 190px;grid-template-rows:auto auto auto;column-gap:12px;row-gap:2px;padding:6px 12px;overflow:visible;align-items:center}
 html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching .learning-clock{grid-column:1;grid-row:1;margin:0;font-size:18px;line-height:1.2}
 html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching .learning-status{grid-column:1;grid-row:2;margin:0;font-size:13px;line-height:1.25;white-space:normal}
 html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching .power-status{grid-column:1;grid-row:3;margin:0;font-size:13px;line-height:1.25}
