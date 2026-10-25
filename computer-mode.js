@@ -7,6 +7,15 @@ function configureComputerMatch(config){
  document.querySelector('#arena1').closest('.arena-slot').classList.add('computer-opponent-slot');
  const existing=document.querySelector('#computerStatus');if(existing)existing.remove();
  if(!computerMode)return;
+ const opponent=document.querySelector('.computer-opponent-slot');
+ if(!document.querySelector('#computerPreviewToggle')){
+  const header=document.createElement('div');header.className='computer-preview-heading';
+  const title=document.createElement('strong');title.textContent='電腦即時畫面';
+  const toggle=document.createElement('button');toggle.id='computerPreviewToggle';toggle.type='button';toggle.textContent='收起';toggle.setAttribute('aria-expanded','true');toggle.setAttribute('aria-controls','arena1');
+  toggle.onclick=()=>{const collapsed=document.body.classList.toggle('computer-preview-collapsed');toggle.textContent=collapsed?'展開':'收起';toggle.setAttribute('aria-expanded',String(!collapsed));fitBattle();};
+  header.append(title,toggle);opponent.prepend(header);
+ }
+
  const status=document.createElement('section');status.id='computerStatus';status.setAttribute('aria-label','電腦對手狀態');
  const image=document.createElement('img');image.src=EquationTeachers[config.teachers[1]].image;image.alt='';
  const text=document.createElement('div'),name=document.createElement('strong'),progress=document.createElement('span'),warning=document.createElement('span');

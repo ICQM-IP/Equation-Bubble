@@ -70,3 +70,17 @@ body>#overlay .home-menu .home-battle-player{align-items:flex-start}
 
 body>#overlay .home-menu .selection-controls kbd.stacked-keys{display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:3px 6px}
 body>#overlay .home-menu .selection-controls kbd.stacked-keys>span{display:block;line-height:1.2}
+
+/* The original opponent arena stays live; only its presentation is scaled. */
+.computer-preview-heading{display:none}
+body.versus-page.mobile-mode.computer-mode .arenas{display:flex!important;flex-direction:column;gap:4px!important;flex:none}
+body.versus-page.mobile-mode.computer-mode .computer-opponent-slot{display:block!important;order:-1;position:relative;width:100%;height:var(--computer-preview-height);padding:0!important;overflow:hidden;flex:none;background:#102e42;border-bottom:2px solid #949ed1}
+body.versus-page.mobile-mode.computer-mode .computer-preview-heading{display:flex;align-items:center;justify-content:space-between;height:28px;padding:0 10px;color:#fff0b5;font:12px/1.3 system-ui}
+body.versus-page.mobile-mode.computer-mode #computerPreviewToggle{min-height:26px;min-width:48px;padding:2px 8px;border:1px solid #a5b7cc;border-radius:5px;background:#294d68;color:white;font:12px system-ui}
+body.versus-page.mobile-mode.computer-mode .computer-opponent-slot .arena{position:absolute;top:28px;left:50%;margin:0!important;transform:translateX(-50%) scale(var(--computer-preview-scale));transform-origin:top center;pointer-events:none}
+body.versus-page.mobile-mode.computer-mode .computer-opponent-slot .mobile-vs-controls{display:none!important}
+body.versus-page.mobile-mode.computer-mode.computer-preview-collapsed .computer-opponent-slot .arena{visibility:hidden}
+@media(orientation:landscape) and (min-width:640px){
+ body.versus-page.mobile-mode.computer-mode .computer-player-slot{height:calc(100dvh - 118px - var(--computer-preview-height))}
+ body.versus-page.mobile-mode.computer-mode .computer-player-slot .mobile-vs-controls{height:calc(100dvh - 118px - var(--computer-preview-height));overflow:auto}
+}
