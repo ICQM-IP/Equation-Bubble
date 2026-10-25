@@ -26,6 +26,7 @@
   begin();return;
  }
  const home=document.querySelector('.home-menu');if(!home)return;
+ for(const key of [KEY,AIKEY]){const saved=read(key);if(saved)save(key,{...saved,topic:'0'});} // Default all activities to mixed on a fresh home visit.
  const panel=home.querySelector('.home-panel'), link=home.querySelector('.battle-card');
  const battleButton=document.createElement('button');battleButton.type='button';battleButton.className=link.className;battleButton.dataset.activity='battle';battleButton.setAttribute('aria-pressed','false');battleButton.append(...link.childNodes);link.replaceWith(battleButton);
  battleButton.querySelector('small').textContent='只限電腦 · 同一鍵盤雙人';

@@ -15,7 +15,7 @@
   }
   // Migrate old rhythm preferences: speed now has one selector.
   byId('soloTurbo').checked = true;
-  if (['0','1','2','3','4','5'].includes(saved.startLevel)) byId('startLevel').value = saved.startLevel;
+  byId('startLevel').value = '0'; // Each home visit starts with all five topics.
   if (['0','1','2','3','4'].includes(saved.singleTeacher)) {
     byId('singleTeacher').value = saved.singleTeacher;
     chooseSingleTeacher();
