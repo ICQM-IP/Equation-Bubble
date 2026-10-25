@@ -139,7 +139,7 @@ function fillDenseWall(){if(practice){const count=Math.min(mobileMode?2:4,gentle
 function refillDense(){if(gentle&&rows.length>=Math.min(mobileMode?4:8,level))return false;if(mobileMode){if(rows.length>=4||rows.some(r=>r.y<160))return false;spawn();const r=rows[rows.length-1];r.lane=0;r.y=0;renderRow(r);load();return true;}if(!frantic||rows.length>=PACE.maxRows)return false;const eligible=[0,1].filter(lane=>{const column=rows.filter(r=>r.lane===lane);return !column.length||Math.min(...column.map(r=>r.y))>=104;});if(!eligible.length)return false;spawn({lane:pickSpawnLane(eligible)});const r=rows[rows.length-1];r.y=Math.random()*20;renderRow(r);load();return true}
 
 function chooseSingleTeacher(){const choice=$('#singleTeacher');const id=Number(choice.value);const teacher=EquationTeachers[Number.isInteger(id)&&id>=0&&id<5?id:2];$('#teacher').src=teacher.image;$('#teacher').alt=teacher.name+' 指導老師';try{localStorage.setItem('equationTeacher',String(id))}catch{}}
-try{const stored=Number(localStorage.getItem('equationTeacher')??2);$('#singleTeacher').value=String(Number.isInteger(stored)&&stored>=0&&stored<5?stored:2)}catch{$('#singleTeacher').value='2'}
+try{const stored=Number(localStorage.getItem('equationTeacher')??1);$('#singleTeacher').value=String(Number.isInteger(stored)&&stored>=0&&stored<5?stored:2)}catch{$('#singleTeacher').value='1'}
 $('#singleTeacher').addEventListener('change',chooseSingleTeacher);chooseSingleTeacher();
 // Start the real frame loop after all helpers have been declared.
 hud();load();requestAnimationFrame(tick);

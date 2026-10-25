@@ -54,6 +54,13 @@
     byId('homeTeacherName').textContent = teacher.name + ' · 你的指導老師';
   };
   byId('singleTeacher').addEventListener('change', teacherPreview);
+  const scene=home.querySelector('.hero-scene'),picture=byId('homeTeacher');
+  const actorButton=document.createElement('button');actorButton.type='button';actorButton.className='home-teacher-action';actorButton.setAttribute('aria-label','點一下老師，轉換動作');picture.replaceWith(actorButton);actorButton.append(picture);
+  const switcher=document.createElement('div');switcher.className='home-teacher-switcher';switcher.setAttribute('aria-label','切換主畫面指導老師');
+  for(const [direction,label]of [[-1,'上一位老師'],[1,'下一位老師']]){const button=document.createElement('button');button.type='button';button.textContent=direction<0?'◀':'▶';button.setAttribute('aria-label',label);button.onclick=()=>{const input=byId('singleTeacher');input.value=String((Number(input.value)+direction+EquationTeachers.length)%EquationTeachers.length);input.dispatchEvent(new Event('change'));};switcher.append(button);}
+  scene.append(switcher);const tip=document.createElement('small');tip.className='home-teacher-tip';tip.textContent='點老師，睇動作';scene.append(tip);
+  let pose=0;const poses=['signature','fire','clap','think','victory'];actorButton.onclick=()=>{if(typeof playHomeTeacherAction==='function')playHomeTeacherAction(poses[pose++%poses.length]);};
+
   // These controls are supplied by the shared effects and teacher scripts.
   for (const node of [...home.querySelectorAll('.effect-settings, .teacher-preview-open')]) byId('homeEffects').append(node);
   home.querySelector('.turbo-help')?.remove(); // The same controls are explained under 玩法說明.

@@ -31,6 +31,8 @@ if(battle){for(let i=0;i<2;i++){mount(document.querySelector('#avatar'+i),i);mou
 let resultEvent=null;
 function teacherEvent(e){if(typeof root.arcadeArtEvent==='function')root.arcadeArtEvent(e);if(e.type==='end'){resultEvent=e;for(let i=0;i<(battle?2:1);i++)controllers[i].play(e.winner===null||e.winner===i?'victory':'recover',{force:true});return;}const i=e.player||0,chain=e.chain||(battle?match?.players[i]?.chain:typeof fastChain!=='undefined'?fastChain:0),action=eventAction(e,chain);if(action)controllers[i].play(action,{chain});}
 root.teacherEvent=teacherEvent;
+const homeController=new Controller();
+root.playHomeTeacherAction=function(action){const img=document.querySelector('#homeTeacher');if(!img)return;let actor=actors.find(a=>a.img===img);if(!actor){mount(img,0);actor=actors[actors.length-1];actor.home=true;}homeController.play(action,{force:true});};
 const previewController=new Controller();let previewId=2,previewActive=false;
 const dialog=document.createElement('dialog');dialog.className='teacher-preview';dialog.setAttribute('aria-label','老師動作預覽');
 const title=document.createElement('h2');title.textContent='老師動作預覽';const note=document.createElement('p');note.textContent='每個動作都是獨立繪製的完整角色圖。遊戲中會按情況自動換圖。';
@@ -54,9 +56,10 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000||0);last=now;
  const pausedGame=battle?!!match?.paused:typeof paused!=='undefined'&&paused;
  const active=battle?match?.status==='playing'&&match.countdown<=0:typeof running!=='undefined'&&running;
  for(let i=0;i<(battle?2:1);i++){const p=battle?match?.players[i]:null;const hints=battle?p?.stats?.hints||0:learningStats.hints;if(hints>lastHints[i])controllers[i].play('think');lastHints[i]=hints;controllers[i].step(dt,{paused:pausedGame||mobileInputEditing||document.hidden,active,danger:!!document.querySelector(battle?'#field'+i:'#field')?.classList.contains('urgent'),aim:battle?p?.angle||0:angle});}
+ homeController.step(dt,{active:false,paused:document.hidden||!document.body.classList.contains('home-open')});
  if(previewActive)previewController.step(dt,{active:false});
  for(const actor of actors){const {img,canvas,ctx,i,preview}=actor;if(!img.isConnected){canvas.remove();continue;}if(battle&&mobileMode&&typeof computerMode!=='undefined'&&computerMode&&i===1&&!preview){canvas.hidden=true;img.classList.remove('teacher-motion-source');continue;}const visible=img.getClientRects().length&&getComputedStyle(img).display!=='none'&&(!preview||previewActive);canvas.hidden=!visible;if(!visible||!img.complete||!img.naturalWidth)continue;
- const c=preview?previewController:controllers[i],id=preview?previewId:battle?match?.players[i]?.teacher??selection[i]:Number(document.querySelector('#singleTeacher')?.value??localStorage.getItem('equationTeacher')??2);
+ const c=actor.home?homeController:preview?previewController:controllers[i],id=preview?previewId:battle?match?.players[i]?.teacher??selection[i]:Number(document.querySelector('#singleTeacher')?.value??localStorage.getItem('equationTeacher')??2);
  // The sibling shares the source's coordinate space, including mobile layout.
  canvas.style.left=img.offsetLeft+'px';canvas.style.top=img.offsetTop+'px';canvas.style.width=img.offsetWidth+'px';canvas.style.height=img.offsetHeight+'px';canvas.dataset.action=c.action;canvas.dataset.clock=c.clock.toFixed(3);canvas.dataset.teacher=String(id);const ready=draw(ctx,img,c,id,actor);img.classList.toggle('teacher-motion-source',ready);canvas.hidden=!ready;canvas.style.animationPlayState=pausedGame?'paused':'running';
  }

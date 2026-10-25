@@ -75,3 +75,11 @@ body > #overlay .home-menu h2 { font-size:25px!important; }
 @media(max-width:860px) { body > #overlay > .home-menu { max-width:620px!important; }body > #overlay .home-menu h1 { font-size:34px!important; }body > #overlay .home-menu h2 { font-size:23px!important; } }
 @media(max-width:460px) { body > #overlay .home-menu h1 { font-size:29px!important; }body > #overlay .home-menu h2 { font-size:22px!important; } }
 @media(min-width:640px) and (max-width:860px) and (orientation:landscape) { body > #overlay > .home-menu { max-width:100%!important; } }
+
+.home-teacher-action{position:relative;display:block;border:0!important;padding:0!important;margin:0!important;background:none!important;cursor:pointer;line-height:0;flex:none;touch-action:manipulation}
+.home-teacher-action:focus-visible{outline:3px solid #e3a849;outline-offset:3px;border-radius:12px}
+.home-teacher-action #homeTeacher{display:block;margin:0}
+.home-teacher-switcher{display:flex;justify-content:center;gap:14px;position:relative;z-index:6;margin-top:6px}
+.home-teacher-switcher button{width:44px;min-height:44px;border:1px solid #8db5ab;border-radius:12px;background:#fffdf3;color:#285f58;font:700 18px system-ui;cursor:pointer;touch-action:manipulation}
+.home-teacher-tip{font:11px/1.4 system-ui;color:#315c57;position:relative;z-index:6}
+@media(max-width:860px){.home-hero{min-height:290px}.hero-scene{bottom:10px}.home-teacher-switcher{gap:8px;margin-top:4px}.home-teacher-tip{font-size:10px}}
