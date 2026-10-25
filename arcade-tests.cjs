@@ -219,3 +219,13 @@ for(let topic=1;topic<=5;topic++){
 }
 ids.startLevel.value='2';run('var openings=new Set();for(let i=0;i<12;i++){reset();openings.add(eqText(rows[0].e))}');assert(run('openings.size>1'));
 console.log('PASS: solo timed mode never loses hearts; all opening topics visible on both layouts; two-step openings vary.');
+
+// Solo portrait reserves room for the complete reordered touch cabinet.
+for(const [width,height] of [[320,480],[320,568],[375,667],[390,844]]){
+ run(`mobileMode=true;innerWidth=${width};innerHeight=${height};fit()`);
+ const arenaHeight=parseFloat(ids.viewport.style.height),cabinetHeight=Math.min(360,Math.max(320,height*.44));
+ assert(arenaHeight+cabinetHeight+56<=height+.01,`complete solo cabinet fits ${width}x${height}`);
+}
+assert(html.indexOf('<section class="math-readout">')<html.indexOf('<nav class="mobile-ops"'));
+assert(html.indexOf('<nav class="mobile-ops"')<html.indexOf('<div class="mobile-actions"'));
+console.log('PASS: compact solo cabinet retains working / operations / fire order and fits short/tall portrait height budgets.');
