@@ -1,0 +1,17 @@
+body .language-switch{display:flex;gap:4px;align-items:center;justify-content:flex-end;flex-wrap:nowrap;margin:0 0 10px;position:relative;z-index:25;font:12px system-ui}
+body .language-switch button{min-height:36px;padding:5px 10px;border:1px solid #91b7af;border-radius:8px;background:#fffdf4;color:#28534f;font:600 12px system-ui;cursor:pointer;touch-action:manipulation;white-space:nowrap}
+body .language-switch button[aria-pressed=true]{background:#285f58;color:white;border-color:#285f58}
+body #deviceToolbar .language-switch,body .battle-tools .language-switch{margin:0;flex:none}
+body #deviceToolbar .language-switch button{min-height:36px;font-size:11px;padding:4px 7px}
+html[lang=en] .home-menu .activity-card strong{white-space:normal;font-size:12px}
+html[lang=en] .home-menu .activity-card small{white-space:normal;line-height:1.4}
+html[lang=en] .home-menu h1{font-size:clamp(26px,3.2vw,46px)}
+html[lang=en] .home-menu .home-battle-player .selection-controls{font-size:11px}
+html[lang=en] .mobile-actions button{font-size:15px!important}
+html[lang=en] .battle-row.special:before{content:'★'!important}
+html[lang=en] .turbo-active .risk-row:before{content:'★★'!important}
+@media(max-width:460px){body #deviceToolbar{gap:3px;flex-wrap:wrap;height:auto;min-height:50px}body #deviceToolbar .device-brand{display:none}body #deviceToolbar .language-switch button{padding:4px 6px;min-width:0}html[lang=en] .home-menu .activity-card strong{font-size:11px}}
+html[lang=en] body.solo-cabinet:not(.mobile-mode) #currentAmmo:before{content:'Loaded'}
+html[lang=en] body.solo-cabinet:not(.mobile-mode) #fire kbd:after{content:' Fire'}
+html[lang=en] .hero-copy{max-width:100%}
+html[lang=en] .home-menu .home-eyebrow{letter-spacing:1px}
