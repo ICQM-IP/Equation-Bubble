@@ -1,0 +1,61 @@
+/* A third activity, with the existing welcome card hierarchy. */
+.home-menu .activity-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.home-menu .computer-card[aria-pressed=true]{background:#edf0ff;border:2px solid #7277b6;box-shadow:0 4px 0 #d9dcec}
+.home-menu .computer-card .activity-icon{font:28px/1 system-ui}
+.home-menu .home-battle-grid label:has(#homeBattleDuration){grid-column:1/-1}
+#computerStatus{display:none}
+.computer-mode #arena1 .battle-ops,.computer-mode #arena1 .battle-fire,.computer-mode #arena1 .player-controls{pointer-events:none;opacity:.65}
+.computer-mode #arena1 .player-controls{visibility:hidden}
+.computer-mode #arena1 .battle-row button{pointer-events:none}
+body.versus-page.mobile-mode.computer-mode{overflow:hidden!important;box-sizing:border-box;height:100dvh;padding-bottom:6px}
+body.versus-page.mobile-mode.computer-mode #battleStage{display:flex;flex-direction:column;position:relative;height:calc(100dvh - 56px)!important;background:#183d51}
+body.versus-page.mobile-mode.computer-mode #computerStatus{display:flex;gap:8px;align-items:center;flex:none;height:56px;box-sizing:border-box;padding:4px 10px;background:#223b55;border-bottom:2px solid #a5a9d2;font:12px/1.3 system-ui;color:#edf6ff}
+#computerStatus img{width:35px;height:46px;object-fit:contain;image-rendering:pixelated;flex:none}
+#computerStatus>div{display:flex;flex-direction:column;min-width:0;gap:1px}
+#computerStatus strong{font-size:12px;color:#fff0b5}
+#computerWarning{font-size:11px}
+#computerStatus.danger-incoming{background:#682e48!important}
+body.versus-page.mobile-mode.computer-mode .computer-opponent-slot,
+body.versus-page.mobile-mode.computer-mode .versus-divider{display:none!important}
+body.versus-page.mobile-mode.computer-mode .arenas{display:block!important;margin:4px 0 0!important;min-height:0}
+body.versus-page.mobile-mode.computer-mode .computer-player-slot{display:flex;flex-direction:column;align-items:stretch;position:relative;padding:0 5px!important}
+body.versus-page.mobile-mode.computer-mode .computer-player-slot .arena{flex:none;margin-bottom:calc(var(--arena-height) - 690px);margin-left:calc((100% - 786px * var(--arena-scale)) / 2)}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls{display:flex!important;flex-direction:column;gap:4px;margin:4px 0 0!important;padding:6px 8px!important;height:300px;flex:none;overflow:hidden}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>*{flex-shrink:0}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>.touch-hud{order:0;min-height:38px!important;height:38px;margin:0!important;padding:0!important}
+body.versus-page.mobile-mode.computer-mode .teacher-chip{height:38px;min-height:38px;padding-left:40px;position:relative}
+body.versus-page.mobile-mode.computer-mode .teacher-chip>img,
+body.versus-page.mobile-mode.computer-mode .teacher-chip>.teacher-actor,
+body.versus-page.mobile-mode.computer-mode .teacher-chip>.mentor-stage{position:absolute;left:0!important;top:0!important;width:34px!important;height:38px!important}
+body.versus-page.mobile-mode.computer-mode .mentor-caption,
+body.versus-page.mobile-mode.computer-mode .touch-ammo{display:none!important}
+body.versus-page.mobile-mode.computer-mode .teacher-chip strong{font-size:14px}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>.math-readout{order:1;flex:1!important;min-height:60px!important;height:auto!important;margin:0!important;padding:4px 8px!important;overflow:auto}
+body.versus-page.mobile-mode.computer-mode .math-readout>header{font-size:12px;padding:0 0 3px}
+body.versus-page.mobile-mode.computer-mode .readout-equation{padding:3px 0;min-height:24px;font-size:21px;line-height:1.3}
+body.versus-page.mobile-mode.computer-mode .math-readout p{font-size:11px;line-height:1.3;padding-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>.learning-panel{order:2;flex:none;margin:0!important;padding:0!important;background:none}
+body.versus-page.mobile-mode.computer-mode .learning-clock,
+body.versus-page.mobile-mode.computer-mode .learning-status,
+body.versus-page.mobile-mode.computer-mode .power-status,
+body.versus-page.mobile-mode.computer-mode .power-meter{display:none!important}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls .rescue-button{min-height:36px;height:36px;margin:0!important;padding:3px 8px;font-size:15px}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>nav{order:3;gap:4px}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>.mobile-actions{order:4;margin:0!important;gap:4px;grid-template-columns:44px minmax(60px,1fr) 44px minmax(85px,1.2fr)}
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls nav button,
+body.versus-page.mobile-mode.computer-mode .mobile-actions button{min-height:44px;height:44px}
+@media(orientation:landscape) and (min-width:640px){
+ body.versus-page.mobile-mode.computer-mode .computer-player-slot{display:block;height:calc(100dvh - 118px)}
+ body.versus-page.mobile-mode.computer-mode .computer-player-slot .arena{position:absolute;top:0;left:calc((100% - 300px - 786px * var(--arena-scale)) / 2);margin:0}
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls{position:absolute;right:5px;top:0;width:288px;height:calc(100dvh - 118px);margin:0!important}
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>.mobile-actions{grid-template-columns:36px minmax(50px,1fr) 36px minmax(66px,1.2fr)}
+ body.versus-page.mobile-mode.computer-mode .mobile-actions button{min-width:0;font-size:14px!important}
+}
+@media(max-width:460px){
+ .home-menu .activity-card strong{font-size:11px;white-space:normal}
+ .home-menu .activity-card small{font-size:8px}
+}
+
+body.versus-page.mobile-mode.computer-mode #arena0 .battle-row .orb{font-size:36px}
+body.versus-page.mobile-mode.computer-mode #arena0 .battle-row .orb.wide{font-size:29px}
+body.versus-page.mobile-mode.computer-mode #arena0 .battle-row .orb.has-stacked{font-size:32px}
