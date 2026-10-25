@@ -18,3 +18,9 @@ console.log('PASS: all three real difficulty profiles solve at slow, default and
 const touch=round(),phonePlayer=touch.m.players[0];touch.m.countdown=0;phonePlayer.touchLayout=true;phonePlayer.rows=phonePlayer.rows.slice(0,1);phonePlayer.rows[0].lane=0;phonePlayer.rows[0].touchLayout=true;V.layout(phonePlayer.rows[0]);assert.equal(phonePlayer.rows[0].height,100);assert(phonePlayer.rows[0].nodes.every(n=>n.x>=0&&n.x+n.w<=V.W));phonePlayer.hint(true);phonePlayer.fire();advance(touch,2);assert(phonePlayer.stats.hits>0,'larger phone target uses matching physical hit boxes');
 const next=phonePlayer.spawn({lane:1});assert.equal(next.lane,0);assert.equal(next.height,100);assert(next.touchLayout);
 console.log('PASS: phone player has full-width single-column targets, working hints, real collision hits and consistent new rows.');
+
+assert.equal(C.LEVELS.easy.delay,1.8);assert.equal(C.LEVELS.easy.error,.08);assert.equal(C.LEVELS.easy.rescueAt,65);
+let entryTotal=0,standardTotal=0;
+for(const topic of [1,2,3,4,5]){const easy=round({topic,difficulty:'easy'}),normal=round({topic,difficulty:'normal'});advance(easy,180);advance(normal,180);entryTotal+=easy.m.players[1].clears;standardTotal+=normal.m.players[1].clears;}
+assert(standardTotal>entryTotal,'new standard solves more questions than former standard / new entry');
+console.log('PASS: entry preserves the previous standard profile; stronger standard solves more questions across all five topics.');

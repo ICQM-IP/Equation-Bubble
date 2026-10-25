@@ -2,7 +2,7 @@
 'use strict';
 const V=typeof module!=='undefined'&&module.exports?require('./versus-engine.js'):root.EquationVersus;
 const M=typeof module!=='undefined'&&module.exports?require('./math.js'):root.EquationMath;
-const LEVELS={easy:{name:'入門',delay:3.1,error:.17,rescueAt:25},normal:{name:'標準',delay:1.8,error:.08,rescueAt:65},hard:{name:'挑戰',delay:.95,error:.025,rescueAt:100}};
+const LEVELS={easy:{name:'入門',delay:1.8,error:.08,rescueAt:65},normal:{name:'標準',delay:1.25,error:.04,rescueAt:85},hard:{name:'挑戰',delay:.95,error:.025,rescueAt:100}};
 class Controller{
  constructor(player,difficulty='normal',random=null){this.player=player;this.level=LEVELS[difficulty]||LEVELS.normal;this.elapsed=0;this.pending=null;this.windup=0;this.status='思考中';let seed=(player.match.seed^0xa5b35705)>>>0;this.random=random||(()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296});}
  plan(){
