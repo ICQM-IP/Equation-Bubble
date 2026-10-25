@@ -17,7 +17,7 @@ body,button,select,input{font-family:var(--ui-font)}
 .incoming.danger-incoming{background:#813a47;color:#fff0b8;border-width:1px}
 /* Special belongs to the whole equation, without repeating an instruction on each row. */
 .battle-row.special:before{content:'★';top:-24px;padding:0;width:25px;height:25px;text-align:center;line-height:24px;border-radius:50%;font-size:19px;background:#594626;color:#ffe58b;border:1px solid #ffdc73;text-shadow:none}
-.battle-row.special:after{content:'';position:absolute;left:calc(var(--special-left) - 4px);top:-4px;width:calc(var(--special-width) + 8px);height:74px;border:1px solid #ffdb7899;border-radius:40px;background:#ffe16b0a;pointer-events:none;z-index:-1}
+.battle-row.special:after{content:'';position:absolute;left:calc(var(--special-left) - 4px);top:-4px;width:calc(var(--special-width) + 8px);height:calc(100% + 8px);box-sizing:border-box;border:1px solid #ffdb7899;border-radius:40px;background:#ffe16b0a;pointer-events:none;z-index:-1}
 .battle-row.special .node{box-shadow:none}
 /* A clear danger marker is always visible; motion is reserved for an approaching row. */
 .danger,.battle-danger{border-top:3px dashed #cc5a49!important;color:#9a3b31!important;background:#fff0d7b8;font-family:var(--ui-font);font-weight:700;font-size:15px!important;letter-spacing:2px!important;text-shadow:none;line-height:23px}
