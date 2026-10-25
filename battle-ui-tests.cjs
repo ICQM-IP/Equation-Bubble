@@ -55,3 +55,10 @@ run('match.players[0].hint(true)');physical('KeyF');assert(run('match.players[0]
 physical('KeyA','a',{target:{matches:()=>true}});assert(!run('match.players[0].held.has("left")'));
 physical('KeyD','d',{metaKey:true});assert(!run('match.players[0].held.has("right")'));
 console.log('PASS: physical WASDF keys work with IME/non-Latin key values; release clears holds; typing and browser shortcuts stay isolated.');
+
+// Repeated star attacks keep the normal attack mechanics without a centre star overlay.
+assert(!html.includes('id="attackFly"'));ctx.document.body=new El('body');
+run('begin();match.countdown=0;for(let i=0;i<3;i++){const p=match.players[0],r=p.rows[0]||p.spawn();r.e=M.eq(1,0,0,2);r.original=M.eq(3,0,0,6);r.special=r.risk=true;p.finish(r);events()}');
+assert.equal(run('match.players[0].sent'),3);assert.equal(run('match.players[1].incoming.length'),3);
+assert(!arenas.classList.contains('attack-left'));assert(!arenas.classList.contains('attack-right'));
+console.log('PASS: three consecutive star attacks retain incoming attacks and do not leave centre-star activation classes or markup.');
