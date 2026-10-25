@@ -41,7 +41,7 @@ const label=document.createElement('p');label.className='teacher-action-label';l
 const buttons=document.createElement('div');buttons.className='teacher-action-buttons';for(const [action,name] of Object.entries(ACTIONS)){const b=document.createElement('button');b.type='button';b.textContent=name;b.dataset.teacherAction=action;b.onclick=()=>{previewController.play(action,{force:true});previewController.left=4;label.textContent=name;};buttons.append(b);}
 const close=document.createElement('button');close.textContent='關閉預覽';close.type='button';close.onclick=()=>dialog.close();pick.onchange=()=>{previewId=Number(pick.value);previewImg.src=EquationTeachers[previewId].image;previewImg.alt=EquationTeachers[previewId].name;previewController.play('signature',{force:true});label.textContent=ACTIONS.signature;};
 const open=document.createElement('button');open.type='button';open.className='teacher-preview-open';open.textContent='老師動作預覽';open.onclick=()=>{previewActive=true;dialog.showModal();};
-(battle?document.querySelector('#battleSetup .setup-card'):document.querySelector('#overlay .menu')).append(open);
+// The pose preview has no player-facing entry point.
 dialog.addEventListener('close',()=>{previewActive=false;});dialog.append(title,note,pick,stage,label,buttons,close);document.body.append(dialog);mount(previewImg,0,true);
 let last=0,lastSession=null,lastHints=[0,0];
 function frame(now){const dt=Math.min(.05,(now-last)/1000||0);last=now;
