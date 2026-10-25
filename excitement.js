@@ -12,7 +12,7 @@ function updateExcitement(){
  const enabled=excitementBattle?!!match?.turbo:turbo,finale=enabled&&(excitementBattle?match.frenzy:frenzy);
  document.body.classList.toggle('turbo-active',enabled);document.body.classList.toggle('frenzy-mode',!!finale);document.body.classList.toggle('effects-off',!excitementEffects);
  for(const panel of excitementPanels){const i=Number(panel.ui.panel.dataset.learningPlayer),p=excitementBattle?match?.players[i]:null;
- panel.line.hidden=panel.bar.hidden=panel.rescueButton.hidden=!enabled;if(!enabled)continue;
+ if(excitementBattle&&mobileMode&&typeof computerMode!=='undefined'&&computerMode&&i===1){panel.ui.panel.hidden=true;continue;}panel.line.hidden=panel.bar.hidden=panel.rescueButton.hidden=!enabled;if(!enabled)continue;
  const power=excitementBattle?p.heat:heat,chain=excitementBattle?p.chain:fastChain,until=excitementBattle?p.chainUntil:chainUntil,elapsed=excitementBattle?match.elapsed:sessionElapsed,remaining=Math.max(0,until-elapsed),used=excitementBattle?p.rescueUsed:rescueUsed;
  panel.line.textContent=(finale?'🔥 最後狂熱 · ':'')+'火力 '+power+'/5'+(chain&&remaining>0?' · '+chain+' 連解 · '+remaining.toFixed(1)+' 秒續擊':' · 8 秒內連解可追擊');panel.fill.style.width=power*20+'%';panel.rescueButton.textContent=used?'救援已用盡':'🛟 救援一次'+(excitementBattle?(i===0?' R':' /'):' R');panel.rescueButton.disabled=used||!(excitementBattle?p.canFire:canAct());
  const field=document.querySelector(excitementBattle?'#field'+i:'#field');field.dataset.power=String(power);document.querySelector(excitementBattle?'#cannon'+i:'#cannon').style.setProperty('--heat',power);

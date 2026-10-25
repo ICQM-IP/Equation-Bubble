@@ -2,6 +2,8 @@
 // Native-size touch controls surround the existing mathematical playfield.
 const mobileVersus=document.body.classList.contains('versus-page');
 let mobileEditor=null;
+function isHandheldDevice(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||'')||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);}
+
 const mobileOverlayParent=document.querySelector('#overlay')?.parentElement;
 function mirrorMath(sourceId,targetId){
  const source=document.querySelector(sourceId),target=document.querySelector(targetId);if(!source||!target)return;
@@ -37,7 +39,7 @@ function syncMobileHud(){
 }
 function setDeviceMode(on){
  // Layout must not move a target while its shot or operation is in progress.
- if(mobileVersus?match?.players.some(p=>p.bullet||p.phase):busy){document.querySelector('#deviceStatus').textContent='請等炮彈完成後切換';return;}
+ if(mobileVersus?match?.players.some(p=>p.bullet||p.phase):busy){document.querySelector('#deviceStatus').textContent='請等炮彈完成後切換';const choice=document.querySelector('#deviceChoice');if(choice)choice.checked=mobileMode;return;}
  if(mobileEditor)mobileEditor.blur();mobileInputEditing=false;mobileMode=!!on;
  document.body.classList.toggle('mobile-mode',mobileMode);
  document.querySelector('#deviceToolbar').hidden=!mobileMode;
@@ -50,6 +52,7 @@ function setDeviceMode(on){
  document.querySelector('#deviceToggle').textContent=mobileMode?'電腦版':'📱 手提裝置模式';
  try{localStorage.setItem('equationMobileMode',mobileMode?'on':'off')}catch{}
  syncMobileHud();
+ if(typeof Event==='function'&&document.dispatchEvent)document.dispatchEvent(new Event('equation-device-change'));
 }
 function registerEditor(input,onInput){
  input.addEventListener('input',onInput);

@@ -24,3 +24,7 @@ let entryTotal=0,standardTotal=0;
 for(const topic of [1,2,3,4,5]){const easy=round({topic,difficulty:'easy'}),normal=round({topic,difficulty:'normal'});advance(easy,180);advance(normal,180);entryTotal+=easy.m.players[1].clears;standardTotal+=normal.m.players[1].clears;}
 assert(standardTotal>entryTotal,'new standard solves more questions than former standard / new entry');
 console.log('PASS: entry preserves the previous standard profile; stronger standard solves more questions across all five topics.');
+// Touch attack rows use the same 28px clearance as normal descent constraints.
+const phoneAttack=new V.Match({turbo:true,gentle:true});phoneAttack.countdown=0;const receiver=phoneAttack.players[0];receiver.touchLayout=true;receiver.rows=[];receiver.spawn({y:100,special:false});assert(receiver.receiveAttack());const ordered=receiver.rows.slice().sort((a,b)=>a.y-b.y);assert(ordered[0].y+ordered[0].height+28<=ordered[1].y);assert(ordered.every(r=>r.lane===0&&r.height===100));
+receiver.rows.forEach(r=>r.y=-170);assert.equal(receiver.receiveAttack(),false,'hidden upper rows defer incoming attacks using the actual touch lane');
+console.log('PASS: phone attacks preserve spacing and defer when the single lane is full.');

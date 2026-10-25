@@ -44,7 +44,8 @@ function renderComputerStatus(){
 // A full-width, single-column player field gives phone targets native touch size.
 function configureComputerPlayer(){
  if(!computerMode||!match)return;
- const p=match.players[0],touch=!!mobileMode;if(!!p.touchLayout===touch)return;
+ const touch=!!mobileMode;
+ for(const p of match.players){if(!!p.touchLayout===touch)continue;
  p.touchLayout=touch;let previous=Infinity;
  for(const row of [...p.rows].sort((a,b)=>b.y-a.y)){
   if(touch){row.desktopLane=row.lane;row.lane=0;row.y=Math.min(row.y,previous-128);previous=row.y;}
@@ -52,4 +53,5 @@ function configureComputerPlayer(){
   row.touchLayout=touch;V.layout(row);
  }
  p.hintKey=null;p.hintLevel=0;p.aimed=null;p.revision++;
+ }
 }

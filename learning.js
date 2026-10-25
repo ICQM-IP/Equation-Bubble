@@ -13,12 +13,13 @@ function clockText(elapsed,limit){if(!limit)return '不限時';const n=Math.max(
 function refreshLearningUI(){
  for(const ui of learningPanels){let ammo,stats,mode,active,elapsed,limit;
  const i=Number(ui.panel.dataset.learningPlayer);
+ if(learningBattle&&mobileMode&&typeof computerMode!=='undefined'&&computerMode&&i===1){ui.panel.hidden=true;continue;}
  if(learningBattle){if(!match){ui.panel.hidden=true;continue}const p=match.players[i];ammo=p.ammo();stats=p.stats;mode='assist';active=p.canFire;elapsed=match.elapsed;limit=match.duration;}
  else{ammo=loaded;stats=learningStats;mode=singleLearningMode;active=canAct();elapsed=sessionElapsed;limit=sessionLimit;}
  if(learningBattle){document.querySelector('#manual'+i).hidden=mode!=='challenge';document.querySelector('#vsMobileLabel'+i).hidden=mode!=='challenge';}else{document.querySelector('#manualAmmo').hidden=mode!=='challenge';document.querySelector('#mobileValueLabel').hidden=mode!=='challenge';}ui.panel.hidden=false;ui.time.textContent=clockText(elapsed,limit);ui.status.textContent='已解 '+stats.solved+' 題 · 正確命中 '+M.accuracy(stats)+'% · 提示 '+stats.hints+' 次';
  ui.choices.hidden=mode!=='choices';
  // Values come from the selected operation on the physically reachable target.
- let base=learningBattle?match.players[i].autoAmmo():cartridges()[ammoIndex];
+ let base=mode==='choices'?(learningBattle?match.players[i].autoAmmo():cartridges()[ammoIndex]):null;
  const enabled=mode==='choices'&&active&&base&&!base.unavailable&&!String(base.label).includes('?');
  const key=mode+'|'+(enabled?base.op+'|'+base.kind+'|'+base.v:'disabled');
  if(key!==ui.key){ui.key=key;ui.choices.replaceChildren();if(enabled){for(const value of M.operandChoices(base.v)){const button=document.createElement('button');button.type='button';button.dataset.operand=value;button.textContent=value.replaceAll('-','−');button.setAttribute('aria-label','裝填數值 '+value);button.onclick=()=>{if(learningBattle){const p=activePlayer(i);if(!p?.canFire)return;p.manualValue=value;document.querySelector('#value'+i).value=value;render()}else{if(!canAct())return;document.querySelector('#ammoValue').value=value;document.querySelector('#mobileValue').value=value;load();if(!mobileMode&&typeof focusSoloStage==='function')focusSoloStage()}};ui.choices.append(button)}}else ui.choices.textContent=mode==='choices'?'先瞄準目標並選擇適用運算，再選數值。':'';}
