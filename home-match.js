@@ -39,7 +39,7 @@
   if(kind==='bot'){const text=document.createElement('span');text.textContent='自動瞄準、換運算、發射及救援';host.append(text);return;}
   const touch=byId('deviceChoice').checked;
   const controls=touch?[['◀ ▶','瞄準'],['＋ − × ÷ LCM','選運算'],['發射','發射'],['提示','提示'],['救援','救援一次']]:kind==='p1'?[['A D','瞄準'],['W S','換運算'],['F','發射'],['G','提示'],['R','救援一次']]:kind==='p2'?[['← →','瞄準'],['↑ ↓','換運算'],['Enter','發射'],['L','提示'],['/','救援一次']]:[['← →','瞄準'],['↑ ↓','換運算'],['Space / Enter','發射'],['H','提示'],['R','救援一次']];
-  for(const [key,label]of controls){const item=document.createElement('span'),cap=document.createElement('kbd');cap.textContent=key;item.append(cap,document.createTextNode(label));host.append(item);}
+  for(const [key,label]of controls){const item=document.createElement('span'),cap=document.createElement('kbd');if(key==='W S'||key==='↑ ↓'){cap.className='stacked-keys';for(const symbol of key.split(' ')){const row=document.createElement('span');row.textContent=symbol;cap.append(row);}cap.setAttribute('aria-label',key==='W S'?'W 上、S 下':'向上、向下');}else cap.textContent=key;item.append(cap,document.createTextNode(label));host.append(item);}
   const pause=document.createElement('span');pause.textContent=touch?'遊戲上方：暫停':'P：暫停整場';host.append(pause);
  }
  const soloGuide=document.createElement('div');byId('singleTeacher').parentElement.append(soloGuide);

@@ -67,3 +67,6 @@ body>#overlay .home-menu .selection-controls>span{display:flex;align-items:cente
 body>#overlay .home-menu .selection-controls kbd{display:inline-block;padding:3px 6px;min-width:25px;border:1px solid #a4bbb5;border-bottom-width:3px;border-radius:5px;background:#f1f7f4;color:#183f3d;text-align:center;font:700 12px/1.4 system-ui,sans-serif;white-space:nowrap}
 body>#overlay .home-menu .home-battle-player{align-items:flex-start}
 @media(max-width:600px){body>#overlay .home-menu .home-battle-players{grid-template-columns:1fr}body>#overlay .home-menu .home-battle-player{display:flex;text-align:left}body>#overlay .home-menu .home-battle-player img{width:55px;height:78px}}
+
+body>#overlay .home-menu .selection-controls kbd.stacked-keys{display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:3px 6px}
+body>#overlay .home-menu .selection-controls kbd.stacked-keys>span{display:block;line-height:1.2}
