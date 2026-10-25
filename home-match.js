@@ -12,12 +12,12 @@
  if(document.body.classList.contains('versus-page')){
   const launch=new URLSearchParams(location.search).get('start')==='1'?read(PENDING):null;
   if(!launch){if(read(MODE)!=='computer')save(MODE,'battle');location.replace('index.html');return;}
-  const c=normalize(launch);if(typeof configureComputerMatch==='function')configureComputerMatch(c);try{sessionStorage.removeItem(PENDING)}catch{}
+  const c=normalize(launch);if(c.opponent==='human'&&(c.mobile===true||mobileMode)){save(MODE,'battle');sessionStorage.removeItem(PENDING);location.replace('index.html');return;}if(typeof configureComputerMatch==='function')configureComputerMatch(c);try{sessionStorage.removeItem(PENDING)}catch{}
   for(let i=0;i<2;i++)choose(i,c.teachers[i]);
   for(const [id,value] of [['battleLevel',c.topic],['battleSpeed',c.speed],['battleDuration',c.duration]])byId(id).value=value;
   byId('battleTurbo').checked=c.turbo;byId('battleGentle').checked=c.gentle;
   const footer=document.querySelector('.battle-footer span');if(footer)footer.textContent=c.turbo?'★ 星題送 2 題 · 連解最多 3 題 · 可反制／反彈':'★ 完整解出星題送 1 題 · 可抵消來襲攻擊';
-  if(c.mobile!==null)setDeviceMode(c.mobile);
+  if(c.mobile!==null)setDeviceMode(c.mobile);byId('deviceToggle').hidden=c.opponent==='human';
   const effects=document.querySelectorAll('.effect-settings input');
   for(const [i,value]of [[0,c.effects],[1,c.music]])if(effects[i]&&value!==null){effects[i].checked=value;effects[i].dispatchEvent(new Event('change'));}
   if(sound!==c.sound)byId('battleSound').click();
@@ -28,6 +28,7 @@
  const home=document.querySelector('.home-menu');if(!home)return;
  const panel=home.querySelector('.home-panel'), link=home.querySelector('.battle-card');
  const battleButton=document.createElement('button');battleButton.type='button';battleButton.className=link.className;battleButton.dataset.activity='battle';battleButton.setAttribute('aria-pressed','false');battleButton.append(...link.childNodes);link.replaceWith(battleButton);
+ battleButton.querySelector('small').textContent='只限電腦 · 同一鍵盤雙人';
  const draft=normalize(read(KEY)), computerDraft=normalize(read(AIKEY)||{opponent:'computer',duration:'0'}), form=document.createElement('section');form.className='home-battle-settings';form.id='homeBattleSettings';form.hidden=true;form.setAttribute('aria-label','雙人對戰設定');
  const computerButton=document.createElement('button');computerButton.type='button';computerButton.className='activity-card computer-card';computerButton.dataset.activity='computer';computerButton.setAttribute('aria-pressed','false');computerButton.innerHTML='<span class=activity-icon aria-hidden=true><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="13" rx="2"/><path d="M8 21h8M12 16v5M9 7l6 5M15 7l-6 5"/></svg></span><strong>挑戰電腦</strong><small>與電腦老師較量</small><span class=activity-check>✓</span>';battleButton.parentElement.append(computerButton);
  const fields={};
@@ -61,6 +62,7 @@
  function config(){const effects=home.querySelectorAll('.effect-settings input');return normalize({opponent:activity==='computer'?'computer':'human',difficulty:fields.homeComputerDifficulty.value,teachers:[fields.homePlayer0.value,fields.homePlayer1.value],topic:fields.homeBattleTopic.value,speed:fields.homeBattleSpeed.value,duration:fields.homeBattleDuration.value,turbo:true,gentle:fields.homeBattleGentle.checked,sound:fields.homeBattleSound.checked,mobile:byId('deviceChoice').checked,effects:effects[0]?.checked,music:effects[1]?.checked});}
  function remember(){if(activity!=='solo')save(activity==='computer'?AIKEY:KEY,config());}
  for(const el of Object.values(fields))el.addEventListener('change',remember);
+ function updateBattleAvailability(){const blocked=activity==='battle'&&byId('deviceChoice').checked;byId('start').disabled=blocked;if(activity==='battle'){note.textContent=blocked?'雙人對戰只限電腦使用同一鍵盤遊玩。手提裝置請選擇「自主練習」或「挑戰電腦」。':'只限電腦 · 同一鍵盤雙人對戰，完成設定後按開始遊戲。';byId('start').textContent=blocked?'雙人對戰只限電腦遊玩':'開始雙人遊戲 →';}}
  function setActivity(next){
   if(activity!=='solo')remember();
   activity=next;const battle=next!=='solo',computer=next==='computer';
@@ -79,13 +81,14 @@
   note.textContent=computer?(fields.homeBattleDuration.value==='0'?'三顆心生存賽：先失去三顆心者落敗。可另選 3 分鐘限時賽。':'3 分鐘限時賽：先比解題數，再比命中率；碰線不扣心。'):battle?'同機雙人 · 所有設定完成後，按開始遊戲進入對戰。':byId('practice').checked?'方程停止下降，留一點時間想清楚。':'方程持續下降，解題時也要留意危險線。';
   route.textContent=battle?'星題可攻擊、反制；老師角色不影響能力，電腦難度另行選擇。':'解題路線：先消左常數、右邊 x 項，再除係數；括號先除外係數。';
   help.innerHTML=battle?'<summary>玩法說明 <span>操作及勝負規則</span></summary><p>'+(computer?'你：方向鍵或 A/D 瞄準，↑/↓ 或 W/S 換運算，Space／Enter／F 發射，H／G 提示，R 救援。手機可使用觸控按鈕。':'玩家 1：A/D 瞄準、W/S 換運算、F 發射、G 提示、R 救援。玩家 2：方向鍵、Enter 發射、L 提示、/ 救援。')+'</p><p>P 暫停整場。星題送 2 題，連解最多送 3 題；來襲預警期間解星題可反制，反彈最多兩次。</p><p>生存賽先失去三顆心者落敗；限時賽持續 3 分鐘，碰線不扣心，先比解題數，再比命中率。</p>'+(computer?'<p>電腦只根據自己的方程逐步選擇運算及發射，會有思考時間、失誤，亦會使用一次救援；不讀取你的按鍵或發射選擇。</p>':''):originalHelp;
+  updateBattleAvailability();
   const extra=more.querySelector('summary span');if(extra)extra.textContent=battle?'操作台與效果':'老師、速度與效果';
  }
 
- byId('deviceChoice').addEventListener('change',()=>{controlGuide(soloGuide,'solo');controlGuide(roles.querySelector('.player-0 small'),activity==='computer'?'solo':'p1');controlGuide(roles.querySelector('.player-1 small'),activity==='computer'?'bot':'p2');});
+ byId('deviceChoice').addEventListener('change',()=>{updateBattleAvailability();controlGuide(soloGuide,'solo');controlGuide(roles.querySelector('.player-0 small'),activity==='computer'?'solo':'p1');controlGuide(roles.querySelector('.player-1 small'),activity==='computer'?'bot':'p2');});
  battleButton.onclick=()=>setActivity('battle');computerButton.onclick=()=>setActivity('computer');home.querySelector('[data-activity=practice]').addEventListener('click',()=>setActivity('solo'));
  fields.homeBattleDuration.addEventListener('change',()=>{if(activity==='computer')note.textContent=fields.homeBattleDuration.value==='0'?'三顆心生存賽：先失去三顆心者落敗。':'3 分鐘限時賽：先比解題數，再比命中率；碰線不扣心。';});
- byId('start').addEventListener('click',event=>{if(activity==='solo')return;event.preventDefault();event.stopImmediatePropagation();remember();if(!save(PENDING,config())){note.textContent='瀏覽器未能保留設定，請允許此網站儲存資料後重試。';return;}location.href='battle.html?start=1';},true);
+ byId('start').addEventListener('click',event=>{if(activity==='solo')return;event.preventDefault();event.stopImmediatePropagation();if(activity==='battle'&&byId('deviceChoice').checked){updateBattleAvailability();return;}remember();if(!save(PENDING,config())){note.textContent='瀏覽器未能保留設定，請允許此網站儲存資料後重試。';return;}location.href='battle.html?start=1';},true);
  // The live device preference belongs to mobile.js, never to an old match draft.
  setActivity(['battle','computer'].includes(read(MODE))?read(MODE):'solo');
  const style=document.createElement('style');style.textContent=".home-battle-settings{margin-top:20px;text-align:left}.home-battle-players{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}.home-battle-player{display:flex;align-items:center;gap:8px;padding:10px 8px;background:#eef6f3;border:1px solid #b6d5cc;border-top:3px solid #58baca;border-radius:12px;min-width:0}.home-battle-player.player-1{background:#faf0f4;border-color:#e5c5d3;border-top-color:#d887a9}.home-battle-player img{width:55px;height:78px;object-fit:contain;image-rendering:pixelated;flex:none}.home-battle-player>div{min-width:0;flex:1}.home-menu .home-battle-settings label{display:block;font:600 12px/1.5 system-ui,sans-serif;color:#4d6665;margin:0}.home-battle-settings label>span{display:block;margin-bottom:6px}.home-battle-player small{display:block;font-size:9px;line-height:1.5;color:#728383;margin-top:6px}.home-battle-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}.home-battle-grid>label:last-child{grid-column:1/-1}.home-menu .home-battle-settings select{width:100%;max-width:100%;font-size:13px!important;background:#fffefb;color:#294b4b;border:1px solid #d0dcd5;border-radius:8px;padding:9px 6px}.home-menu .home-battle-settings .home-battle-check{display:flex;align-items:center;gap:8px;font-weight:500;margin:9px 0;color:#385858}.home-battle-check input{width:17px;height:17px;accent-color:#267e75}.home-menu [hidden]{display:none!important}.home-menu .battle-card[aria-pressed=true]{border:2px solid #ae6e91;background:#faf0f5}.home-menu .battle-card[aria-pressed=true] .activity-arrow{color:#ae6e91}.home-battle-settings input:focus-visible{outline:3px solid #ddac55;outline-offset:3px}@media(max-width:460px){.home-battle-players{gap:7px}.home-battle-player{display:block;text-align:center;padding:8px 6px}.home-battle-player img{height:65px;width:50px}.home-battle-player small{font-size:8px}.home-battle-grid{gap:9px}}";document.head.append(style);
