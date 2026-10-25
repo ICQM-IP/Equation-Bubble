@@ -35,6 +35,7 @@
  function select(host,id,label,options,value){const wrap=document.createElement('label');wrap.htmlFor=id;const title=document.createElement('span');title.textContent=label;const input=document.createElement('select');input.id=id;for(const [v,t]of options){const option=document.createElement('option');option.value=v;option.textContent=t;input.append(option)}input.value=String(value);wrap.append(title,input);host.append(wrap);fields[id]=input;return input;}
  function controlGuide(host,kind){
   host.classList.add('selection-controls');host.replaceChildren();
+  host.hidden=byId('deviceChoice').checked;if(host.hidden)return;
   const heading=document.createElement('strong');heading.textContent=kind==='bot'?'電腦操作':'操作按鈕';host.append(heading);
   if(kind==='bot'){const text=document.createElement('span');text.textContent='自動瞄準、換運算、發射及救援';host.append(text);return;}
   const touch=byId('deviceChoice').checked;
