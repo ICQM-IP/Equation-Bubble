@@ -16,7 +16,27 @@ let shotsLeft=4,pressurePending=false,energy=0,bankShots=0,chains=0;
 const rational=v=>String(v).replaceAll('-','−'),xterm=v=>v.eq(1)?'x':v.eq(-1)?'−x':rational(v)+'x';
 function sideText(s){return (s.a.eq(0)?'':xterm(s.a))+(s.b.eq(0)?'':(s.a.eq(0)?'':s.b.n<0n?' − ':' + ')+(s.a.eq(0)?rational(s.b):rational(s.b.n<0n?s.b.neg():s.b)))||'0'}
 function eqText(e){return (e.group?`${e.group.k}(x ${e.group.b<0?'−':'+'} ${Math.abs(e.group.b)})`:sideText(e.l))+' = '+sideText(e.r)}
-function fit(){if(mobileMode){if(mobileInputEditing)return;const landscape=innerWidth>=640&&innerWidth>innerHeight;const available=landscape?innerWidth-310:innerWidth;const scale=landscape?Math.min(available/1120,Math.max(180,innerHeight-56)/680):Math.min(available/1120,Math.max(60,innerHeight-56-Math.min(360,Math.max(320,innerHeight*.44)))/680);$('#stage').style.width='1120px';$('#stage').style.height='680px';$('#stage').style.transform='scale('+scale+')';$('#viewport').style.width=(1120*scale)+'px';$('#viewport').style.height=(680*scale)+'px';return;}$('#stage').style.width='1672px';$('#stage').style.height='941px';const scale=Math.min(innerWidth/1672,innerHeight/941);$('#stage').style.transform='scale('+scale+')';$('#viewport').style.width=(1672*scale)+'px';$('#viewport').style.height=(941*scale)+'px'}
+function fit(){
+ if(mobileMode){
+  if(mobileInputEditing)return;
+  const landscape=innerWidth>=640&&innerWidth>innerHeight;
+  const available=landscape?innerWidth-310:innerWidth;
+  const safeBottom=typeof getComputedStyle==='function'?Math.max(12,parseFloat(getComputedStyle(document.body).paddingBottom)||0):12;
+  const controlsHeight=Math.min(380,Math.max(340,innerHeight*.44));
+  const heightBudget=Math.max(60,innerHeight-58-safeBottom-controlsHeight);
+  const scale=landscape?Math.min(available/1120,Math.max(180,innerHeight-56)/680):Math.min(available/1120,heightBudget/680);
+  // One display transform maps the field, cannon, guide and shots together.
+  // Extra portrait space never changes world coordinates or descent timing.
+  const scaleY=landscape?scale:Math.min(scale*1.2,heightBudget/680);
+  $('#mobileControls').style.setProperty('--solo-controls-height',controlsHeight+'px');
+  $('#stage').style.width='1120px';$('#stage').style.height='680px';
+  $('#stage').style.transform=scaleY===scale?'scale('+scale+')':'scale('+scale+','+scaleY+')';
+  $('#viewport').style.width=(1120*scale)+'px';$('#viewport').style.height=(680*scaleY)+'px';return;
+ }
+ $('#stage').style.width='1672px';$('#stage').style.height='941px';
+ const scale=Math.min(innerWidth/1672,innerHeight/941);$('#stage').style.transform='scale('+scale+')';
+ $('#viewport').style.width=1672*scale+'px';$('#viewport').style.height=941*scale+'px';
+}
 addEventListener('resize',fit);fit();
 function renderMath(el,value){const text=String(value);el.replaceChildren();el.classList.toggle('has-stacked',/\d+\/\d+/.test(text));let at=0;for(const match of text.matchAll(/[−-]?\d+\/\d+/g)){if(match.index>at){const plain=document.createElement('span');plain.textContent=text.slice(at,match.index);el.append(plain)}let [num,den]=match[0].split('/');if(num[0]==='-'||num[0]==='−'){const sign=document.createElement('span');sign.className='fraction-sign';sign.textContent='−';el.append(sign);num=num.slice(1)}const frac=document.createElement('span');frac.className='stack-frac';frac.setAttribute('aria-label',den+'分之'+num);const top=document.createElement('span');top.className='frac-num';top.textContent=num;const bottom=document.createElement('span');bottom.className='frac-den';bottom.textContent=den;frac.append(top,bottom);el.append(frac);at=match.index+match[0].length}if(at<text.length||!text){const plain=document.createElement('span');plain.textContent=text.slice(at);el.append(plain)}el.setAttribute('aria-label',text)}
 function speak(text){const teacher=$('#teacher');teacher.classList.remove('happy','thinking');void teacher.offsetWidth;teacher.classList.add(/完成|太好|進入/.test(text)?'happy':'thinking');renderMath($('#speech'),text);$('#speech').classList.toggle('long',text.length>18);renderMath($('#sideFeedback'),text);if(typeof syncMobileHud==='function')syncMobileHud()}

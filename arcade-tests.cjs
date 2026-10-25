@@ -223,9 +223,19 @@ console.log('PASS: solo timed mode never loses hearts; all opening topics visibl
 // Solo portrait reserves room for the complete reordered touch cabinet.
 for(const [width,height] of [[320,480],[320,568],[375,667],[390,844]]){
  run(`mobileMode=true;innerWidth=${width};innerHeight=${height};fit()`);
- const arenaHeight=parseFloat(ids.viewport.style.height),cabinetHeight=Math.min(360,Math.max(320,height*.44));
- assert(arenaHeight+cabinetHeight+56<=height+.01,`complete solo cabinet fits ${width}x${height}`);
+ const arenaHeight=parseFloat(ids.viewport.style.height),cabinetHeight=Math.min(380,Math.max(340,height*.44));
+ assert(arenaHeight+cabinetHeight+70<=height+.01,`complete solo cabinet fits ${width}x${height}`);
 }
 assert(html.indexOf('<section class="math-readout">')<html.indexOf('<nav class="mobile-ops"'));
 assert(html.indexOf('<nav class="mobile-ops"')<html.indexOf('<div class="mobile-actions"'));
 console.log('PASS: compact solo cabinet retains working / operations / fire order and fits short/tall portrait height budgets.');
+
+// Portrait uses extra height only when the full controls and safe gap fit.
+run('mobileMode=true;innerWidth=390;innerHeight=844;reset();fit()');
+assert(Math.abs(parseFloat(ids.viewport.style.height)-(680*390/1120*1.2))<1e-8);
+const projection=ids.stage.style.transform.match(/scale\(([^,]+),([^\)]+)\)/);assert(projection);
+const sx=Number(projection[1]),sy=Number(projection[2]);
+ids.field.getBoundingClientRect=()=>({left:0,top:0,width:1120*sx,height:660*sy});
+ids.field.events.pointermove({clientX:760*sx,clientY:200*sy,buttons:1});
+assert(Math.abs(run('angle')-Math.atan2(200,380)*180/Math.PI)<1e-8,'touch aim inverts both display scales');
+console.log('PASS: extra portrait height is capped at 20%; aiming maps correctly through the taller display.');
