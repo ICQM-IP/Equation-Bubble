@@ -20,9 +20,10 @@ function fit(){
  if(mobileMode){
   if(mobileInputEditing)return;
   const landscape=innerWidth>=640&&innerWidth>innerHeight;
-  const available=landscape?innerWidth-310:innerWidth;
+  const tablet=innerWidth>=700&&innerHeight>=600;
+  const available=landscape?innerWidth-(tablet?390:310):innerWidth;
   const safeBottom=typeof getComputedStyle==='function'?Math.max(12,parseFloat(getComputedStyle(document.body).paddingBottom)||0):12;
-  const controlsHeight=Math.min(380,Math.max(340,innerHeight*.44));
+  const controlsHeight=tablet?420:Math.min(380,Math.max(340,innerHeight*.44));
   const heightBudget=Math.max(60,innerHeight-58-safeBottom-controlsHeight);
   const scale=landscape?Math.min(available/1120,Math.max(180,innerHeight-56)/680):Math.min(available/1120,heightBudget/680);
   // One display transform maps the field, cannon, guide and shots together.

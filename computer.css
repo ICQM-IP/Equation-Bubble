@@ -99,3 +99,26 @@ body.versus-page.mobile-mode.computer-mode .computer-opponent-slot .teacher-stri
 body.versus-page.mobile-mode.computer-mode .computer-opponent-slot .player-controls{display:none!important}
 body.versus-page.mobile-mode.computer-mode #arena1 .battle-row .orb{font-size:36px}
 body.versus-page.mobile-mode.computer-mode #arena1 .battle-row .orb.wide{font-size:29px}
+
+/* iPad and other tablets keep native-size, separated touch targets. */
+body.mobile-mode #mobileControls,body.mobile-mode .computer-player-slot .mobile-vs-controls{position:relative;z-index:20;pointer-events:auto}
+@media(min-width:700px) and (min-height:600px){
+ body.solo-cabinet.mobile-mode:not(.versus-page) #mobileControls>.mobile-ops,
+ body.solo-cabinet.mobile-mode:not(.versus-page) #mobileControls>.mobile-actions,
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>nav,
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>.mobile-actions{gap:10px!important}
+ body.solo-cabinet.mobile-mode:not(.versus-page) #mobileControls>.mobile-actions,
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>.mobile-actions{grid-template-columns:64px minmax(64px,1fr) 64px minmax(100px,1.3fr)!important}
+ body.solo-cabinet.mobile-mode:not(.versus-page) #mobileControls>.mobile-ops button,
+ body.solo-cabinet.mobile-mode:not(.versus-page) #mobileControls>.mobile-actions button,
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls nav button,
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls .mobile-actions button{min-height:64px!important;height:64px!important;min-width:0;font-size:23px!important;touch-action:none}
+ body.mobile-mode #mobileControls .rescue-button,
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls .rescue-button{min-height:56px!important;height:56px!important;font-size:18px!important}
+ body.versus-page.mobile-mode.computer-mode .mobile-vs-controls{height:360px;gap:8px;padding:8px!important}
+}
+@media(min-width:700px) and (min-height:600px) and (orientation:landscape){
+ body.solo-cabinet.mobile-mode:not(.versus-page) #mobileControls{width:360px!important;padding:12px!important;box-sizing:border-box}
+ body.versus-page.mobile-mode.computer-mode .computer-player-slot .mobile-vs-controls{position:absolute;width:360px;height:calc(100dvh - 118px - var(--computer-preview-height))}
+ body.versus-page.mobile-mode.computer-mode .computer-player-slot .arena{left:calc((100% - 380px - 786px * var(--arena-scale)) / 2)}
+}
