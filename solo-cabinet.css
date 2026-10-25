@@ -55,7 +55,6 @@ body.solo-cabinet:not(.mobile-mode) .aux>span:last-child{display:none}
 body.solo-cabinet:not(.mobile-mode) .power-status{font-size:12px!important}
 body.solo-cabinet:not(.mobile-mode) .rescue-button{position:absolute;left:585px;top:0;width:195px;min-height:40px;margin:0}
 body.solo-cabinet:not(.mobile-mode) .power-meter{display:none}
-body.solo-cabinet:not(.mobile-mode) .mentor-entrance{display:none}
 /* Handheld retains native touch sizing and shares the same arena background. */
 body.solo-cabinet.mobile-mode #field{background:linear-gradient(#d8f4ff99,#eafaff88),url('assets/sky-island-v9.png') center/cover}
 
