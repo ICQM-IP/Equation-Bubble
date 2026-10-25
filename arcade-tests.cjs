@@ -19,7 +19,7 @@ for(let i=21;i<=25;i++)frameQueue.shift()(i*50);
 assert(vm.runInContext('bullet===null||bullet.index>0',context),'scheduled frames must advance the projectile');
 ids.practice.checked=true;
 console.log('PASS: page boot schedules frame loop; start button triggers falling; fire button launches and scheduled frames advance the projectile.');
-vm.runInContext('function preparePair(){reset();if(document.querySelector("#paceMode").value==="normal"){frantic=false;PACE.maxRows=3;PACE.spawnTime=10;while(rows.length>2)remove(rows[rows.length-1]);rows[0].y=180;rows[1].y=15;rows[1].e=M.eq(2,-2,0,8);rows[1].original=rows[1].e;for(const r of rows)renderRow(r);hint(true)}}',context);
+vm.runInContext('function preparePair(){reset();if(document.querySelector("#paceMode").value==="normal"){frantic=false;PACE.maxRows=3;PACE.spawnTime=10;while(rows.length>2)remove(rows[rows.length-1]);rows[0].y=180;rows[1].y=15;rows[1].e=M.eq(2,-2,0,8);rows[1].original=rows[1].e;for(const r of rows)renderRow(r);hint(true)}for(const row of rows)row.hintHold=0;}',context);
 const run=s=>vm.runInContext(s,context),step=n=>run(`for(let i=0;i<${n};i++){testTime+=50;tick(testTime)}`);run('let testTime=0;last=0;preparePair();energy=0;rows[0].e=M.eq(3,-2,0,4);rows[0].original=rows[0].e;renderRow(rows[0]);hint(true)');
 assert.equal(run('loaded.label'),'+2');assert.equal(buttons.filter(b=>b.attrs['aria-pressed']==='true').length,1);assert.equal(buttons[0].attrs['aria-pressed'],'true');
 run('load(1)');assert.equal(buttons[1].attrs['aria-pressed'],'true');run('hint(true)');assert.equal(run('trace().hit.node.key'),'lb');
@@ -63,7 +63,7 @@ console.log('PASS: solved-answer celebration; reward does not duplicate score; b
 
 // Frantic mode keeps other equations falling during shots and teaching animations.
 
-ids.paceMode.value='frantic';ids.practice.checked=false;run('preparePair();energy=0;const crowdedCount=rows.length;const firstFlightY=rows[0].y;hint(true);launch()');step(2);assert.equal(run('crowdedCount'),4);assert(run('rows[0].y>firstFlightY'));
+ids.paceMode.value='frantic';ids.practice.checked=false;run('preparePair();energy=0;const crowdedCount=rows.length;const firstFlightY=rows[0].y;hint(true);for(const r of rows)r.hintHold=0;launch()');step(2);assert.equal(run('crowdedCount'),4);assert(run('rows[0].y>firstFlightY'));
 run('preparePair();energy=0;hint(true);launch()');step(12);assert(run('phase!==null'));run('const locked=phase.r;const lockedY=locked.y;const otherMoving=rows.find(r=>r!==locked&&r.y>=0);const otherY=otherMoving.y');step(3);assert.equal(run('locked.y'),run('lockedY'));assert(run('otherMoving.y>otherY'));
 run('togglePause();const panicPauseY=rows[0].y');step(30);assert.equal(run('rows[0].y'),run('panicPauseY'));
 console.log('PASS: four-equation opening; real-time falling during projectile flight; moving-target collision; only active equation freezes during teaching; pause still stops all motion.');
@@ -92,7 +92,7 @@ run('rows[0].e=M.eq(3,-4,0,8);rows[0].original=rows[0].e;renderRow(rows[0]);ammo
 run('ammoIndex=OPS.indexOf("÷");load()');assert.equal(run('loaded.label'),'÷?');
 console.log('PASS: -7 target loads +7 despite another +4 equation; five operation types only; +7 applies to both sides; other equation unchanged; target changes update operand; premature division has no valid ammo.');
 
-ids.paceMode.value='normal';run('reset()');assert.equal(run('rows.length'),4);
+ids.paceMode.value='normal';ids.practice.checked=false;run('reset()');assert.equal(run('rows.length'),4);
 run('for(const r of [...rows])remove(r);startWave()');assert.equal(run('rows.length'),1);
 ids.paceMode.value='frantic';run('reset()');assert.equal(run('rows.length'),4);run('for(const r of [...rows])remove(r);startWave()');assert.equal(run('rows.length'),1);
 console.log('PASS: single standard pace opens with four equations; empty-board replenishment adds exactly one in both modes; four-equation opening retained; shooting cannot trigger pressure drops.');
@@ -120,8 +120,8 @@ assert(/href="battle\.html(?:\?[^"]*)?"/.test(html));console.log('PASS: single-p
 
 // v10: progressive hints do not immediately choose ammo or aim.
 ids.learningMode.value='assist';run('preparePair();hintKey=null;hintLevel=0;angle=30;ammoIndex=2;updateAim();hint()');assert.equal(run('angle'),30);assert.equal(run('ammoIndex'),2);assert.equal(run('hintLevel'),1);run('hint()');assert.equal(run('angle'),30);assert.equal(run('hintLevel'),2);run('hint()');assert.equal(run('hintLevel'),3);assert.equal(run('trace().hit.node.key'),'lb');
-// Challenge requires a manual operand and snapshots the entered value in flight.
-ids.learningMode.value='challenge';run('preparePair();hint(true)');assert.equal(ids.manualAmmo.hidden,false);assert.equal(ids.ammoValue.value,'2');ids.ammoValue.value='';run('load();launch()');assert.equal(run('bullet'),null);ids.ammoValue.value='4';run('load();launch()');assert.equal(run('bullet.ammo.v.toString()'),'4');run('bullet=null;busy=false');ids.ammoValue.value='1/0';run('load();launch()');assert.equal(run('bullet'),null);
+// Legacy settings cannot restore removed manual answer modes.
+ids.learningMode.value='challenge';run('preparePair();hint(true)');assert.equal(run('singleLearningMode'),'assist');assert.equal(ids.manualAmmo.hidden,true);run('launch()');assert(run('bullet'));run('bullet=null;busy=false');
 // Keyboard shortcuts cannot steal input while typing fractions or negatives.
 const op=run('ammoIndex');events.keydown({key:'ArrowDown',target:{matches:()=>true},preventDefault(){throw Error('stole input')}});assert.equal(run('ammoIndex'),op);
 // Advancing a stage clears stale previous-level equations.
@@ -158,7 +158,7 @@ console.log('PASS: solo turbo timing, one rescue, miss reset, finale and practic
 
 // Load the real learning UI, then emulate the setup DOM being removed by pause/result menus.
 Element.prototype.querySelector=function(){return null};context.document.head=new Element('head');ids.learningMode.value='choices';ids.sessionLength.value='180';ids.soloTurbo.checked=true;ids.practice.checked=false;run('reset()');vm.runInContext(fs.readFileSync(__dirname+'/learning.js','utf8'),context);
-const oldQuery=context.document.querySelector;const setupIds=new Set(['#learningMode','#sessionLength','#soloTurbo','#fixedTopic','#gentlePace','#practice','#startLevel']);context.document.querySelector=s=>setupIds.has(s)?null:oldQuery(s);run('togglePause();refreshLearningUI()');assert.equal(run('paused'),true);run('togglePause()');step(3);assert(run('sessionElapsed>0'));run('reset();refreshLearningUI()');assert.equal(run('singleLearningMode'),'choices');assert.equal(run('sessionLimit'),180);assert.equal(run('turbo'),true);assert.equal(run('challenge'),true);context.document.querySelector=oldQuery;
+const oldQuery=context.document.querySelector;const setupIds=new Set(['#learningMode','#sessionLength','#soloTurbo','#fixedTopic','#gentlePace','#practice','#startLevel']);context.document.querySelector=s=>setupIds.has(s)?null:oldQuery(s);run('togglePause();refreshLearningUI()');assert.equal(run('paused'),true);run('togglePause()');step(3);assert(run('sessionElapsed>0'));run('reset();refreshLearningUI()');assert.equal(run('singleLearningMode'),'assist');assert.equal(run('sessionLimit'),180);assert.equal(run('turbo'),true);assert.equal(run('challenge'),false);context.document.querySelector=oldQuery;
 console.log('PASS: actual learning UI survives removed setup DOM, pause/resume and reset without losing timed/choice/turbo settings.');
 
 // v15 fixed topics no longer advance after four clears; mixed generations cover all families.
@@ -167,7 +167,7 @@ ids.startLevel.value='3';run('reset();cleared=3;const fixedLevel=level;rows[0].e
 console.log('PASS: solo mixed topic generation, speed selection and fixed-topic round after four solves.');
 
 // New equations use shuffled left/right pairs, including openings, empty-board waves and refills.
-ids.startLevel.value='1';ids.gentlePace.checked=true;run('mobileMode=false;const realRandom=Math.random;Math.random=()=>.1;reset()');assert.equal(run('rows[0].lane'),0);run('Math.random=()=>.9;reset()');assert.equal(run('rows[0].lane'),1,'opening is not pinned to the left');run('Math.random=realRandom;spawnLaneBag=[];const waveSides=[];for(let i=0;i<20;i++){for(const r of [...rows])remove(r);startWave();waveSides.push(rows[0].lane)}');const waveSides=run('waveSides');for(let i=0;i<20;i+=2)assert.notEqual(waveSides[i],waveSides[i+1]);
+ids.startLevel.value='1';ids.gentlePace.checked=true;ids.practice.checked=false;run('mobileMode=false;const realRandom=Math.random;Math.random=()=>.1;reset()');assert.equal(run('rows[0].lane'),0);run('Math.random=()=>.9;reset()');assert.equal(run('rows[0].lane'),1,'opening is not pinned to the left');run('Math.random=realRandom;spawnLaneBag=[];const waveSides=[];for(let i=0;i<20;i++){for(const r of [...rows])remove(r);startWave();waveSides.push(rows[0].lane)}');const waveSides=run('waveSides');for(let i=0;i<20;i+=2)assert.notEqual(waveSides[i],waveSides[i+1]);
 run('gentle=false;for(const r of [...rows])remove(r);spawnLaneBag=[];const refillSides=[];for(let i=0;i<10;i++){for(const r of [...rows])remove(r);if(!refillDense())throw Error("empty lanes should accept a refill");refillSides.push(rows[0].lane)}');assert.equal(new Set(run('refillSides')).size,2);
 run('for(const r of [...rows])remove(r);spawn({lane:0});rows[0].y=0');assert.equal(run('refillDense()'),true);assert.equal(run('rows[1].lane'),1,'use the empty right lane when left entry is blocked');
 run('mobileMode=true;for(const r of [...rows])remove(r);spawnLaneBag=[];const phoneSides=[];for(let i=0;i<4;i++){spawn();const r=rows[rows.length-1];const center=(r.nodes[0].x+r.nodes[r.nodes.length-1].x+r.nodes[r.nodes.length-1].w)/2;phoneSides.push([r.spawnSide,center]);}');for(const [side,center]of run('phoneSides'))assert(side===0?center<560:center>560);assert.equal(new Set(run('phoneSides.map(x=>x[0])')).size,2);
@@ -187,6 +187,25 @@ soloKey('KeyH');assert(run('hintLevel>0'));soloKey('Space');assert(run('bullet!=
 soloKey('KeyP');assert(run('paused'));soloKey('KeyP','Process',{repeat:true});assert(run('paused'),'held pause must not repeatedly toggle');const beforeResume=focusCalls;soloKey('KeyP');assert(!run('paused'));assert(focusCalls>beforeResume,'resume returns focus to arena');
 run('bullet=null;busy=false;phase=null');soloKey('Space',' ',{metaKey:true});assert.equal(run('bullet'),null);soloKey('Space',' ',{target:{matches:()=>true}});assert.equal(run('bullet'),null,'typing cannot fire');
 ids.learningMode.value='challenge';run('reset()');ids.ammoValue.value='3';let blurred=0;ids.ammoValue.blur=()=>blurred++;const beforeEdit=focusCalls;ids.ammoValue.events.keydown({code:'Enter',key:'Process',preventDefault(){}});assert.equal(blurred,1);assert(focusCalls>beforeEdit);assert.equal(run('bullet'),null,'commit operand does not accidentally fire');
-ids.learningMode.value='choices';run('reset();rows[0].e=M.eq(3,0,0,6);rows[0].original=rows[0].e;renderRow(rows[0]);hint(true);document.querySelector("#ammoValue").value="";load();refreshLearningUI()');run('launch()');assert.equal(run('bullet'),null);assert(ids.sideFeedback.textContent.includes('先選運算'));
-const operand=run('learningPanels[0].choices.children.find(b=>b.dataset.operand==="3")');assert(operand);const beforeChoice=focusCalls;operand.onclick();assert(focusCalls>beforeChoice,'choosing a value returns keyboard focus');soloKey('Enter');assert(run('bullet!==null'),'three-choice keyboard fire works after choosing value');
+ids.learningMode.value='choices';run('reset();hint(true);launch()');assert.equal(run('singleLearningMode'),'assist');assert(run('bullet!==null'),'legacy choices value still fires automatic ammunition');
 console.log('PASS: solo physical arrow/H/Space/Enter/P keys with IME values; repeat, typing and shortcut guards; start/resume/value focus; challenge commit; real three-choice firing.');
+
+// Practice boards must remain visible, including mode changes and preserved queued rows.
+for(let topic=1;topic<=5;topic++){
+ ids.practice.checked=true;ids.startLevel.value=String(topic);ids.gentlePace.checked=true;
+ run('mobileMode=false;reset()');assert(run('rows.every(r=>r.y>=0&&r.y+r.height<LIMIT)'));
+ run('var practiceEquations=rows.map(r=>eqText(r.e)).sort();mobileMode=true;arrangePracticeRows()');
+ assert(run('rows.length<=2&&rows.every(r=>r.y>=0&&r.y+r.height<LIMIT)'));
+ assert(run('JSON.stringify([...rows,...practiceQueue].map(r=>eqText(r.e)).sort())===JSON.stringify(practiceEquations)'));
+ run('mobileMode=false;arrangePracticeRows()');assert.equal(run('practiceQueue.length'),0);
+ assert(run('rows.every(r=>r.y>=0&&r.y+r.height<LIMIT)'));
+}
+// A real level-three hint prevents a near-line target disappearing before its shot.
+ids.practice.checked=false;ids.startLevel.value='2';ids.gentlePace.checked=true;
+run('mobileMode=false;reset();while(rows.length>1)remove(rows[rows.length-1]);rows[0].e=M.eq(3,-2,0,4);rows[0].original=rows[0].e;rows[0].lane=0;rows[0].y=LIMIT-rows[0].height-1;renderRow(rows[0]);hint();hint();hint();const guarded=rows[0];const guardedY=guarded.y;descend(.05)');
+assert.equal(run('guarded.y'),run('guardedY'));assert.equal(run('lives'),3);
+run('guarded.hintHold=1;hint()');assert.equal(run('guarded.hintHold'),1,'repeating the same hint does not renew protection');
+run('launch()');step(60);assert.equal(run('learningStats.hits'),1);
+run('reset();for(const r of rows)r.hintHold=0;rows[0].y=LIMIT;descend(.05)');
+assert(ids.teachingMath.textContent.includes('本題已移除'));
+console.log('PASS: every practice topic remains visible; layout switches preserve queued equations; near-line hint shot succeeds; repeated hint cannot extend protection; removed question clears stale teaching.');

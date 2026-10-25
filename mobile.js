@@ -44,7 +44,7 @@ function setDeviceMode(on){
  if(!mobileVersus){document.querySelector('#mobileControls').hidden=!mobileMode;if(document.querySelector('#deviceChoice'))document.querySelector('#deviceChoice').checked=mobileMode;const overlay=document.querySelector('#overlay');if(mobileMode)document.body.append(overlay);else mobileOverlayParent.append(overlay);
   keys.clear();PACE.maxRows=mobileMode?4:12;PACE.spawnTime=mobileMode?5:2;
   if(rows.length){const ordered=[...rows].sort((a,b)=>b.y-a.y);const bottom=Math.min(220,ordered[0].y);
-   ordered.forEach((r,i)=>{r.lane=mobileMode?0:(r.spawnSide??i%2);if(mobileMode){r.y=bottom-i*156;r.scatterX=(r.spawnSide?1:-1)*(40+Math.random()*110);}renderRow(r);});load();}
+   ordered.forEach((r,i)=>{r.lane=mobileMode?0:(r.spawnSide??i%2);if(mobileMode){r.y=bottom-i*156;r.scatterX=(r.spawnSide?1:-1)*(40+Math.random()*110);}renderRow(r);});if(practice)arrangePracticeRows();load();}
   fit();
  }else{match?.players.forEach(p=>p.held.clear());fitBattle();}
  document.querySelector('#deviceToggle').textContent=mobileMode?'電腦版':'📱 手提裝置模式';

@@ -14,3 +14,12 @@ m=make();m.elapsed=149.99;advance(m,.025);assert(m.frenzy);assert.equal(m.events
 m=make();p=m.players[0];row=p.rows[0];const move=M.moves(row.e)[0],node=row.nodes.find(n=>n.key===move.target);p.impact({row,node},{ammo:move,bounces:0});assert.equal(p.heat,1);advance(m,.35);assert(p.phase?.applied);advance(m,.15);assert.equal(p.phase,null);
 const classic=new V.Match();classic.countdown=0;assert.equal(classic.players[0].rescue(),false);assert.equal(classic.players[0].rows.length,4);
 console.log('PASS: turbo fair risk decks and all five exact solves; chain attacks; miss reset; strength-preserving reflection; bounded rallies; multi-question delivery; single-use/paused rescue; one-shot finale; faster phases; classic preservation.');
+
+// Sent and received statistics both count questions, not attack packets.
+m=make();m.attack(0,3);assert.equal(m.players[0].sentQuestions,3);advance(m,4.6);assert.equal(m.players[1].received,3);
+p=m.players[0];p.teaching={text:'obsolete equation'};p.hintLevel=3;p.aimed={row:p.rows[0].id};p.lose(p.rows[0]);
+assert.equal(p.teaching,null);assert.equal(p.aimed,null);assert.equal(p.hintLevel,0);
+m=make({level:2,speed:2.3});p=m.players[0];p.rows=p.rows.slice(0,1);row=p.rows[0];row.y=V.LINE-row.height-.5;p.hint();p.hint();p.hint();
+const guardedY=row.y;advance(m,.1);assert.equal(row.y,guardedY);assert.equal(p.lives,3);
+row.hintHold=1;p.hint();assert.equal(row.hintHold,1);assert(p.fire());advance(m,1);assert.equal(p.stats.hits,1);
+console.log('PASS: question-count attack statistics; removed-row teaching reset; protected near-line hint firing and bounded repeat protection.');

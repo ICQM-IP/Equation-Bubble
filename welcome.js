@@ -4,11 +4,27 @@
   const home = document.querySelector('.home-menu');
   if (!home) return;
   const byId = id => document.getElementById(id);
-  byId('practice').checked = false;
-  byId('sessionLength').value = '0';
-  byId('soloTurbo').checked = true;
-  byId('fallSpeed').value = '1.6';
-  byId('gentlePace').checked = true;
+  const preferenceKey = 'equationSoloSettings';
+  const defaults = {practice:false, sessionLength:'0', soloTurbo:true, fallSpeed:'1.6', gentlePace:true};
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(preferenceKey) || '{}') || {}; } catch {}
+  for (const [id, fallback] of Object.entries(defaults)) {
+    const input = byId(id);
+    if (typeof fallback === 'boolean') input.checked = typeof saved[id] === 'boolean' ? saved[id] : fallback;
+    else input.value = (id === 'fallSpeed' ? ['0.65','1','1.6','2.3'] : ['0','180']).includes(saved[id]) ? saved[id] : fallback;
+  }
+  if (['0','1','2','3','4','5'].includes(saved.startLevel)) byId('startLevel').value = saved.startLevel;
+  if (['0','1','2','3','4'].includes(saved.singleTeacher)) {
+    byId('singleTeacher').value = saved.singleTeacher;
+    chooseSingleTeacher();
+  }
+  function rememberSolo() {
+    const settings = {};
+    for (const id of [...Object.keys(defaults), 'startLevel', 'singleTeacher']) {
+      settings[id] = typeof defaults[id] === 'boolean' ? byId(id).checked : byId(id).value;
+    }
+    try { localStorage.setItem(preferenceKey, JSON.stringify(settings)); } catch {}
+  }
   function refreshSummary() {
     const practice = byId('practice').checked;
     const timed = byId('sessionLength').value === '180';
@@ -25,11 +41,9 @@
     byId('soloTurbo').disabled = practice;
   }
   home.querySelector('[data-activity=practice]').addEventListener('click', () => {
-    byId('practice').checked = false;
-    byId('sessionLength').value = '0';
-    byId('soloTurbo').checked = true;
     refreshSummary();
   });
+  for (const id of [...Object.keys(defaults), 'startLevel', 'singleTeacher']) byId(id).addEventListener('change', rememberSolo);
   for (const id of ['practice', 'sessionLength']) byId(id).addEventListener('change', refreshSummary);
   const teacherPreview = () => {
     const teacher = EquationTeachers[Number(byId('singleTeacher').value)] || EquationTeachers[2];

@@ -61,3 +61,22 @@ body.solo-cabinet.mobile-mode #field{background:linear-gradient(#d8f4ff99,#eafaf
 
 body.solo-cabinet:not(.mobile-mode) .sky-frame{z-index:0}
 body.solo-cabinet:not(.mobile-mode) .score,body.solo-cabinet:not(.mobile-mode) .stage-number,body.solo-cabinet:not(.mobile-mode) .hearts{z-index:7}
+
+/* Larger fractions retain matching physics widths in arcade.js. */
+body.solo-cabinet:not(.mobile-mode) #field.dense .node.fraction{width:96px;min-width:96px;font-size:30px}
+body.solo-cabinet:not(.mobile-mode) #field.dense .node.fraction .stack-frac{font-size:1em;line-height:1.12}
+body.solo-cabinet:not(.mobile-mode) #stage #teachingMath{font-size:23px}
+/* The arena remains in view while only the optional details scroll. */
+@media (orientation:landscape) and (min-width:640px) and (max-height:560px){
+ body.mobile-mode:not(.versus-page) #deviceToolbar{height:44px}
+ body.mobile-mode:not(.versus-page) #deviceLayout{align-items:flex-start!important}
+ body.mobile-mode:not(.versus-page) #mobileControls{height:calc(100dvh - 54px)!important;min-height:0!important;max-height:calc(100dvh - 54px)!important;overflow-y:auto!important;overscroll-behavior:contain;scrollbar-width:thin;display:flex;flex-direction:column;gap:0}
+ body.mobile-mode:not(.versus-page) #mobileControls>*{flex-shrink:0}
+ body.mobile-mode:not(.versus-page) #mobileControls>.touch-hud{order:0;margin:0 0 4px;padding-bottom:4px}
+ body.mobile-mode:not(.versus-page) #mobileControls>.mobile-info{order:1;margin-bottom:6px;min-height:34px}
+ body.mobile-mode:not(.versus-page) #mobileControls>.mobile-ops{order:2}
+ body.mobile-mode:not(.versus-page) #mobileControls>.mobile-actions{order:3;position:sticky;top:0;z-index:15;background:#173b4b;margin:7px 0;padding:3px 0}
+ body.mobile-mode:not(.versus-page) #mobileControls>.learning-panel{order:4}
+ body.mobile-mode:not(.versus-page) #mobileControls>.math-readout{order:5;flex:none}
+ body.mobile-mode:not(.versus-page) #mobileControls>.mobile-tip{order:6}
+}
