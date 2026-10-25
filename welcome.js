@@ -13,6 +13,8 @@
     if (typeof fallback === 'boolean') input.checked = typeof saved[id] === 'boolean' ? saved[id] : fallback;
     else input.value = (id === 'fallSpeed' ? ['0.65','1','1.6','2.3'] : ['0','180']).includes(saved[id]) ? saved[id] : fallback;
   }
+  // Migrate old rhythm preferences: speed now has one selector.
+  byId('soloTurbo').checked = true;
   if (['0','1','2','3','4','5'].includes(saved.startLevel)) byId('startLevel').value = saved.startLevel;
   if (['0','1','2','3','4'].includes(saved.singleTeacher)) {
     byId('singleTeacher').value = saved.singleTeacher;
