@@ -128,7 +128,7 @@ const op=run('ammoIndex');events.keydown({key:'ArrowDown',target:{matches:()=>tr
 ids.learningMode.value='assist';run('preparePair();cleared=3;rows[0].original=M.eq(1,0,0,2);rows[0].e=rows[0].original;clearSolved(rows[0])');assert.equal(run('level'),2);assert.equal(run('cleared'),4);run('startWave()');assert(run('rows.every(r=>!r.e.r.a.eq(0)||M.verify(r.original,M.solution(r.e)))'));
 // A cluster of equations crossing the line loses only one heart during grace.
 run('preparePair();frantic=true;practice=false;rows[0].lane=0;rows[1].lane=1;for(const r of rows)r.y=LIMIT;descend(.05)');assert.equal(run('lives'),2);assert.equal(run('graceTimer'),1.8);run('descend(1)');assert.equal(run('lives'),2);
-console.log('PASS: v10 staged reachable hints; challenge validation and immutable shot operand; typing preserves input; clean stage transitions; single-life cluster protection.');
+console.log('PASS: staged reachable hints; removed answer modes stay automatic; typing preserves input; clean stage transitions; single-life cluster protection.');
 
 // v11 mobile core: larger one-column targets and stable pointer geometry.
 run('mobileMode=true;reset()');assert.equal(run('rows.length'),2);assert(run('rows.every(r=>r.lane===0&&r.height===132)'));assert.equal(run('PACE.maxRows'),4);run('hint(true);launch()');step(120);assert.equal(run('score'),10);
@@ -159,7 +159,7 @@ console.log('PASS: solo turbo timing, one rescue, miss reset, finale and practic
 // Load the real learning UI, then emulate the setup DOM being removed by pause/result menus.
 Element.prototype.querySelector=function(){return null};context.document.head=new Element('head');ids.learningMode.value='choices';ids.sessionLength.value='180';ids.soloTurbo.checked=true;ids.practice.checked=false;run('reset()');vm.runInContext(fs.readFileSync(__dirname+'/learning.js','utf8'),context);
 const oldQuery=context.document.querySelector;const setupIds=new Set(['#learningMode','#sessionLength','#soloTurbo','#fixedTopic','#gentlePace','#practice','#startLevel']);context.document.querySelector=s=>setupIds.has(s)?null:oldQuery(s);run('togglePause();refreshLearningUI()');assert.equal(run('paused'),true);run('togglePause()');step(3);assert(run('sessionElapsed>0'));run('reset();refreshLearningUI()');assert.equal(run('singleLearningMode'),'assist');assert.equal(run('sessionLimit'),180);assert.equal(run('turbo'),true);assert.equal(run('challenge'),false);context.document.querySelector=oldQuery;
-console.log('PASS: actual learning UI survives removed setup DOM, pause/resume and reset without losing timed/choice/turbo settings.');
+console.log('PASS: actual learning UI survives removed setup DOM, pause/resume and reset with automatic answers and preserved timer/turbo.');
 
 // v15 fixed topics no longer advance after four clears; mixed generations cover all families.
 ids.startLevel.value='0';ids.learningMode.value='assist';ids.practice.checked=true;ids.fallSpeed.value='1.6';run('reset();const mix=[];for(let i=0;i<10;i++){mix.push(rows[rows.length-1].topic);spawn()}');assert.equal(run('preferredTopic'),0);assert.equal(run('fallSpeed'),1.6);assert.equal(new Set(run('mix')).size,5);
@@ -188,7 +188,7 @@ soloKey('KeyP');assert(run('paused'));soloKey('KeyP','Process',{repeat:true});as
 run('bullet=null;busy=false;phase=null');soloKey('Space',' ',{metaKey:true});assert.equal(run('bullet'),null);soloKey('Space',' ',{target:{matches:()=>true}});assert.equal(run('bullet'),null,'typing cannot fire');
 ids.learningMode.value='challenge';run('reset()');ids.ammoValue.value='3';let blurred=0;ids.ammoValue.blur=()=>blurred++;const beforeEdit=focusCalls;ids.ammoValue.events.keydown({code:'Enter',key:'Process',preventDefault(){}});assert.equal(blurred,1);assert(focusCalls>beforeEdit);assert.equal(run('bullet'),null,'commit operand does not accidentally fire');
 ids.learningMode.value='choices';run('reset();hint(true);launch()');assert.equal(run('singleLearningMode'),'assist');assert(run('bullet!==null'),'legacy choices value still fires automatic ammunition');
-console.log('PASS: solo physical arrow/H/Space/Enter/P keys with IME values; repeat, typing and shortcut guards; start/resume/value focus; challenge commit; real three-choice firing.');
+console.log('PASS: solo physical arrow/H/Space/Enter/P keys with IME values; repeat, typing and shortcut guards; start/resume/value focus; legacy values retain automatic ammunition.');
 
 // Practice boards must remain visible, including mode changes and preserved queued rows.
 for(let topic=1;topic<=5;topic++){
