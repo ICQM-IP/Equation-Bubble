@@ -33,6 +33,16 @@
  const fields={};
  const roles=document.createElement('div');roles.className='home-battle-players';form.append(roles);
  function select(host,id,label,options,value){const wrap=document.createElement('label');wrap.htmlFor=id;const title=document.createElement('span');title.textContent=label;const input=document.createElement('select');input.id=id;for(const [v,t]of options){const option=document.createElement('option');option.value=v;option.textContent=t;input.append(option)}input.value=String(value);wrap.append(title,input);host.append(wrap);fields[id]=input;return input;}
+ function controlGuide(host,kind){
+  host.classList.add('selection-controls');host.replaceChildren();
+  const heading=document.createElement('strong');heading.textContent=kind==='bot'?'電腦操作':'操作按鈕';host.append(heading);
+  if(kind==='bot'){const text=document.createElement('span');text.textContent='自動瞄準、換運算、發射及救援';host.append(text);return;}
+  const touch=byId('deviceChoice').checked;
+  const controls=touch?[['◀ ▶','瞄準'],['＋ − × ÷ LCM','選運算'],['發射','發射'],['提示','提示'],['救援','救援一次']]:kind==='p1'?[['A D','瞄準'],['W S','換運算'],['F','發射'],['G','提示'],['R','救援一次']]:kind==='p2'?[['← →','瞄準'],['↑ ↓','換運算'],['Enter','發射'],['L','提示'],['/','救援一次']]:[['← →','瞄準'],['↑ ↓','換運算'],['Space / Enter','發射'],['H','提示'],['R','救援一次']];
+  for(const [key,label]of controls){const item=document.createElement('span'),cap=document.createElement('kbd');cap.textContent=key;item.append(cap,document.createTextNode(label));host.append(item);}
+  const pause=document.createElement('span');pause.textContent=touch?'遊戲上方：暫停':'P：暫停整場';host.append(pause);
+ }
+ const soloGuide=document.createElement('div');byId('singleTeacher').parentElement.append(soloGuide);
  const previews=[];
  for(let i=0;i<2;i++){const card=document.createElement('div');card.className='home-battle-player player-'+i;roles.append(card);const image=document.createElement('img');card.append(image);const slot=document.createElement('div');card.append(slot);const input=select(slot,'homePlayer'+i,'PLAYER '+(i+1),EquationTeachers.map((t,j)=>[String(j),t.name]),draft.teachers[i]);const keys=document.createElement('small');keys.textContent=i===0?'A/D 瞄準 · W/S 換彈 · F 發射':'方向鍵瞄準／換彈 · Enter 發射';slot.append(keys);previews.push(()=>{const t=EquationTeachers[teacher(input.value)];image.src=t.image;image.alt=t.name+' 玩家 '+(i+1);});input.addEventListener('change',()=>{previews[i]();remember()});previews[i]();}
  const grid=document.createElement('div');grid.className='home-battle-grid';form.append(grid);
@@ -61,8 +71,9 @@
   for(const label of soloLabels)label.hidden=battle;
   home.querySelector('[data-activity=practice]').setAttribute('aria-pressed',String(!battle));battleButton.setAttribute('aria-pressed',String(next==='battle'));computerButton.setAttribute('aria-pressed',String(computer));
   fields.homePlayer0.parentElement.querySelector('span').textContent=computer?'你的老師':'PLAYER 1';fields.homePlayer1.parentElement.querySelector('span').textContent=computer?'電腦老師':'PLAYER 2';
-  roles.querySelector('.player-1 small').textContent=computer?'電腦獨立思考，逐步消元':'方向鍵瞄準／換彈 · Enter 發射';
-  roles.querySelector('.player-0 small').textContent=computer?'方向鍵／A D 瞄準 · Space／F 發射':'A/D 瞄準 · W/S 換彈 · F 發射';
+  controlGuide(roles.querySelector('.player-1 small'),computer?'bot':'p2');
+  controlGuide(roles.querySelector('.player-0 small'),computer?'solo':'p1');
+  controlGuide(soloGuide,'solo');
   byId('start').textContent=computer?'開始挑戰電腦 →':battle?'開始雙人遊戲 →':'開始練習 →';
   note.textContent=computer?(fields.homeBattleDuration.value==='0'?'三顆心生存賽：先失去三顆心者落敗。可另選 3 分鐘限時賽。':'3 分鐘限時賽：先比解題數，再比命中率；碰線不扣心。'):battle?'同機雙人 · 所有設定完成後，按開始遊戲進入對戰。':byId('practice').checked?'方程停止下降，留一點時間想清楚。':'方程持續下降，解題時也要留意危險線。';
   route.textContent=battle?'星題可攻擊、反制；老師角色不影響能力，電腦難度另行選擇。':'解題路線：先消左常數、右邊 x 項，再除係數；括號先除外係數。';
@@ -70,6 +81,7 @@
   const extra=more.querySelector('summary span');if(extra)extra.textContent=battle?'操作台與效果':'老師、速度與效果';
  }
 
+ byId('deviceChoice').addEventListener('change',()=>{controlGuide(soloGuide,'solo');controlGuide(roles.querySelector('.player-0 small'),activity==='computer'?'solo':'p1');controlGuide(roles.querySelector('.player-1 small'),activity==='computer'?'bot':'p2');});
  battleButton.onclick=()=>setActivity('battle');computerButton.onclick=()=>setActivity('computer');home.querySelector('[data-activity=practice]').addEventListener('click',()=>setActivity('solo'));
  fields.homeBattleDuration.addEventListener('change',()=>{if(activity==='computer')note.textContent=fields.homeBattleDuration.value==='0'?'三顆心生存賽：先失去三顆心者落敗。':'3 分鐘限時賽：先比解題數，再比命中率；碰線不扣心。';});
  byId('start').addEventListener('click',event=>{if(activity==='solo')return;event.preventDefault();event.stopImmediatePropagation();remember();if(!save(PENDING,config())){note.textContent='瀏覽器未能保留設定，請允許此網站儲存資料後重試。';return;}location.href='battle.html?start=1';},true);

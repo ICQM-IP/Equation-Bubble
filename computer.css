@@ -59,3 +59,11 @@ body.versus-page.mobile-mode.computer-mode .mobile-actions button{min-height:44p
 body.versus-page.mobile-mode.computer-mode #arena0 .battle-row .orb{font-size:36px}
 body.versus-page.mobile-mode.computer-mode #arena0 .battle-row .orb.wide{font-size:29px}
 body.versus-page.mobile-mode.computer-mode #arena0 .battle-row .orb.has-stacked{font-size:32px}
+
+/* Readable controls beside the selected teacher, on keyboard and touch layouts. */
+body>#overlay .home-menu .selection-controls{display:flex;flex-wrap:wrap;gap:7px 10px;margin-top:12px;padding:10px;background:#fffdf5;border:1px solid #c9d9d1;border-radius:9px;text-align:left;font:500 12px/1.5 system-ui,sans-serif;color:#294b4b}
+body>#overlay .home-menu .selection-controls>strong{width:100%;font-size:12px;color:#245d58}
+body>#overlay .home-menu .selection-controls>span{display:flex;align-items:center;gap:6px}
+body>#overlay .home-menu .selection-controls kbd{display:inline-block;padding:3px 6px;min-width:25px;border:1px solid #a4bbb5;border-bottom-width:3px;border-radius:5px;background:#f1f7f4;color:#183f3d;text-align:center;font:700 12px/1.4 system-ui,sans-serif;white-space:nowrap}
+body>#overlay .home-menu .home-battle-player{align-items:flex-start}
+@media(max-width:600px){body>#overlay .home-menu .home-battle-players{grid-template-columns:1fr}body>#overlay .home-menu .home-battle-player{display:flex;text-align:left}body>#overlay .home-menu .home-battle-player img{width:55px;height:78px}}
