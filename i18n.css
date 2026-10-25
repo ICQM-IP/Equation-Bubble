@@ -31,3 +31,8 @@ html[lang=en] body.versus-page.mobile-mode.computer-mode #computerStatus>div{fle
 html[lang=en] .home-menu .home-battle-grid{grid-template-columns:minmax(0,1fr)}
 html[lang=en] .home-menu .home-battle-grid>label{min-width:0}
 html[lang=en] .home-menu .home-battle-settings select{font-size:12px!important}
+
+html[lang=en] .stage-number:before{content:'TOPIC'!important}
+html[lang=en] .vs-stage-number:before{content:'TOPIC'!important}
+html[lang=en] .vs-stage-number{display:flex;align-items:center;gap:8px;line-height:1.2}
+html[lang=en] .vs-stage-number:before{position:static;line-height:1.2}
