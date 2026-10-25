@@ -62,3 +62,11 @@ run('begin();match.countdown=0;for(let i=0;i<3;i++){const p=match.players[0],r=p
 assert.equal(run('match.players[0].sent'),3);assert.equal(run('match.players[1].incoming.length'),3);
 assert(!arenas.classList.contains('attack-left'));assert(!arenas.classList.contains('attack-right'));
 console.log('PASS: three consecutive star attacks retain incoming attacks and do not leave centre-star activation classes or markup.');
+// Mobile CPU preview rendering is capped independently of player rendering.
+ctx.document.body=ctx.document.body||new El('body');let renderClock=10000;ctx.Date={now:()=>renderClock};
+run("computerMode=true;mobileMode=true;document.body.classList.remove('computer-preview-collapsed');caches[1].previewAt=null;var previewPaints=[0,0],originalPaintRows=paintRows;paintRows=function(p){previewPaints[p.index]++;originalPaintRows(p)}");
+for(let i=0;i<120;i++){renderClock+=16;run('match.players.forEach(p=>p.revision++);render()');}
+assert.equal(run('previewPaints[0]'),120);assert(run('previewPaints[1]')<=40);assert(run('previewPaints[1]')>=25);
+const paints=run('previewPaints[1]');run("document.body.classList.add('computer-preview-collapsed')");for(let i=0;i<20;i++){renderClock+=60;run('match.players[1].revision++;render()');}assert.equal(run('previewPaints[1]'),paints);
+run("document.body.classList.remove('computer-preview-collapsed');render()");assert.equal(run('previewPaints[1]'),paints+1);
+console.log('PASS: CPU preview caps repaint frequency, skips collapsed rendering and refreshes on expansion.');

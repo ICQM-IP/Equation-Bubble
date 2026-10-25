@@ -15,7 +15,7 @@ function syncMobileHud(){
  document.querySelector('#deviceStatus').textContent=mobileInputEditing?'輸入中：場面暫停':'';
  if(mobileVersus){
   if(!match)return;
-  for(const p of match.players){const i=p.index;
+  for(const p of match.players){const i=p.index;if(typeof computerMode!=='undefined'&&computerMode&&i===1)continue;
    document.querySelector('#vsMobileLoaded'+i).textContent=p.ammo().label;document.querySelector('#vsMobileName'+i).textContent=document.querySelector('#name'+i).textContent;document.querySelector('#vsMobileTeacher'+i).src=document.querySelector('#avatar'+i).src;mirrorMath('#math'+i,'#vsMobileMath'+i);
    document.querySelector('#vsMobileMessage'+i).textContent=p.message;
    document.querySelector('#vsMobileHint'+i).textContent='提示 '+Math.min(3,p.hintLevel+1)+'/3';

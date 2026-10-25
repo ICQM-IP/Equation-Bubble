@@ -64,6 +64,7 @@
     if (!pausedArt) reactions.forEach(reaction => { if (reaction) reaction.left = Math.max(0, reaction.left - dt); });
     for (const view of views) {
       const {source, frame, portrait, caption, i} = view;
+      if(versus&&mobileMode&&typeof computerMode!=='undefined'&&computerMode&&i===1){frame.hidden=true;continue;}
       const visible = active && source.getClientRects().length && getComputedStyle(source).display !== 'none';
       frame.hidden = !visible;
       if (!visible) continue;

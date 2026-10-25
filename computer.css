@@ -84,3 +84,8 @@ body.versus-page.mobile-mode.computer-mode.computer-preview-collapsed .computer-
  body.versus-page.mobile-mode.computer-mode .computer-player-slot{height:calc(100dvh - 118px - var(--computer-preview-height))}
  body.versus-page.mobile-mode.computer-mode .computer-player-slot .mobile-vs-controls{height:calc(100dvh - 118px - var(--computer-preview-height));overflow:auto}
 }
+
+body.versus-page.mobile-mode.computer-mode .computer-opponent-slot .arena *{animation:none!important;transition:none!important;box-shadow:none!important;text-shadow:none!important;filter:none!important}
+body.versus-page.mobile-mode.computer-mode .computer-opponent-slot .battle-spark,
+body.versus-page.mobile-mode.computer-mode .computer-opponent-slot .score-flight,
+body.versus-page.mobile-mode.computer-mode .computer-opponent-slot .battle-effects{display:none!important}

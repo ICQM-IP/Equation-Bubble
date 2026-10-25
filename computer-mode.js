@@ -31,11 +31,13 @@ function configureComputerMatch(config){
 }
 function renderComputerStatus(){
  if(!computerMode||!match)return;
+ const status=document.querySelector('#computerStatus'),now=performance.now();if(mobileMode&&status._match===match&&now-(status._renderAt||0)<100)return;status._match=match;status._renderAt=now;
+ const setText=(selector,value)=>{const el=document.querySelector(selector);if(el.textContent!==value)el.textContent=value;};
  const p=match.players[1],you=match.players[0],clock=match.duration?' · 剩餘 '+Math.ceil(Math.max(0,match.duration-match.elapsed))+' 秒':'';
  const state=match.status==='ended'?'對戰結束':match.paused?'已暫停':match.countdown>0?'準備開始':computerController?.status||'思考中';
- document.querySelector('#computerProgress').textContent='♥ '+p.lives+' · 已解 '+p.clears+' 題 · '+state+clock;
+ setText('#computerProgress','♥ '+p.lives+' · 已解 '+p.clears+' 題 · '+state+clock);
  const incoming=you.incoming.reduce((n,a)=>n+a.remaining,0);
- document.querySelector('#computerWarning').textContent=incoming?'⚠ '+incoming+' 題來襲 · '+Math.ceil(you.incoming[0].delay)+' 秒 · 解星題反制':'你已解 '+you.clears+' 題 · 星題可攻擊電腦';
+ setText('#computerWarning',incoming?'⚠ '+incoming+' 題來襲 · '+Math.ceil(you.incoming[0].delay)+' 秒 · 解星題反制':'你已解 '+you.clears+' 題 · 星題可攻擊電腦');
  document.querySelector('#computerStatus').classList.toggle('danger-incoming',incoming>0);
 }
 
