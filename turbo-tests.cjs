@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),M=require('./math.js'),V=require('./versus-engine.js');
-const make=(o={})=>{const m=new V.Match({seed:55,level:2,turbo:true,duration:180,...o});m.countdown=0;return m};
+const make=(o={})=>{const m=new V.Match({seed:55,level:2,turbo:true,gentle:true,duration:180,...o});m.countdown=0;return m};
 const advance=(m,t)=>{for(let n=0;n<Math.ceil(t/.025);n++)m.step(.025)};
 const solvedRow=p=>{const row=p.rows[0];row.e=M.eq(1,0,0,2);row.original=M.eq(3,0,0,6);return row};
 let m=make(),p=m.players[0];assert.equal(p.rows.length,2);assert.equal(p.rows[0].risk,false);assert.equal(p.rows[1].risk,true);assert.equal(V.equationText(p.rows[1].e),V.equationText(m.players[1].rows[1].e));

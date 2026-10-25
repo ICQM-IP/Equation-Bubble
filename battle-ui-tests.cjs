@@ -31,11 +31,11 @@ for(const teacher of require('./characters.js'))assert(teacher.image==='assets/t
 console.log('PASS: all five screens use the pointing teacher roster; Yeung Sir retained and four edited right-pointing assets present.');
 
 run('mobileMode=true;innerWidth=390;fitBattle()');assert.equal(ids.battleStage.style.transform,'none');assert.equal(ids.battleViewport.style.width,'100%');assert(+ids.battleStage.style['--arena-scale']<1);
-run('begin();mobileInputEditing=true');const mobileCountdown=run('match.countdown');advance(20);assert.equal(run('match.countdown'),mobileCountdown);run('mobileInputEditing=false');advance(10);assert(run('match.countdown')<mobileCountdown);
+run('begin();mobileInputEditing=true');const mobileCountdown=run('match.countdown');advance(20);assert.equal(run('match.countdown'),mobileCountdown);run('mobileInputEditing=false');advance(10);assert.equal(run('match.countdown'),mobileCountdown,'small screen keeps match paused');run('innerWidth=1024;innerHeight=768;fitBattle();pause()');advance(10);assert(run('match.countdown')<mobileCountdown);
 run('mobileMode=false;fitBattle()');assert.equal(ids.battleStage.style.width,'1672px');
 console.log('PASS: v11 stacked mobile arena scaling; native editing freezes both countdowns; desktop layout restores.');
 
-ids.battleTurbo.checked=true;ids.battleDuration.value='180';run('begin();match.countdown=0');assert.equal(run('match.turbo'),true);assert.equal(run('match.players[0].rows.length'),2);key('r');assert.equal(run('match.players[0].rescueUsed'),true);assert.equal(run('match.players[1].rescueUsed'),false);key('/');assert.equal(run('match.players[1].rescueUsed'),true);run('fitBattle()');assert.equal(ids.battleStage.style.height,'1290px');run('begin();match.countdown=0');assert.equal(run('match.players[0].rescueUsed'),false);
+ids.battleTurbo.checked=true;ids.battleGentle.checked=true;ids.battleDuration.value='180';run('begin();match.countdown=0');assert.equal(run('match.turbo'),true);assert.equal(run('match.players[0].rows.length'),2);key('r');assert.equal(run('match.players[0].rescueUsed'),true);assert.equal(run('match.players[1].rescueUsed'),false);key('/');assert.equal(run('match.players[1].rescueUsed'),true);run('fitBattle()');assert.equal(ids.battleStage.style.height,'1220px');run('begin();match.countdown=0');assert.equal(run('match.players[0].rescueUsed'),false);
 console.log('PASS: turbo UI configuration, independent rescue keys, clean rematch and desktop height.');
 
 // Exercise actual excitement announcements together with the battle event presenter.

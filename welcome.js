@@ -32,7 +32,7 @@
     const timed = byId('sessionLength').value === '180';
     byId('activityNote').textContent = practice
       ? (timed ? '方程停止下降，在三分鐘內按自己的節奏解題。' : '方程停止下降，留一點時間想清楚。')
-      : (timed ? '三分鐘內逐題解開方程，看看自己的進步。' : '方程持續下降，解題時也要留意危險線。');
+      : (timed ? '三分鐘挑戰：碰線只移除該題，不扣心，持續至時間到。' : '方程持續下降，解題時也要留意危險線。');
     const label = '開始練習';
     byId('start').replaceChildren(document.createTextNode(label + ' '));
     const arrow = document.createElement('span');

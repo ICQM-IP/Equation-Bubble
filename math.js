@@ -71,6 +71,7 @@ function topicAt(index,topic=0,seed=1){
  return bag[index%5];
 }
 function speedMultiplier(value){const n=Number(value);return [.65,1,1.6,2.3].includes(n)?n:1.6}
-const api={topicAt,speedMultiplier,diagnose,newStats,accuracy,report,operandChoices,ERROR_NAMES,Q,q,eq,solution,verify,lcm,solved,moves,apply,generate,parseOperand};root.EquationMath=api;if(typeof module!=='undefined')module.exports=api;
+function descentSpeed(value){return 9*speedMultiplier(value)}
+const api={descentSpeed,topicAt,speedMultiplier,diagnose,newStats,accuracy,report,operandChoices,ERROR_NAMES,Q,q,eq,solution,verify,lcm,solved,moves,apply,generate,parseOperand};root.EquationMath=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 

@@ -19,7 +19,7 @@ for(let i=21;i<=25;i++)frameQueue.shift()(i*50);
 assert(vm.runInContext('bullet===null||bullet.index>0',context),'scheduled frames must advance the projectile');
 ids.practice.checked=true;
 console.log('PASS: page boot schedules frame loop; start button triggers falling; fire button launches and scheduled frames advance the projectile.');
-vm.runInContext('function preparePair(){reset();if(document.querySelector("#paceMode").value==="normal"){frantic=false;PACE.maxRows=3;PACE.spawnTime=10;while(rows.length>2)remove(rows[rows.length-1]);rows[0].y=180;rows[1].y=15;rows[1].e=M.eq(2,-2,0,8);rows[1].original=rows[1].e;for(const r of rows)renderRow(r);hint(true)}for(const row of rows)row.hintHold=0;}',context);
+vm.runInContext('function preparePair(){reset();if(document.querySelector("#paceMode").value==="normal"){frantic=false;PACE.maxRows=3;PACE.spawnTime=10;while(rows.length>2)remove(rows[rows.length-1]);rows[0].y=180;rows[0].e=M.eq(3,-2,0,4);rows[0].original=rows[0].e;rows[1].y=15;rows[1].e=M.eq(2,-2,0,8);rows[1].original=rows[1].e;for(const r of rows)renderRow(r);hint(true)}for(const row of rows)row.hintHold=0;}',context);
 const run=s=>vm.runInContext(s,context),step=n=>run(`for(let i=0;i<${n};i++){testTime+=50;tick(testTime)}`);run('let testTime=0;last=0;preparePair();energy=0;rows[0].e=M.eq(3,-2,0,4);rows[0].original=rows[0].e;renderRow(rows[0]);hint(true)');
 assert.equal(run('loaded.label'),'+2');assert.equal(buttons.filter(b=>b.attrs['aria-pressed']==='true').length,1);assert.equal(buttons[0].attrs['aria-pressed'],'true');
 run('load(1)');assert.equal(buttons[1].attrs['aria-pressed'],'true');run('hint(true)');assert.equal(run('trace().hit.node.key'),'lb');
@@ -80,7 +80,7 @@ const firstLayout=run('rows.map(r=>r.y+","+r.scatterX).join("|")');run('prepareP
 console.log('PASS: irregular horizontal placement; staggered layer heights; layouts vary between waves while maintaining readable equation order.');
 
 ids.paceMode.value='normal';ids.practice.checked=false;
-run('preparePair();gentle=false;turbo=false;level=2;fallSpeed=1;const slowY=rows[0].y');step(20);assert(Math.abs(run('rows[0].y-slowY')-7)<.001);
+run('preparePair();gentle=false;turbo=false;level=2;fallSpeed=1;const slowY=rows[0].y');step(20);assert(Math.abs(run('rows[0].y-slowY')-9)<.001);
 console.log('PASS: matching equations remain independent; no chain lines or energy rewards; descent matches versus standard speed; no discrete pressure drop.');
 
 ids.paceMode.value='normal';ids.practice.checked=true;
@@ -174,7 +174,7 @@ run('mobileMode=true;for(const r of [...rows])remove(r);spawnLaneBag=[];const ph
 run('mobileMode=false');console.log('PASS: randomized opening side, balanced random waves, randomized refills, blocked-lane safety and mobile left/right positioning.');
 
 run('mobileMode=false;gentle=false;reset();while(rows.length<2)spawn();frantic=true;practice=false;turbo=false;gentle=false;graceTimer=0;fallSpeed=1.6;level=3;rows[0].lane=0;rows[1].lane=1;rows[0].y=100;rows[1].y=-100;const slowerStart=rows[0].y;descend(.1)');
-assert(Math.abs(run('rows[0].y-slowerStart')-(6+3*.5)*1.6*.1)<1e-8);
+assert(Math.abs(run('rows[0].y-slowerStart')-9*1.6*.1)<1e-8);
 console.log('PASS: solo descent matches versus at the selected speed.');
 
 // Physical single-player keys must survive IMEs and native focus changes.
@@ -209,3 +209,13 @@ run('launch()');step(60);assert.equal(run('learningStats.hits'),1);
 run('reset();for(const r of rows)r.hintHold=0;rows[0].y=LIMIT;descend(.05)');
 assert(ids.teachingMath.textContent.includes('本題已移除'));
 console.log('PASS: every practice topic remains visible; layout switches preserve queued equations; near-line hint shot succeeds; repeated hint cannot extend protection; removed question clears stale teaching.');
+
+ids.sessionLength.value='180';ids.practice.checked=false;ids.gentlePace.checked=true;
+run('reset();for(let i=0;i<5;i++){for(const r of rows)r.hintHold=0;graceTimer=0;rows[0].y=LIMIT;descend(.05)}');
+assert.equal(run('lives'),3);assert.equal(run('running'),true,'timed solo continues after repeated line crossings');
+for(let topic=1;topic<=5;topic++){
+ ids.startLevel.value=String(topic);run('mobileMode=true;reset()');assert(run('rows.every(r=>r.y>=0&&r.y+r.height<LIMIT)'));
+ run('mobileMode=false;reset()');assert(run('rows.every(r=>r.y>=0&&r.y+r.height<LIMIT)'));
+}
+ids.startLevel.value='2';run('var openings=new Set();for(let i=0;i<12;i++){reset();openings.add(eqText(rows[0].e))}');assert(run('openings.size>1'));
+console.log('PASS: solo timed mode never loses hearts; all opening topics visible on both layouts; two-step openings vary.');
