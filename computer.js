@@ -9,7 +9,7 @@ class Controller{
   const p=this.player,savedAngle=p.angle,savedOp=p.op;
   const rows=[...p.rows].filter(r=>r.y>=0).sort((a,b)=>p.incoming.length?(Number(b.special)-Number(a.special)||b.y-a.y):b.y-a.y);
   let result=null;
-  for(const row of rows){for(const move of M.moves(row.e)){
+  for(const row of rows){const moves=M.moves(row.e);if(row.e.group)moves.sort((a,b)=>Number(b.kind==='expand')-Number(a.kind==='expand'));for(const move of moves){
    const nodes=row.nodes.filter(n=>move.target===n.key||move.target==='fraction'&&row.e[n.key[0]]?.[n.key[1]]?.d>1n);
    for(const node of nodes){const angle=Math.atan2(node.x+node.w/2-V.ORIGIN.x,V.ORIGIN.y-row.y-node.h/2)*180/Math.PI;if(Math.abs(angle)>70)continue;
     p.angle=angle;p.op=V.OPS.indexOf(move.op);const hit=V.aimTrace(p).hit;

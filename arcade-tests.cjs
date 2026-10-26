@@ -85,12 +85,12 @@ console.log('PASS: matching equations remain independent; no chain lines or ener
 
 ids.paceMode.value='normal';ids.practice.checked=true;
 run('preparePair();rows[0].e=M.eq(2,-7,0,13);rows[0].original=rows[0].e;rows[1].e=M.eq(3,-4,0,8);rows[1].original=rows[1].e;renderRow(rows[0]);renderRow(rows[1]);selected=rows[0];hint(true)');
-assert.equal(run('loaded.label'),'+7');assert.equal(ids.cannonAmmo.textContent,'+7');assert.equal(run('cartridges().length'),5);
-run('for(let i=0;i<5;i++)load(1)');assert.equal(run('loaded.label'),'+7');
+assert.equal(run('loaded.label'),'+7');assert.equal(ids.cannonAmmo.textContent,'+7');assert.equal(run('cartridges().length'),6);
+run('for(let i=0;i<OPS.length;i++)load(1)');assert.equal(run('loaded.label'),'+7');
 run('launch()');step(100);assert.equal(run('rows[0].e.l.b.toString()'),'0');assert.equal(run('rows[0].e.r.b.toString()'),'20');assert.equal(run('rows[1].e.l.b.toString()'),'-4');
 run('rows[0].e=M.eq(3,-4,0,8);rows[0].original=rows[0].e;renderRow(rows[0]);ammoIndex=OPS.indexOf("+");hint(true)');assert.equal(run('loaded.label'),'+4');
 run('ammoIndex=OPS.indexOf("÷");load()');assert.equal(run('loaded.label'),'÷?');
-console.log('PASS: -7 target loads +7 despite another +4 equation; five operation types only; +7 applies to both sides; other equation unchanged; target changes update operand; premature division has no valid ammo.');
+console.log('PASS: -7 target loads +7 despite another +4 equation; six operation types; +7 applies to both sides; other equation unchanged; target changes update operand; premature division has no valid ammo.');
 
 ids.paceMode.value='normal';ids.practice.checked=false;run('reset()');assert.equal(run('rows.length'),4);
 run('for(const r of [...rows])remove(r);startWave()');assert.equal(run('rows.length'),1);

@@ -122,3 +122,17 @@ body.mobile-mode #mobileControls,body.mobile-mode .computer-player-slot .mobile-
  body.versus-page.mobile-mode.computer-mode .computer-player-slot .mobile-vs-controls{position:absolute;width:360px;height:calc(100dvh - 118px - var(--computer-preview-height))}
  body.versus-page.mobile-mode.computer-mode .computer-player-slot .arena{left:calc((100% - 380px - 786px * var(--arena-scale)) / 2)}
 }
+
+/* Six operations: preserve room for the loaded shot and fire button. */
+body.mobile-mode .mobile-ops,body.mobile-mode .mobile-vs-controls nav{grid-template-columns:repeat(6,minmax(0,1fr))}
+body.mobile-mode #mobileControls .mobile-ops .expand,body.mobile-mode .mobile-vs-controls nav .expand{font-size:12px!important;line-height:1.15;padding:2px!important;overflow-wrap:anywhere}
+body.solo-cabinet:not(.mobile-mode) #ops{gap:8px}
+body.solo-cabinet:not(.mobile-mode) #ops .orb{width:50px;height:60px}
+body.solo-cabinet:not(.mobile-mode) #ops .expand{font-size:13px}
+body.versus-page .battle-ops{gap:8px}
+body.versus-page .battle-ops .orb{width:48px}
+body.versus-page .battle-ops .expand{font-size:12px}
+.orb.expand{font-size:13px}
+html[lang=en] .orb.expand{font-size:11px}
+body .battle-bullet.expand,html[lang=en] body .battle-bullet.expand{font-size:9px;line-height:1}
+body #projectile.expand,html[lang=en] body #projectile.expand{font-size:10px;line-height:1}

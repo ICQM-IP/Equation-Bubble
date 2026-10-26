@@ -41,7 +41,7 @@
   const heading=document.createElement('strong');heading.textContent=kind==='bot'?'電腦操作':'操作按鈕';host.append(heading);
   if(kind==='bot'){const text=document.createElement('span');text.textContent='自動瞄準、換運算、發射及救援';host.append(text);return;}
   const touch=byId('deviceChoice').checked;
-  const controls=touch?[['◀ ▶','瞄準'],['＋ − × ÷ LCM','選運算'],['發射','發射'],['提示','提示'],['救援','救援一次']]:kind==='p1'?[['A D','瞄準'],['W S','換運算'],['F','發射'],['G','提示'],['R','救援一次']]:kind==='p2'?[['← →','瞄準'],['↑ ↓','換運算'],['Enter','發射'],['L','提示'],['/','救援一次']]:[['← →','瞄準'],['↑ ↓','換運算'],['Space / Enter','發射'],['H','提示'],['R','救援一次']];
+  const controls=touch?[['◀ ▶','瞄準'],['＋ − × ÷ 拆括弧 LCM','選運算'],['發射','發射'],['提示','提示'],['救援','救援一次']]:kind==='p1'?[['A D','瞄準'],['W S','換運算'],['F','發射'],['G','提示'],['R','救援一次']]:kind==='p2'?[['← →','瞄準'],['↑ ↓','換運算'],['Enter','發射'],['L','提示'],['/','救援一次']]:[['← →','瞄準'],['↑ ↓','換運算'],['Space / Enter','發射'],['H','提示'],['R','救援一次']];
   for(const [key,label]of controls){const item=document.createElement('span'),cap=document.createElement('kbd');if(key==='W S'||key==='↑ ↓'){cap.className='stacked-keys';for(const symbol of key.split(' ')){const row=document.createElement('span');row.textContent=symbol;cap.append(row);}cap.setAttribute('aria-label',key==='W S'?'W 上、S 下':'向上、向下');}else cap.textContent=key;item.append(cap,document.createTextNode(label));host.append(item);}
   const pause=document.createElement('span');pause.textContent=touch?'遊戲上方：暫停':'P：暫停整場';host.append(pause);
  }
@@ -80,7 +80,7 @@
   controlGuide(soloGuide,'solo');
   byId('start').textContent=computer?'開始挑戰電腦 →':battle?'開始雙人遊戲 →':'開始練習 →';
   note.textContent=computer?(fields.homeBattleDuration.value==='0'?'三顆心生存賽：先失去三顆心者落敗。可另選 3 分鐘限時賽。':'3 分鐘限時賽：先比解題數，再比命中率；碰線不扣心。'):battle?'同機雙人 · 所有設定完成後，按開始遊戲進入對戰。':byId('practice').checked?'方程停止下降，留一點時間想清楚。':'方程持續下降，解題時也要留意危險線。';
-  route.textContent=battle?'星題可攻擊、反制；老師角色不影響能力，電腦難度另行選擇。':'解題路線：先消左常數、右邊 x 項，再除係數；括號先除外係數。';
+  route.textContent=battle?'星題可攻擊、反制；老師角色不影響能力，電腦難度另行選擇。':'解題路線：先消左常數、右邊 x 項，再除係數；括號可先拆括弧，或先除外係數。';
   help.innerHTML=battle?'<summary>玩法說明 <span>操作及勝負規則</span></summary><p>'+(computer?'你：方向鍵或 A/D 瞄準，↑/↓ 或 W/S 換運算，Space／Enter／F 發射，H／G 提示，R 救援。手機可使用觸控按鈕。':'玩家 1：A/D 瞄準、W/S 換運算、F 發射、G 提示、R 救援。玩家 2：方向鍵、Enter 發射、L 提示、/ 救援。')+'</p><p>P 暫停整場。星題送 2 題，連解最多送 3 題；來襲預警期間解星題可反制，反彈最多兩次。</p><p>生存賽先失去三顆心者落敗；限時賽持續 3 分鐘，碰線不扣心，先比解題數，再比命中率。</p>'+(computer?'<p>電腦只根據自己的方程逐步選擇運算及發射，會有思考時間、失誤，亦會使用一次救援；不讀取你的按鍵或發射選擇。</p>':''):originalHelp;
   updateBattleAvailability();
   const extra=more.querySelector('summary span');if(extra)extra.textContent=battle?'操作台與效果':'老師、速度與效果';

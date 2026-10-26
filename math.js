@@ -13,7 +13,7 @@ const lcm=e=>[e.l.a,e.l.b,e.r.a,e.r.b].reduce((a,v)=>a/gcd(a,v.d)*v.d,1n);
 const solved=e=>!e.group&&e.l.a.eq(1)&&e.l.b.eq(0)&&e.r.a.eq(0);
 const operationLabel=(op,v)=>op+((op==='÷'||op==='×')&&q(v).n<0n?'('+q(v)+')':q(v));
 function moves(e){
- if(e.group)return [{op:'÷',v:q(e.group.k),kind:'scale',target:'group',label:operationLabel('÷',e.group.k)}];
+ if(e.group)return [{op:'÷',v:q(e.group.k),kind:'scale',target:'group',label:operationLabel('÷',e.group.k)},{op:'EXPAND',v:q(1),kind:'expand',target:'group',label:'拆括弧'}];
  const out=[];const add=(op,v,kind,target)=>out.push({op,v:q(v),kind,target,label:operationLabel(op,v)+(kind==='x'?'x':'')});
  if(lcm(e)>1n)out.push({op:'LCM',v:q(lcm(e)),kind:'scale',target:'fraction',label:'×'+lcm(e)});
  for(const s of ['l','r']){

@@ -1,7 +1,7 @@
 (function(root){
 'use strict';
 const M=typeof module!=='undefined'&&module.exports?require('./math.js'):root.EquationMath;
-const OPS=['+','−','×','÷','LCM'],W=760,H=620,LINE=478,ORIGIN={x:380,y:555};
+const OPS=['+','−','×','÷','EXPAND','LCM'],W=760,H=620,LINE=478,ORIGIN={x:380,y:555};
 const qtext=v=>String(v).replaceAll('-','−'),xt=v=>v.eq(1)?'x':v.eq(-1)?'−x':qtext(v)+'x';
 function sideText(s){return (s.a.eq(0)?'':xt(s.a))+(s.b.eq(0)?'':(s.a.eq(0)?'':s.b.n<0n?' − ':' + ')+qtext(!s.a.eq(0)&&s.b.n<0n?s.b.neg():s.b))||'0'}
 function equationText(e){return (e.group?`${e.group.k}(x ${e.group.b<0?'−':'+'} ${Math.abs(e.group.b)})`:sideText(e.l))+' = '+sideText(e.r)}
@@ -19,7 +19,7 @@ class Player{
  emit(type,data={}){this.match.events.push({type,player:this.index,...data})}
  spawn({attack=false,lane=null,y=null,special=null}={}){if(this.rows.length>=12)return null;if(this.touchLayout)lane=0;const ordinal=attack?this.attackNext++:this.next++;let e=clone(attack?this.match.attackEquation(ordinal):this.match.equation(ordinal)),id=++this.serial;const isStar=special??(!attack&&ordinal%3===0),risk=this.match.turbo&&isStar&&!attack;if(risk)e=clone(this.match.riskEquation(ordinal));if(lane===null){const counts=[this.rows.filter(r=>r.lane===0),this.rows.filter(r=>r.lane===1)];lane=counts[0].length<=counts[1].length?0:1}const column=this.rows.filter(r=>r.lane===lane),top=column.length?Math.min(...column.map(r=>r.y)):100;if(y===null)y=Math.min(10,top-(this.touchLayout?128:96));const row=layout({id,e,original:clone(e),lane,y,jitter:(this.match.layoutRandom(this.index,id)-.5)*100,special:isStar,risk,topic:M.topicAt(ordinal,this.match.topic,attack?this.match.seed^0x9e3779b9:this.match.seed),attack,height:66,touchLayout:!!this.touchLayout,nodes:[]});this.rows.push(row);this.revision++;return row}
  initialize(){if(this.match.turbo&&this.match.gentle){this.spawn({lane:0,y:130,special:false});this.spawn({lane:1,y:80,special:true});return;}if(this.match.gentle){this.spawn({lane:0,y:136,special:true});return;}this.spawn({lane:0,y:136,special:true});this.spawn({lane:1,y:150,special:false});this.spawn({lane:0,y:40,special:false});this.spawn({lane:1,y:54,special:true})}
- autoAmmo(){const hit=aimTrace(this).hit,focus=hit?.row||[...this.rows].filter(r=>r.y>=0).sort((a,b)=>b.y-a.y)[0],op=OPS[this.op],moves=focus?M.moves(focus.e):[];return moves.find(m=>m.op===op&&hit&&validTarget(focus.e,hit.node,m))||moves.find(m=>m.op===op)||{op,v:M.q(1),kind:op==='+'||op==='−'?'constant':'scale',label:op==='LCM'?'×?':op+'?',unavailable:true}}
+ autoAmmo(){const hit=aimTrace(this).hit,focus=hit?.row||[...this.rows].filter(r=>r.y>=0).sort((a,b)=>b.y-a.y)[0],op=OPS[this.op],moves=focus?M.moves(focus.e):[];return moves.find(m=>m.op===op&&hit&&validTarget(focus.e,hit.node,m))||moves.find(m=>m.op===op)||{op,v:M.q(1),kind:op==='+'||op==='−'?'constant':'scale',label:op==='EXPAND'?'拆括弧':op==='LCM'?'×?':op+'?',unavailable:true}}
  ammo(){const move=this.autoAmmo();if(!this.match.challenge)return move;let v;try{v=M.parseOperand(this.manualValue)}catch{return {...move,label:(move.op==='LCM'?'×':move.op)+'?',manualValid:false}}return {...move,v,manualValid:true,label:(move.op==='LCM'?'×':move.op)+(move.op==='÷'&&v.n<0n?'('+v+')':v)+(move.kind==='x'?'x':'')};}
  cycle(delta){if(!this.active)return;this.op=(this.op+delta+OPS.length)%OPS.length}
  setAngle(value){if(!this.active)return;this.angle=Math.max(-70,Math.min(70,value))}
@@ -30,14 +30,14 @@ class Player{
  const key=row.id+'|'+equationText(row.e)+'|'+node.key;if(key!==this.hintKey){this.hintKey=key;this.hintLevel=0;}const previous=this.hintLevel;this.hintLevel=full?3:Math.min(3,this.hintLevel+1);if(this.hintLevel>previous)row.hintHold=2.5;
  this.aimed={row:row.id,key:node.key};
  if(this.hintLevel===1)this.message='提示 1：先處理發光項 '+node.text+'。';
- if(this.hintLevel===2)this.message='提示 2：兩邊同時做 '+(m.op==='LCM'?'乘最小公倍數':m.op)+' 運算。';
- if(this.hintLevel===3){this.op=OPS.indexOf(m.op);this.angle=angle;if(this.match.challenge)this.manualValue=String(m.v);this.message='提示 3：兩邊都 '+m.label+'，已協助瞄準。';}
+ if(this.hintLevel===2&&m.kind==='expand')this.message='拆括弧：把外面的數乘入括弧內每一項。';else if(this.hintLevel===2)this.message='提示 2：兩邊同時做 '+(m.op==='LCM'?'乘最小公倍數':m.op)+' 運算。';
+ if(this.hintLevel===3){this.op=OPS.indexOf(m.op);this.angle=angle;if(this.match.challenge)this.manualValue=String(m.v);this.message=m.kind==='expand'?'提示 3：已選擇拆括弧並協助瞄準。':'提示 3：兩邊都 '+m.label+'，已協助瞄準。';}
  return;
  }}this.message='先清理最下方的等式，打開射擊路線。';}
 
  fire(){if(!this.canFire)return false;const ammo=this.ammo();if(this.match.challenge&&!ammo.manualValid){this.message='請先輸入非零整數或分數，例如 3 或 -1/2。';return false;}this.stats.shots++;this.bullet={x:ORIGIN.x,y:ORIGIN.y,dx:Math.sin(this.angle*Math.PI/180),dy:-Math.cos(this.angle*Math.PI/180),ammo:{...ammo},bounces:0};this.emit('fire');return true}
  miss(text,code='aim'){this.stats.errors[code]++;this.bullet=null;this.combo=0;this.heat=0;this.chain=0;this.chainUntil=0;this.misses++;this.message=text;this.emit('miss');this.revision++}
- impact(hit,shot){this.bullet=null;const move=M.moves(hit.row.e).find(m=>m.op===shot.ammo.op&&m.kind===shot.ammo.kind&&m.v.eq(shot.ammo.v)&&validTarget(hit.row.e,hit.node,m));if(!move){const d=M.diagnose(hit.row.e,hit.node,shot.ammo);this.miss(d.text,d.code);return}this.stats.hits++;if(this.match.turbo)this.heat=Math.min(5,this.heat+1);const next=M.apply(hit.row.e,move);this.hintKey=null;this.hintLevel=0;this.aimed=null;if(this.match.challenge)this.manualValue='';if(shot.bounces){this.score+=75;this.emit('bank',{points:75})}this.phase={row:hit.row,move,next,elapsed:0,applied:false};this.teaching={equation:clone(hit.row.e),move};this.message='兩邊都 '+move.label+'！';this.revision++;this.emit('hit')}
+ impact(hit,shot){this.bullet=null;const move=M.moves(hit.row.e).find(m=>m.op===shot.ammo.op&&m.kind===shot.ammo.kind&&m.v.eq(shot.ammo.v)&&validTarget(hit.row.e,hit.node,m));if(!move){const d=M.diagnose(hit.row.e,hit.node,shot.ammo);this.miss(d.text,d.code);return}this.stats.hits++;if(this.match.turbo)this.heat=Math.min(5,this.heat+1);const next=M.apply(hit.row.e,move);this.hintKey=null;this.hintLevel=0;this.aimed=null;if(this.match.challenge)this.manualValue='';if(shot.bounces){this.score+=75;this.emit('bank',{points:75})}this.phase={row:hit.row,move,next,elapsed:0,applied:false};this.teaching={equation:clone(hit.row.e),move};this.message=move.kind==='expand'?'分配律：每一項都要乘！':'兩邊都 '+move.label+'！';this.revision++;this.emit('hit')}
  finish(row){if(!M.solved(row.e)||!M.verify(row.original,row.e.r.b))throw Error('Solution verification failed');this.combo=Math.min(8,this.combo+1);const gain=100*this.combo;this.score+=gain;this.clears++;this.stats.solved++;this.reward=this.match.turbo?.22:.45;this.rows=this.rows.filter(r=>r!==row);this.message='平衡完成！x = '+qtext(row.e.r.b);this.teaching={answer:row.e.r.b};this.emit('clear',{x:qtext(row.e.r.b),points:gain,y:row.y,special:row.special});if(this.match.turbo){
  this.chain=this.match.elapsed<=this.chainUntil?this.chain+1:1;this.chainUntil=this.match.elapsed+8;
  const strength=Math.min(3,(row.risk?2:0)+(this.chain>=2?1:0));

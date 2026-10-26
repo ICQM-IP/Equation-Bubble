@@ -7,3 +7,4 @@ console.log('PASS: menu, dynamic hints, results and attack messages translate; m
 // Include every teacher reaction, not only static menus and equation messages.
 const fs=require('node:fs'),art=fs.readFileSync(__dirname+'/arcade-art.js','utf8');
 const reactions=[...art.matchAll(/\['([^']*[\u4e00-\u9fff][^']*)',\s*[.\d]+/g)].map(m=>m[1]);assert(reactions.length>=10);for(const phrase of reactions)assert(!/[\u4e00-\u9fff]/.test(translate(phrase)),phrase);assert.equal(translate('漂亮一步！'),'Nice step!');assert.equal(translate('3 連解！'),'3 Combo!');console.log('PASS: all teacher reaction captions have English translations.');
+assert.equal(translate('拆括弧'),'Expand');assert.equal(translate('分配律：每一項都要乘！'),'Distributive law: multiply every term!');

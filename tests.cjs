@@ -16,11 +16,11 @@ assert.equal(solve(ordered),'6');
 console.log('PASS: required order: 5x+5=35 → −5 → 5x=30 → ÷5 → x=6; premature division rejected.');
 
 const bracketEq=M.eq(3,-21,0,-15,{k:3,b:-7});
-assert.equal(M.moves(bracketEq).length,1);const divideBracket=M.moves(bracketEq)[0];assert.equal(divideBracket.op,'÷');assert.equal(divideBracket.v.toString(),'3');assert.equal(divideBracket.target,'group');
+assert.equal(M.moves(bracketEq).length,2);const divideBracket=M.moves(bracketEq)[0];assert.equal(divideBracket.op,'÷');assert.equal(divideBracket.v.toString(),'3');assert.equal(divideBracket.target,'group');
 const bracketNext=M.apply(bracketEq,divideBracket);assert.equal(bracketNext.group,null);assert.equal(bracketNext.l.a.toString(),'1');assert.equal(bracketNext.l.b.toString(),'-7');assert.equal(bracketNext.r.b.toString(),'-5');assert.equal(solve(bracketEq),'2');
 assert.throws(()=>M.apply(bracketEq,{op:'×',v:M.q(1),kind:'expand',target:'group'}));assert.throws(()=>M.apply(bracketEq,{op:'+',v:M.q(7),kind:'constant',target:'lb'}));
 assert.equal(solve(M.eq(-3,21,0,15,{k:-3,b:-7})),'2');
-console.log('PASS: 3(x-7)=-15 requires ÷3 → x-7=-5 → +7 → x=2; expansion and premature addition rejected; negative outer coefficient supported.');
+console.log('PASS: 3(x-7)=-15 supports ÷3 → x-7=-5 → +7 → x=2; unknown expansion operations and premature addition rejected; negative outer coefficient supported.');
 
 assert.equal(M.moves(M.eq(-1,0,0,2)).find(m=>m.op==='÷').label,'÷(-1)');
 assert.equal(M.moves(M.eq(-3,0,0,6)).find(m=>m.op==='÷').label,'÷(-3)');
