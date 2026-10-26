@@ -49,3 +49,7 @@ html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching .power-meter{
 html[lang=en] body.solo-cabinet:not(.mobile-mode) #stage #teaching .rescue-button{grid-column:2;grid-row:1/4;align-self:center;margin:0;min-height:44px;font-size:16px;padding:5px}
 html[lang=en] body.solo-cabinet:not(.mobile-mode) #hint:before{content:'← → Aim · ↑ ↓ Operation';font-size:13px}
 html[lang=en] #currentAmmo:before{content:'Loaded'}
+/* Keep the three-character expand label inside launcher bubbles, overriding numeric ammo sizing. */
+body .orb.expand{font-size:13px!important;line-height:1.15;letter-spacing:0;white-space:nowrap}
+body .orb.expand>span{font-size:inherit!important}
+html[lang=en] body .orb.expand{font-size:10px!important}
