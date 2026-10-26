@@ -56,3 +56,20 @@ html[lang=en] body .orb.expand{font-size:13px!important}
 /* Launcher preview is larger than the compact operation selector. */
 body #cannonAmmo.expand{font-size:18px!important}
 html[lang=en] body #cannonAmmo.expand{font-size:18px!important}
+
+/* A queued layout change must be visible even while the touch toolbar is hidden. */
+#deviceSwitchNotice:not([hidden]){position:fixed;z-index:500;top:64px;left:50%;transform:translateX(-50%);max-width:calc(100vw - 32px);box-sizing:border-box;padding:10px 14px;border:2px solid #e1bc71;border-radius:10px;background:#fff9e8;color:#263f4b;font:600 14px/1.4 system-ui,sans-serif;box-shadow:0 3px 12px #0004;pointer-events:none}
+/* Use the same readable launcher label in solo, local VS and computer matches. */
+body #cannonAmmo0.expand,body #cannonAmmo1.expand,
+html[lang=en] body #cannonAmmo0.expand,html[lang=en] body #cannonAmmo1.expand{font-size:18px!important}
+/* Reserve enough room for whole labels instead of breaking Expand into letters. */
+body.mobile-mode #mobileControls>.mobile-ops,
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>nav{grid-template-columns:repeat(4,minmax(0,1fr)) minmax(58px,1.45fr) minmax(52px,1.25fr)!important;gap:4px}
+body.mobile-mode #mobileControls>.mobile-ops button,
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls>nav button{min-width:0;box-sizing:border-box}
+body.mobile-mode #mobileControls .mobile-ops .expand,
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls nav .expand{font-size:13px!important;white-space:nowrap;overflow-wrap:normal;word-break:normal;line-height:1.15;padding:2px!important;letter-spacing:0}
+html[lang=en] body.mobile-mode #mobileControls .mobile-ops .expand,
+html[lang=en] body.versus-page.mobile-mode.computer-mode .mobile-vs-controls nav .expand{font-size:12px!important}
+body.mobile-mode #mobileControls .mobile-ops button:last-child,
+body.versus-page.mobile-mode.computer-mode .mobile-vs-controls nav button:last-child{font-size:13px!important;white-space:nowrap;padding:2px!important}

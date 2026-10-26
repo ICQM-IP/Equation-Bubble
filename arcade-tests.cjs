@@ -239,3 +239,10 @@ ids.field.getBoundingClientRect=()=>({left:0,top:0,width:1120*sx,height:660*sy})
 ids.field.events.pointermove({clientX:760*sx,clientY:200*sy,buttons:1});
 assert(Math.abs(run('angle')-Math.atan2(200,380)*180/Math.PI)<1e-8,'touch aim inverts both display scales');
 console.log('PASS: extra portrait height is capped at 20%; aiming maps correctly through the taller display.');
+
+// Queue a real in-flight layout switch; the shot must finish on its original geometry.
+run('mobileMode=false;busy=false;phase=null;bullet=null;reset();hint(true);launch();setDeviceMode(true)');
+assert.equal(run('mobileMode'),false);assert.equal(run('pendingDeviceMode'),true);assert.equal(ids.deviceSwitchNotice.hidden,false);
+step(160);assert.equal(run('pendingDeviceMode'),null);assert.equal(run('mobileMode'),true);assert.equal(ids.deviceSwitchNotice.hidden,true);assert(run('learningStats.hits>=1'),'queued layout switch keeps the actual shot valid');
+run('busy=true;setDeviceMode(false);setDeviceMode(true)');assert.equal(run('pendingDeviceMode'),null);assert.equal(ids.deviceSwitchNotice.hidden,true);run('busy=false');
+console.log('PASS: queued solo switch preserves the in-flight hit, applies automatically after completion, and can be cancelled.');

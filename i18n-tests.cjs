@@ -8,3 +8,7 @@ console.log('PASS: menu, dynamic hints, results and attack messages translate; m
 const fs=require('node:fs'),art=fs.readFileSync(__dirname+'/arcade-art.js','utf8');
 const reactions=[...art.matchAll(/\['([^']*[\u4e00-\u9fff][^']*)',\s*[.\d]+/g)].map(m=>m[1]);assert(reactions.length>=10);for(const phrase of reactions)assert(!/[\u4e00-\u9fff]/.test(translate(phrase)),phrase);assert.equal(translate('漂亮一步！'),'Nice step!');assert.equal(translate('3 連解！'),'3 Combo!');console.log('PASS: all teacher reaction captions have English translations.');
 assert.equal(translate('拆括弧'),'Expand');assert.equal(translate('分配律：每一項都要乘！'),'Distributive law: multiply every term!');
+
+// Dynamic rescue captions and on-screen/accessibility labels must remain fully English.
+for(const phrase of ['🛟 救援啟動','玩家一炮台','玩家二選擇運算','玩家 1 選擇 Expand','手提裝置乘最小公倍數','玩家 1 向左瞄準','雙人遊戲區','正在等炮彈完成，之後會自動切換操作台。'])assert(!/[\u4e00-\u9fff]/.test(translate(phrase)),translate(phrase));
+console.log('PASS: rescue, device-switch notices and touch/versus accessibility labels translate completely.');

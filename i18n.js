@@ -32,9 +32,11 @@
  Object.assign(dictionary,{"出發！": "Let’s go!", "漂亮一步！": "Nice step!", "漂亮的一步": "Nice step", "平衡完成！": "Balanced!", "連解！": "Combo!", "救援啟動！": "Rescue activated!", "星題出擊！": "Star attack!", "反彈成功！": "Attack reflected!", "漂亮反制！": "Great counter!", "再接再厲！": "Keep going!", "再想一步": "Think it through"});
  Object.assign(dictionary,{'拆括弧':'Expand','提示 3：已選擇拆括弧並協助瞄準。':'Hint 3: Expand selected and aim set.','拆括弧：把外面的數乘入括弧內每一項。':'Expand: multiply every term inside by the outside number.','解題路線：先消左常數、右邊 x 項，再除係數；括號可先拆括弧，或先除外係數。':'Route: remove the left constant and right x term, then divide the coefficient. For brackets, expand or divide the outer coefficient first.','括號可先拆括弧，或先除外係數':'Expand brackets or divide the outer coefficient first'});
  for(const [source,target]of Object.entries(dictionary))if(source.includes('括號先除外係數'))dictionary[source.replaceAll('括號先除外係數','括號可先拆括弧，或先除外係數')]=target.replace('For brackets, divide the outer coefficient first.','For brackets, expand or divide the outer coefficient first.');
+ Object.assign(dictionary,{"救援啟動": "Rescue activated", "玩家一炮台": "Player 1 cannon", "玩家二炮台": "Player 2 cannon", "玩家一": "Player 1", "玩家二": "Player 2", "雙人遊戲區": "Two-player arena", "手提裝置乘最小公倍數": "Touch multiply by the LCM", "手提裝置": "Touch", "向左瞄準": "Aim left", "向右瞄準": "Aim right", "選擇": "Choose", "正在等炮彈完成，之後會自動切換操作台。": "Waiting for the shot to finish; controls will switch automatically."});
+ Object.assign(dictionary,{"雙人對戰遊戲區": "Two-player arena", "下降方程式遊戲區": "Falling equation playfield", "選擇炮彈運算": "Choose shot operation", "黃銅青綠色泡泡炮台": "Brass and teal bubble cannon", "遊戲舞台": "arena", "反彈攻擊！": "Attack reflected!", "最後 30 秒！": "Final 30 seconds!", "連擊爆發！": "Combo burst!", "漂亮解題！": "Great solve!"});
  const keys=Object.keys(dictionary).sort((a,b)=>b.length-a.length);
  const pattern=new RegExp(keys.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
- function translate(text){return text.replace(pattern,key=>dictionary[key]);}
+ function translate(text){return text.replace(pattern,key=>dictionary[key]).replace(/(\d+)分之(\d+)/g,'$2 over $1');}
  if(typeof module!=='undefined'&&module.exports){module.exports={translate,dictionary};return;}
  let lang='zh-Hant';try{if(localStorage.getItem('equationLanguage')==='en')lang='en';}catch{}
  const textState=new WeakMap(),attrState=new WeakMap();

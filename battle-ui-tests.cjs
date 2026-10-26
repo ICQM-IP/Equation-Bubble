@@ -70,3 +70,15 @@ assert.equal(run('previewPaints[0]'),120);assert(run('previewPaints[1]')<=40);as
 const paints=run('previewPaints[1]');run("document.body.classList.add('computer-preview-collapsed')");for(let i=0;i<20;i++){renderClock+=60;run('match.players[1].revision++;render()');}assert.equal(run('previewPaints[1]'),paints);
 run("document.body.classList.remove('computer-preview-collapsed');render()");assert.equal(run('previewPaints[1]'),paints+1);
 console.log('PASS: CPU preview caps repaint frequency, skips collapsed rendering and refreshes on expansion.');
+
+// While a layout change is queued, finish existing shots without allowing the CPU
+// to start another one. Use the real battle frame and real pending-switch processor.
+ctx.EquationComputer=require('./computer.js');
+run("document.body.className='versus-page';mobileMode=false;computerMode=true");
+const mobileSource=fs.readFileSync(__dirname+'/mobile.js','utf8');
+vm.runInContext(mobileSource.slice(0,mobileSource.indexOf('const mobileOverlayParent')),ctx);
+run('var appliedLayout=null,cpuStarts=0;function setDeviceMode(on){appliedLayout=on;mobileMode=on;deviceSwitchNotice(false)};begin();match.countdown=0;match.players[0].hint(true);match.players[0].fire();pendingDeviceMode=true;computerController={step(){cpuStarts++}};deviceSwitchNotice(true)');
+assert(run('match.players[0].bullet!==null'));advance(1);assert.equal(run('cpuStarts'),0);assert.equal(run('mobileMode'),false);assert.equal(ids.deviceSwitchNotice.hidden,false);
+for(let i=0;i<200&&run('pendingDeviceMode!==null');i++)advance(1);
+assert.equal(run('pendingDeviceMode'),null);assert.equal(run('appliedLayout'),true);assert.equal(ids.deviceSwitchNotice.hidden,true);assert(run('match.players[0].stats.hits>0'));
+console.log('PASS: queued VS switch drains the real shot, temporarily prevents CPU launches, preserves the hit and applies the requested layout.');
