@@ -53,3 +53,6 @@ html[lang=en] #currentAmmo:before{content:'Loaded'}
 body .orb.expand{font-size:13px!important;line-height:1.15;letter-spacing:0;white-space:nowrap}
 body .orb.expand>span{font-size:inherit!important}
 html[lang=en] body .orb.expand{font-size:10px!important}
+/* Launcher preview is larger than the compact operation selector. */
+body #cannonAmmo.expand{font-size:18px!important}
+html[lang=en] body #cannonAmmo.expand{font-size:12px!important}
